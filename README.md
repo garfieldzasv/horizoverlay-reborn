@@ -1,234 +1,111 @@
 # Horizoverlay Reborn
 
-给 FF14 的 ACT 悬浮窗，横向紧凑的 DPS / HPS 统计。
+English · [简体中文](README_zhCN.md) · [正體中文](README_zhHK.md) · [Português](README_ptBR.md) · [Français](README_frFR.md)
 
-基于 [Horizoverlay](https://overlays.ffcafe.cn/horizoverlay/) 重做：字体、布局、配置页全部重写，全部资源打包在本地，运行时不请求任何外部地址。
+A horizontal damage meter overlay for Final Fantasy XIV, showing the whole party's DPS and HPS in one row of cards. A rebuild of [Horizoverlay](https://github.com/bsides/horizoverlay).
 
-开发过程和技术决策记录在 [DEVLOG.md](DEVLOG.md)，本文档只讲功能和用法。
+![](screenshots/overlay-byrole.png)
 
-![八人队伍，职业特有主题](screenshots/overlay-byrole.png)
+## Install
 
----
+Grab the zip from [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) and unpack it, or clone this repository and use the `build/` directory.
 
-## 快速开始
+1. In OverlayPlugin, create a new overlay of type MiniParse
+2. Point the URL at `index.html` using its full `file://` path
+3. Turn off **Enable clickthru** for this overlay, or right-click will not open the settings
+4. Right-click the overlay to open the settings
 
-1. 在 OverlayPlugin 里新建一个 **MiniParse** 类型的悬浮窗
-2. URL 填 `build/index.html` 的完整 `file://` 地址，形如：
+Window width: a row of 4 needs 759px, 6 needs 1138px, 8 needs 1517px, 12 needs 2276px, 24 needs 4551px. Cards wrap when they do not fit.
 
-   ```
-   file:///<你存放本项目的目录>/build/index.html
-   ```
+ACTWebSocket works too, just append `?HOST_PORT=ws://127.0.0.1:10501/` to the URL.
 
-   最省事的取法：在文件管理器里双击 `build/index.html`，从浏览器地址栏把地址整条复制过来。路径含空格或中文时尤其推荐这样做——浏览器已经替你转义好了，手写容易漏。
-3. 关掉该悬浮窗的**「滑鼠穿透 / Enable clickthru」**，否则鼠标事件到不了页面
-4. 在悬浮窗上**右键**打开配置页
+## Features
 
-也支持 WebSocket 模式，URL 后加 `?HOST_PORT=ws://127.0.0.1:10501/`。
+Right-click to open the settings. Everything takes effect immediately and saves itself.
 
-### 窗口该开多宽
+<img src="screenshots/config.png" width="420">
 
-卡片宽度固定，放不下会自动折行（不会裁掉卡片）。一行放下 N 个人所需的宽度：
+* Five interface languages: English, Portuguese, Simplified Chinese, Traditional Chinese, French
+* Three color themes: by role, black & white, and by role in detail
+* The right half of a card is DPS; the left half switches between HPS, crit rate, direct hit rate, crit direct hit rate and the job code
+* Two share bars, one for DPS and one for HPS
+* Rank number, job icon, max hit and highlight, each toggled separately
+* An encounter bar with duration and total DPS
+* 1 to 24 combatants, with an option to include chocobos, egis and other jobless units
+* Your own card pinned to white; you can also show only yourself, or blur everyone else's name
+* Zoom from 0.5x to 2x
+* Setup mode, a mock-data preview so you can set things up outside a fight
+* A Discord webhook that posts the fight to your channel
 
-| 人数   | 4     | 6      | 8                | 12     | 24     |
-| ------ | ----- | ------ | ---------------- | ------ | ------ |
-| 窗口宽 | 759px | 1138px | **1517px** | 2276px | 4551px |
+The detailed theme, one color per sub-role:
 
-嫌宽可以用配置页的**缩放尺寸**整体缩小，卡片宽度会跟着等比缩小。
+![](screenshots/overlay-byjob.png)
 
----
+Black & white:
 
-## 界面构成
+![](screenshots/overlay-blackwhite.png)
 
-```
-   ①名字                  ①名字
- ┌──────────────┐      ┌──────────────┐
- │②左侧 ③图标 ④DPS│      │…             │     ← 角色卡片
- └──────────────┘      └──────────────┘
-   ⑤DPS占比条              ⑤
-   ⑥HPS占比条              ⑥
-   ⑦最强伤害               ⑦
+Setup mode:
 
-        ┌────────────────────────┐  ┌──────────┐
-        │⑧区域 总DPS LB 战斗时间 │  │⑨Discord │  ← 总览横幅
-        └────────────────────────┘  └──────────┘
-```
+![](screenshots/setup-mode.png)
 
-① 排名 + 角色名 ② 可切换的统计量 ③ 职业图标 ④ DPS
-⑤⑥ 占比横条 ⑦ 最强一击 ⑧ 总览 ⑨ 发送到 Discord
+## What changed from the original
 
-所有元素都可以单独关掉。
+* A bundled monospaced font, so the digits stop jittering as DPS refreshes
+* Cards sized for six-digit numbers
+* Cards wrap instead of being silently cut off
+* The damage percentage text is gone, replaced by a second bar for healing share
+* The left half is selectable; the original only offered HPS
+* Cards, banners and share bars line their slanted edges up automatically
+* An extra theme that splits DPS into melee, ranged and caster
+* 59 job icons, including Beastmaster <img src="screenshots/bst-icon.png" width="18"> from patch 7.56
+* Pets use a summon icon in neutral grey, instead of a disconnected-network icon in black
+* A rebuilt settings page
+* Fully offline; nothing is fetched at runtime
 
----
+The original, with a proportional font and narrower cards:
 
-## 配置项
+![](screenshots/upstream-1300px.png)
 
-右键悬浮窗打开。**所有改动即时生效、自动保存**，不需要确认。
+Six digits fit now:
 
-<img src="screenshots/config.png" width="420" alt="配置页">
+![](screenshots/overlay-6digit.png)
 
-### 模板语言
+Same 900px, same eight players. The original drops the first and last card:
 
-下拉里五个选项固定用各自语言的本名，切换语言时列表内容不变：English · Português · 简体中文 · 正體中文 · Français
+![](screenshots/upstream-900px-clipped.png)
 
-### 颜色主题
+Now it wraps onto two rows:
 
-| 主题                       | 效果                                                         |
-| -------------------------- | ------------------------------------------------------------ |
-| **职业特有**（默认） | 防卫蓝 / 治疗绿 / 输出红                                     |
-| **黑白色调**         | 职业色全部收敛为黑，只靠明暗区分                             |
-| **细分职业**         | 五职能各一色：防卫蓝 · 治疗绿 · 近战红 · 远敏金 · 法系紫 |
+![](screenshots/wrap-900px.png)
 
-三种主题下，**你自己的卡片都是白色**（可关闭），宠物等无职业单位是中性灰。
+## FAQ
 
-![细分职业主题](screenshots/overlay-byjob.png)
+**Right-click does nothing.** Check that Enable clickthru is off. You can also append `#/config` to the URL to open the settings directly.
 
-![黑白色调主题](screenshots/overlay-blackwhite.png)
+**Settings are lost on restart.** `localStorage` is blocked on a `file://` path; serve the unpacked directory over local HTTP instead.
 
-### 角色卡片
+**A percentage reads 0% for everyone.** Your build of ACT does not provide that field. Pick another one.
 
-| 选项               | 默认 | 说明                                 |
-| ------------------ | ---- | ------------------------------------ |
-| 排名 #             | 开   | 名字前的序号                         |
-| 职业图标           | 开   | 色带中间的职业符号                   |
-| **左侧显示** | HPS  | 见下                                 |
-| DPS占比条          | 开   | 本人伤害占全队的比例                 |
-| HPS占比条          | 开   | 本人治疗占全队的比例                 |
-| 最强伤害           | 关   | 卡片下方的最强一击「技能: 数值」     |
-| 高亮色块           | 关   | 把色带分成明暗两半，强调关键数字那侧 |
+**A job icon shows a carbuncle.** That unit's name did not match any known pet name. Nothing breaks.
 
-**左侧显示**决定卡片左半格放什么。右半格恒为 DPS。
+For anything else, please [open an issue](https://github.com/garfieldzasv/horizoverlay-reborn/issues).
 
-| 选项   | 示例           | 说明                                     |
-| ------ | -------------- | ---------------------------------------- |
-| HPS    | `102843 HPS` | 治疗量。非治疗职业基本是 0，左半格会偏空 |
-| 暴击率 | `25% CRIT`   | 所有职业都有值                           |
-| 直击率 | `31% DH`     | 所有职业都有值                           |
-| 直暴率 | `11% CDH`    | 直击且暴击                               |
-| 职业   | `BLM`        | 三字母缩写，宠物显示`PET`              |
+## Building
 
-> 选 HPS 时，治疗职业的**高亮色块会反向**强调左半格 —— 因为那才是治疗的关键数字。选其他项时不反向。
-
-### 总览横幅
-
-战斗时间 · 总DPS，都默认开启。两个都关掉时整条横幅隐藏。
-
-### 名单范围
-
-- **最多显示人数**：显示几个人，1–24（默认 8）
-- **显示无职业单位**：陆行鸟、召唤兽、小仙女、机工士炮塔等。默认关闭
-
-### 个人与直播
-
-- **你的角色名字**：用来认出哪张卡是你。填 ACT 里显示的名字
-- **凸显个人数据**：把你的卡片固定成白色。关掉后按职业/主题上色
-- **只显示你的DPS**：只留自己一张卡
-- **直播模式**：模糊掉**其他人**的角色名，自己的不受影响
-
-### 缩放尺寸
-
-0.5× – 2.0×，整体缩放悬浮窗（不影响配置页自身）。
-
-### Discord
-
-填 Webhook URL 并勾选「显示发送按钮」后，总览横幅右侧会多出一条按钮，点击把本场战绩发到频道。
-
-### 底部操作
-
-- **配置模式**：悬浮窗切换成模拟数据预览，方便在没开打时调整窗口大小和选项
-
-  ![配置模式](screenshots/setup-mode.png)
-
-- **返回悬浮窗**：配置页在悬浮窗内打开时用来回去
-- **初始化**：清空所有设置恢复默认
-
----
-
-## 特性
-
-**等宽字体，数字不跳动。** 内置 Maple Mono NF CN（6.0MB，已打包），DPS 每秒刷新时数字宽度恒定，不会左右抖。原版用的是比例字体，数值每秒重排一次宽度：
-
-![原版的比例字体与窄卡片](screenshots/upstream-1300px.png)
-
-**支持 6 位数。** 卡片宽度按「DPS 和 HPS 都可能到 6 位」预留，长数值不会被挤掉。
-
-![六位数 DPS](screenshots/overlay-6digit.png)
-
-**放不下会折行。** 窗口不够宽时卡片自动换行，不会像原版那样把首尾的卡片静默裁掉。同样是 900px 宽、同样 8 个人：
-
-原版 —— 第 1 和第 8 张卡被无声裁掉，只剩 2–7，而且不会有任何提示：
-
-![原版在 900px 下裁掉首尾卡片](screenshots/upstream-900px-clipped.png)
-
-现在 —— 折成两行，8 个人一个不少：
-
-![现在在 900px 下折行](screenshots/wrap-900px.png)
-
-**斜边对齐。** 总览横幅、Discord 横幅、两条占比条的斜边，都和卡片色带的斜边落在同一组延长线上。这个对齐是运行时实测的，改字号、开关卡片内的可选行都会自动重算。
-
-**五职能配色。** 除了原版的三职能（防卫/治疗/输出），提供把输出细分为近战/远敏/法系的主题。配色按感知亮度对齐，不会有某一色特别跳。
-
-**59 个职业图标**，含 7.56 新增的驯兽师 <img src="screenshots/bst-icon.png" width="18" alt="驯兽师图标"> —— 原版没有，照着既有图标的风格补的。
-
-**完全离线。** 渲染路径不请求任何外部地址，字体和图标全部内嵌，ACT 断网也能正常显示。
-
----
-
-## 常见问题
-
-**右键没反应**
-
-1. 确认该悬浮窗的「滑鼠穿透 / Enable clickthru」是关闭的
-2. 在悬浮窗 URL 末尾加上 `#/config` 再重载，能打开就说明只是右键没传进来
-3. 也可以在 OverlayPlugin 里单独建一个悬浮窗专门指向配置页
-
-**设置改了但重启就丢**
-
-`localStorage` 在 `file://` 下被 CEF 拦了。悬浮窗仍能正常显示（会退回内存存储），改用本地 HTTP 服务指向 `build/` 即可解决。
-
-**某个百分比全是 0%**
-
-左侧显示选了暴击率 / 直击率 / 直暴率，但你的 ACT 版本没填那个字段。换一个选项，或把 devtools 里的 `Combatant` 对象内容反馈上来。
-
-**职业图标变成宝石兽**
-
-说明那个单位的名字没能匹配上已知的宠物名 —— 中文客户端的宠物名和内置的英文列表对不上时会这样。不影响使用，只是图标统一成了宠物图标。
-
-**横幅斜边有点偏**
-
-底排卡片数是奇数时会偏半个卡距。这是几何决定的：对齐要求横幅两端落在第 N/2 和 N/2+1 张卡的边上，N 为奇数时列表中心落在某张卡中间而不是边上。
-
----
-
-## 自己改
-
-需要 Node.js。
+You need Node.js.
 
 ```bash
-npm install --registry=https://registry.npmmirror.com
-npm start    # http://localhost:3000/?mock=1#/
+npm install
 npm run build
 ```
 
-模拟数据参数（只在 URL 带 `mock` 时生效，产物给 ACT 用时不受影响）：
+For development use `npm start` and add `?mock=1#/` to the URL for mock data. [DEVLOG.md](DEVLOG.md) covers adding a color theme and where the card geometry and type scale live.
 
-| 参数               | 说明                                               |
-| ------------------ | -------------------------------------------------- |
-| `mock=1`         | 启用模拟数据                                       |
-| `mockInterval=0` | 只推一次，截图时用                                 |
-| `mockParty=24`   | 队伍人数                                           |
-| `mockStress=1`   | 数值 ×10，压到 6 位数                             |
-| `mockPet=1`      | 插入一个无职业单位                                 |
-| `mockBackdrop=1` | 深色预览背景（悬浮窗本身透明，浏览器里是白底白字） |
+## License and credits
 
-改颜色主题、卡片几何、字号的具体做法见 [DEVLOG.md](DEVLOG.md)。
+Derived from [bsides/horizoverlay](https://github.com/bsides/horizoverlay), Copyright 2017 Rafael "BSIDES" Pereira, Apache-2.0, and released under the same license. [NOTICE](NOTICE) lists what changed.
 
----
+The bundled Maple Mono NF CN comes from [subframe7536/maple-font](https://github.com/subframe7536/maple-font) under the SIL Open Font License 1.1.
 
-## 许可与来源
-
-本项目是 [bsides/horizoverlay](https://github.com/bsides/horizoverlay)（Copyright 2017 Rafael "BSIDES" Pereira，Apache-2.0）的衍生作品，沿用 **Apache-2.0**。
-
-字体、图标等第三方组件的出处和改动清单见 [NOTICE](NOTICE)：
-
-- **Maple Mono NF CN** —— [subframe7536/maple-font](https://github.com/subframe7536/maple-font)，SIL Open Font License 1.1，许可证全文在 [src/fonts/OFL.txt](src/fonts/OFL.txt)
-- 职业图标取自 FINAL FANTASY XIV。FINAL FANTASY 是 Square Enix Holdings Co., Ltd. 的注册商标，本项目与 Square Enix 无关联、未获其背书。
+Job icons are derived from FINAL FANTASY XIV artwork. FINAL FANTASY is a registered trademark of Square Enix Holdings Co., Ltd. This project is unaffiliated with and unendorsed by Square Enix.

@@ -1,16 +1,95 @@
-@import url('https://fonts.googleapis.com/css?family=Droid+Sans');
+/* Bundled locally: no network, and ACT's CEF never reaches the internet for it.
+   Monospaced so the DPS columns stop jittering as the numbers update. SIL OFL-1.1.
+   Swapping fonts: drop a woff2 in ../fonts and change the family here plus the
+   html/body stack below -- those two places are the only references. */
 @font-face {
-  font-family: 'Sarasa Gothic SC';
+  font-family: 'Maple Mono NF CN';
   font-style: normal;
   font-weight: 400;
-  src: url('https://github.com/bsides/horizoverlay/raw/chinesefont/src/css/fonts/sarasa-gothic-sc-regular.ttf'); /* IE9 Compat Modes */
-  src: local('Sarasa Gothic SC'), local('SarasaGothic'),
-    url('https://github.com/bsides/horizoverlay/raw/chinesefont/src/css/fonts/sarasa-gothic-sc-regular.woff')
-      format('woff'),
-    /* Modern Browsers */
-      url('https://github.com/bsides/horizoverlay/raw/chinesefont/src/css/fonts/sarasa-gothic-sc-regular.ttf')
-      format('truetype'); /* Safari, Android, iOS */
+  font-display: block;
+  src: url('../fonts/MapleMono-NF-CN-Regular.woff2') format('woff2');
 }
+:root {
+  /* The overlay's base type size. The original wrote it as
+     `html, body { font-size: 0.9rem }`, which applies 0.9 twice: once to the
+     root, and again to body against that already-shrunk root. It reads as
+     14.4px and renders at 12.96px. Root now keeps the browser default and body
+     takes this instead -- the same 12.96px, stated once, so `rem` elsewhere
+     means what it looks like. */
+  --text-base: 0.81rem;
+  /* The rest of the scale is a ratio of the base, so moving --text-base moves
+     the whole overlay with it instead of leaving these behind -- the point of
+     this change is the relationship, not a new look. The ratios are exactly the
+     ones that reproduce the 0.85em / 8px / 7px the original hard-coded, and the
+     render is byte-identical to before.
+
+     The long decimals are 50/81 and 175/324 and they are spelled out on purpose:
+     writing them as calc(50em / 81) shifts the glyphs enough to change the
+     rasterisation, and rounding to ~6 places does too. Every element using them
+     inherits --text-base directly, so em is the right unit here. */
+  --text-small: 0.85em;                 /* 11.02px -- character name, max hit */
+  --text-label: 0.6172839506172839em;   /*  8.00px -- the ' HPS'/' DPS' suffix */
+
+  /* The widest DPS/HPS the cards must fit without clipping -- FFXIV pushes both
+     to 6 digits. The font is monospaced, so 1ch is exactly one digit and this
+     tracks font-size on its own: change the type scale and the cards follow. */
+  --stat-digits: 6;
+  --job-icon: 20px;
+  /* The job icon floats over the centre of the band. Without a reserved slot it
+     lands on top of the leading digit once a number reaches 6 figures. */
+  --icon-slot: calc(var(--job-icon) / 2 + 3px);
+  /* two stat columns, their ' HPS'/' DPS' labels, side padding, and the icon */
+  --card-width: calc(var(--stat-digits) * 2ch + 7.5ch + 2 * var(--icon-slot));
+  --card-gap: 6px;
+
+  /* ── Colour themes ──────────────────────────────────────────────────────
+     A theme is nothing but a set of these properties. Every rule that paints a
+     role colour is written once, in src/css/overlay.css, in terms of them, so a
+     new theme is one class block -- not one rule per role per element.
+
+     Channels are bare `r, g, b` so each element can pick its own alpha. */
+  --role-tank: 33, 150, 243;
+  --role-healer: 139, 195, 74;
+  --role-melee: 244, 67, 54;
+  --role-ranged: 244, 67, 54;
+  --role-caster: 244, 67, 54;
+  /* Pets, companions, anything ACT reports with no job. Material Grey 500:
+     achromatic on purpose, so it cannot be mistaken for a sixth role, and light
+     enough to read as deliberate rather than as a card that failed to paint. */
+  --role-other: 158, 158, 158;
+  --role-self: 255, 255, 255;
+
+  /* band = the skewed slab behind the numbers; track/fill = the share bars.
+     -hi and -dim are the two halves the 高亮色块 gradient splits the band into,
+     equal by default so the split is invisible until a theme separates them. */
+  --band-alpha: 0.5;
+  --band-hi-alpha: 0.5;
+  --band-dim-alpha: 0.1;
+  --track-alpha: 0.3;
+  --fill-alpha: 0.7;
+
+  /* Fallbacks for the first paint only; src/skewAlign.js measures the real
+     offsets and overwrites all three. */
+  --bar-shift-1: 8px;
+  --bar-shift-2: 10px;
+
+  /* Vertical distance between the card band and the encounter band. This value
+     is only the fallback for the first paint: src/skewAlign.js measures the real
+     layout and overwrites it, because the optional rows inside a card (伤害条,
+     占比数字, 最强伤害) and the font size all move it. */
+  --band-gap-y: 61.1px;
+  /* How far a -30deg edge drifts left over that distance. tan(30deg) = 0.5774,
+     spelled out because CSS tan() is too new to rely on in ACT's CEF. */
+  --skew-reach: calc(var(--band-gap-y) * 0.5774);
+  /* The skew drags BOTH of a card's edges left by --skew-reach, so a banner
+     whose edges continue them is the span from the left edge of card N/2 to the
+     right edge of card N/2+1 -- two cards plus the gap between them -- moved
+     left by that same amount. Which is why it cannot also be centred: its centre
+     lands --skew-reach short of the list's. Holds for an even number of cards in
+     the bottom row; with an odd count the centre falls mid-card, not on an edge. */
+  --banner-width: calc(2 * var(--card-width) + 2 * var(--card-gap));
+}
+
 *,
 *::before,
 *::after {
@@ -26,19 +105,16 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Droid Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Maple Mono NF CN', Consolas, 'Microsoft YaHei', monospace;
   background: transparent;
   overflow: hidden;
   height: 100%;
-  font-size: 0.9rem;
   font-weight: normal;
   color: #fff;
   line-height: 1.5;
 }
-body .chinese {
-  font-family: 'SarasaGothic', 'Droid Sans', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+body {
+  font-size: var(--text-base);
 }
 .resizable {
   background-image: url(../images/handle.png);

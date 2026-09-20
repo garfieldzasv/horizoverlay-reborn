@@ -1,92 +1,234 @@
-# H O R I Z O V E R L A Y
+# Horizoverlay Reborn
 
-![](https://api.travis-ci.org/bsides/horizoverlay.svg?branch=master)
+给 FF14 的 ACT 悬浮窗，横向紧凑的 DPS / HPS 统计。
 
-## URL CHANGED AGAIN, PLEASE UPDATE TO `https://bsides.github.io/horizoverlay`
-## URL for [ActWebSocket Plugin](https://github.com/ZCube/ACTWebSocket): Self host it!
+基于 [Horizoverlay](https://overlays.ffcafe.cn/horizoverlay/) 重做：字体、布局、配置页全部重写，全部资源打包在本地，运行时不请求任何外部地址。
 
-A simple horizontal damage meter [overlay](https://github.com/hibiyasleep/OverlayPlugin) for Final Fantasy XIV. It currently shows player dps, damage %, hps, encounter duration and total dps. Based on [this post on reddit](https://www.reddit.com/r/ffxiv/comments/6q41r3/what_act_overlay_is_this_snipped_off_of_a_stream/).
+开发过程和技术决策记录在 [DEVLOG.md](DEVLOG.md)，本文档只讲功能和用法。
 
-![Horizontal overlay by https://www.twitch.tv/yuu_tayuun](https://i.redd.it/l1vfkfd2dccz.png "Horizontal Overlay by https://www.twitch.tv/yuu_tayuun")
+![八人队伍，职业特有主题](screenshots/overlay-byrole.png)
 
-## Example setup
-This is how it should be showing for you after setup with everything checked
-![Horizoverlay](https://raw.githubusercontent.com/bsides/horizoverlay/master/screenshots/config-allbyrole.jpg "Horizoverlay")
+---
 
-## Install
-### __Please notice the URL has changed from v1!__
-1. Please, be sure you are running version 0.3.3.13 or higher of hibiyasleep Overlay plugin: https://github.com/hibiyasleep/OverlayPlugin/releases | [Version x64](https://github.com/hibiyasleep/OverlayPlugin/releases/download/0.3.3.13/OverlayPlugin-0.3.3.13-x64-full.zip) | [Version x86](https://github.com/hibiyasleep/OverlayPlugin/releases/download/0.3.3.13/OverlayPlugin-0.3.3.13-x86-full.zip) |
+## 快速开始
 
-2. Just paste this url into the overlay's url field:
-`https://bsides.github.io/horizoverlay` and click in the _Reload Overlay_ button. You should see something like this:
+1. 在 OverlayPlugin 里新建一个 **MiniParse** 类型的悬浮窗
+2. URL 填 `build/index.html` 的完整 `file://` 地址，形如：
 
-![First Screen](https://raw.githubusercontent.com/bsides/horizoverlay/master/screenshots/config-initial.png "First Screen of Horizoverlay")
+   ```
+   file:///<你存放本项目的目录>/build/index.html
+   ```
 
-3. Now would be the right time to resize the window to something like 70% of your screen's width.
+   最省事的取法：在文件管理器里双击 `build/index.html`，从浏览器地址栏把地址整条复制过来。路径含空格或中文时尤其推荐这样做——浏览器已经替你转义好了，手写容易漏。
+3. 关掉该悬浮窗的**「滑鼠穿透 / Enable clickthru」**，否则鼠标事件到不了页面
+4. 在悬浮窗上**右键**打开配置页
 
-![Resize](https://raw.githubusercontent.com/bsides/horizoverlay/master/screenshots/config-resize.png)
+也支持 WebSocket 模式，URL 后加 `?HOST_PORT=ws://127.0.0.1:10501/`。
 
-4. Right click in the text to open Settings!
+### 窗口该开多宽
 
-![Settings](https://raw.githubusercontent.com/bsides/horizoverlay/master/screenshots/config-window.png "Horizoverlay Settings")
-If you can't see the Settings window, just alt tab until you do.
+卡片宽度固定，放不下会自动折行（不会裁掉卡片）。一行放下 N 个人所需的宽度：
 
-5. To tweak the settings without having to hit something, toggle Setup Mode. With it enabled you can see all changes you do live. All settings are saved automatically.
+| 人数   | 4     | 6      | 8                | 12     | 24     |
+| ------ | ----- | ------ | ---------------- | ------ | ------ |
+| 窗口宽 | 759px | 1138px | **1517px** | 2276px | 4551px |
 
-Congratulations, you have it installed and setup.
+嫌宽可以用配置页的**缩放尺寸**整体缩小，卡片宽度会跟着等比缩小。
 
-## Install locally
-1. Install Yarn https://yarnpkg.com/en/
-2. Download the project
-3. Install serve yarn global add serve
-4. Go to the terminal (cmd.exe) and to the project's folder
-5. Once inside the project's folder, type yarn, wait for it to finish, then yarn build
-6. Still inside the project's folder, type serve docs.
-7. Leave the terminal open!
-8. Then inside ACT, the url would be http://localhost:5000
+---
 
-## Screenshots
-Color by Role and [@bmwang](https://github.com/bmwang)'s
+## 界面构成
 
-![All By Role](https://raw.githubusercontent.com/bsides/horizoverlay/master/screenshots/config-byrole.png "Color by Role")
-![By Role @bmwang](https://raw.githubusercontent.com/bsides/horizoverlay/master/screenshots/bmwang-setup.png "By Role @bmwang")
+```
+   ①名字                  ①名字
+ ┌──────────────┐      ┌──────────────┐
+ │②左侧 ③图标 ④DPS│      │…             │     ← 角色卡片
+ └──────────────┘      └──────────────┘
+   ⑤DPS占比条              ⑤
+   ⑥HPS占比条              ⑥
+   ⑦最强伤害               ⑦
 
-Black & White
+        ┌────────────────────────┐  ┌──────────┐
+        │⑧区域 总DPS LB 战斗时间 │  │⑨Discord │  ← 总览横幅
+        └────────────────────────┘  └──────────┘
+```
 
-![Black & White](https://raw.githubusercontent.com/bsides/horizoverlay/master/screenshots/config-colorbw.png "Black & White")
+① 排名 + 角色名 ② 可切换的统计量 ③ 职业图标 ④ DPS
+⑤⑥ 占比横条 ⑦ 最强一击 ⑧ 总览 ⑨ 发送到 Discord
 
-Minimalist AKA version 1
+所有元素都可以单独关掉。
 
-![Minimalist](https://raw.githubusercontent.com/bsides/horizoverlay/master/screenshots/config-minimalist.png "Minimalist AKA version 1")
+---
 
+## 配置项
 
-## Suggestion, bug report, FAQ
-Please, [open an issue](https://github.com/bsides/horizoverlay/issues). Also don't forget to search if it's alerady down here in the known issue section ;)
+右键悬浮窗打开。**所有改动即时生效、自动保存**，不需要确认。
 
-## Contributing
-You are welcome to [open a PR](https://github.com/bsides/horizoverlay/pulls) with anything. Just please try to follow the mindset of what is done.
+<img src="screenshots/config.png" width="420" alt="配置页">
 
-The project uses:
-* React
-* React Router
-* ES6
-* [Prettier](https://github.com/prettier/prettier) with ESLint (react defaults) to autoformat with ease
+### 模板语言
 
-💲💲💲 If you're looking to donate, please do so [at my Patreon page](https://www.patreon.com/bsides) 👍
+下拉里五个选项固定用各自语言的本名，切换语言时列表内容不变：English · Português · 简体中文 · 正體中文 · Français
 
-## Credits & other Magicked KnickerKnacks
-It's based of the amazing work [of this repo](https://github.com/billyvg/OverlayPlugin-themes) that tries to compile a whole bunch of [Overlay](https://github.com/hibiyasleep/OverlayPlugin) themes together. Thanks to its repo's `testing.js` file (and [/u/rdmty](https://www.reddit.com/user/rdmty)), I was able to mock the data that ACT throws and built this theme.
+### 颜色主题
 
-The background image from the config window was made by [Richard Tabor](https://purtypixels.com/) and was taken from [Subtle Patterns](https://www.toptal.com/designers/subtlepatterns/).
+| 主题                       | 效果                                                         |
+| -------------------------- | ------------------------------------------------------------ |
+| **职业特有**（默认） | 防卫蓝 / 治疗绿 / 输出红                                     |
+| **黑白色调**         | 职业色全部收敛为黑，只靠明暗区分                             |
+| **细分职业**         | 五职能各一色：防卫蓝 · 治疗绿 · 近战红 · 远敏金 · 法系紫 |
 
-Thanks to [@bmwang](https://github.com/bmwang) for introducing more options and color themes.
+三种主题下，**你自己的卡片都是白色**（可关闭），宠物等无职业单位是中性灰。
 
-A lot of inspiration from [Kagerou](https://github.com/hibiyasleep/kagerou) overlay by [@hibiyasleep](https://github.com/hibiyasleep).
+![细分职业主题](screenshots/overlay-byjob.png)
 
-A very special thanks for [@yorushika](https://github.com/yorushika) to translating into Simplified / Traditional Chinese!!!
+![黑白色调主题](screenshots/overlay-blackwhite.png)
 
-A very special thanks for [@moondark](https://github.com/mooondark) to translating into French!!!
+### 角色卡片
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+| 选项               | 默认 | 说明                                 |
+| ------------------ | ---- | ------------------------------------ |
+| 排名 #             | 开   | 名字前的序号                         |
+| 职业图标           | 开   | 色带中间的职业符号                   |
+| **左侧显示** | HPS  | 见下                                 |
+| DPS占比条          | 开   | 本人伤害占全队的比例                 |
+| HPS占比条          | 开   | 本人治疗占全队的比例                 |
+| 最强伤害           | 关   | 卡片下方的最强一击「技能: 数值」     |
+| 高亮色块           | 关   | 把色带分成明暗两半，强调关键数字那侧 |
 
-Special thanks to [my awesome boyfriend](http://na.finalfantasyxiv.com/lodestone/character/2834234/), who test everything everytime I ask ❤
+**左侧显示**决定卡片左半格放什么。右半格恒为 DPS。
+
+| 选项   | 示例           | 说明                                     |
+| ------ | -------------- | ---------------------------------------- |
+| HPS    | `102843 HPS` | 治疗量。非治疗职业基本是 0，左半格会偏空 |
+| 暴击率 | `25% CRIT`   | 所有职业都有值                           |
+| 直击率 | `31% DH`     | 所有职业都有值                           |
+| 直暴率 | `11% CDH`    | 直击且暴击                               |
+| 职业   | `BLM`        | 三字母缩写，宠物显示`PET`              |
+
+> 选 HPS 时，治疗职业的**高亮色块会反向**强调左半格 —— 因为那才是治疗的关键数字。选其他项时不反向。
+
+### 总览横幅
+
+战斗时间 · 总DPS，都默认开启。两个都关掉时整条横幅隐藏。
+
+### 名单范围
+
+- **最多显示人数**：显示几个人，1–24（默认 8）
+- **显示无职业单位**：陆行鸟、召唤兽、小仙女、机工士炮塔等。默认关闭
+
+### 个人与直播
+
+- **你的角色名字**：用来认出哪张卡是你。填 ACT 里显示的名字
+- **凸显个人数据**：把你的卡片固定成白色。关掉后按职业/主题上色
+- **只显示你的DPS**：只留自己一张卡
+- **直播模式**：模糊掉**其他人**的角色名，自己的不受影响
+
+### 缩放尺寸
+
+0.5× – 2.0×，整体缩放悬浮窗（不影响配置页自身）。
+
+### Discord
+
+填 Webhook URL 并勾选「显示发送按钮」后，总览横幅右侧会多出一条按钮，点击把本场战绩发到频道。
+
+### 底部操作
+
+- **配置模式**：悬浮窗切换成模拟数据预览，方便在没开打时调整窗口大小和选项
+
+  ![配置模式](screenshots/setup-mode.png)
+
+- **返回悬浮窗**：配置页在悬浮窗内打开时用来回去
+- **初始化**：清空所有设置恢复默认
+
+---
+
+## 特性
+
+**等宽字体，数字不跳动。** 内置 Maple Mono NF CN（6.0MB，已打包），DPS 每秒刷新时数字宽度恒定，不会左右抖。原版用的是比例字体，数值每秒重排一次宽度：
+
+![原版的比例字体与窄卡片](screenshots/upstream-1300px.png)
+
+**支持 6 位数。** 卡片宽度按「DPS 和 HPS 都可能到 6 位」预留，长数值不会被挤掉。
+
+![六位数 DPS](screenshots/overlay-6digit.png)
+
+**放不下会折行。** 窗口不够宽时卡片自动换行，不会像原版那样把首尾的卡片静默裁掉。同样是 900px 宽、同样 8 个人：
+
+原版 —— 第 1 和第 8 张卡被无声裁掉，只剩 2–7，而且不会有任何提示：
+
+![原版在 900px 下裁掉首尾卡片](screenshots/upstream-900px-clipped.png)
+
+现在 —— 折成两行，8 个人一个不少：
+
+![现在在 900px 下折行](screenshots/wrap-900px.png)
+
+**斜边对齐。** 总览横幅、Discord 横幅、两条占比条的斜边，都和卡片色带的斜边落在同一组延长线上。这个对齐是运行时实测的，改字号、开关卡片内的可选行都会自动重算。
+
+**五职能配色。** 除了原版的三职能（防卫/治疗/输出），提供把输出细分为近战/远敏/法系的主题。配色按感知亮度对齐，不会有某一色特别跳。
+
+**59 个职业图标**，含 7.56 新增的驯兽师 <img src="screenshots/bst-icon.png" width="18" alt="驯兽师图标"> —— 原版没有，照着既有图标的风格补的。
+
+**完全离线。** 渲染路径不请求任何外部地址，字体和图标全部内嵌，ACT 断网也能正常显示。
+
+---
+
+## 常见问题
+
+**右键没反应**
+
+1. 确认该悬浮窗的「滑鼠穿透 / Enable clickthru」是关闭的
+2. 在悬浮窗 URL 末尾加上 `#/config` 再重载，能打开就说明只是右键没传进来
+3. 也可以在 OverlayPlugin 里单独建一个悬浮窗专门指向配置页
+
+**设置改了但重启就丢**
+
+`localStorage` 在 `file://` 下被 CEF 拦了。悬浮窗仍能正常显示（会退回内存存储），改用本地 HTTP 服务指向 `build/` 即可解决。
+
+**某个百分比全是 0%**
+
+左侧显示选了暴击率 / 直击率 / 直暴率，但你的 ACT 版本没填那个字段。换一个选项，或把 devtools 里的 `Combatant` 对象内容反馈上来。
+
+**职业图标变成宝石兽**
+
+说明那个单位的名字没能匹配上已知的宠物名 —— 中文客户端的宠物名和内置的英文列表对不上时会这样。不影响使用，只是图标统一成了宠物图标。
+
+**横幅斜边有点偏**
+
+底排卡片数是奇数时会偏半个卡距。这是几何决定的：对齐要求横幅两端落在第 N/2 和 N/2+1 张卡的边上，N 为奇数时列表中心落在某张卡中间而不是边上。
+
+---
+
+## 自己改
+
+需要 Node.js。
+
+```bash
+npm install --registry=https://registry.npmmirror.com
+npm start    # http://localhost:3000/?mock=1#/
+npm run build
+```
+
+模拟数据参数（只在 URL 带 `mock` 时生效，产物给 ACT 用时不受影响）：
+
+| 参数               | 说明                                               |
+| ------------------ | -------------------------------------------------- |
+| `mock=1`         | 启用模拟数据                                       |
+| `mockInterval=0` | 只推一次，截图时用                                 |
+| `mockParty=24`   | 队伍人数                                           |
+| `mockStress=1`   | 数值 ×10，压到 6 位数                             |
+| `mockPet=1`      | 插入一个无职业单位                                 |
+| `mockBackdrop=1` | 深色预览背景（悬浮窗本身透明，浏览器里是白底白字） |
+
+改颜色主题、卡片几何、字号的具体做法见 [DEVLOG.md](DEVLOG.md)。
+
+---
+
+## 许可与来源
+
+本项目是 [bsides/horizoverlay](https://github.com/bsides/horizoverlay)（Copyright 2017 Rafael "BSIDES" Pereira，Apache-2.0）的衍生作品，沿用 **Apache-2.0**。
+
+字体、图标等第三方组件的出处和改动清单见 [NOTICE](NOTICE)：
+
+- **Maple Mono NF CN** —— [subframe7536/maple-font](https://github.com/subframe7536/maple-font)，SIL Open Font License 1.1，许可证全文在 [src/fonts/OFL.txt](src/fonts/OFL.txt)
+- 职业图标取自 FINAL FANTASY XIV。FINAL FANTASY 是 Square Enix Holdings Co., Ltd. 的注册商标，本项目与 Square Enix 无关联、未获其背书。

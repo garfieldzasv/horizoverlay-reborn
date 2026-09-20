@@ -1,0 +1,10 @@
+# Without this, whoever clones on Linux or macOS gets whatever line endings the
+# Windows checkout happened to produce. Normalise text to LF in the repository;
+# working copies still follow each platform's convention.
+* text=auto eol=lf
+
+# Binary, and large enough that a mangled one would be an annoying thing to
+# discover later. Marked explicitly rather than left to content sniffing.
+*.woff2 binary
+*.png   binary
+*.ico   binary

@@ -1,0 +1,42 @@
+Horizoverlay Reborn
+Copyright 2026 Jiahui Liang
+
+This product is a derivative work of Horizoverlay,
+  https://github.com/bsides/horizoverlay
+  Copyright 2017 Rafael "BSIDES" Pereira
+licensed under the Apache License, Version 2.0.
+
+The upstream project ships no NOTICE file; this one exists to record the
+attribution and the changes that Apache-2.0 section 4(b) asks a fork to
+state. Every file under src/ descends from the original unless listed as
+new below, and most have been modified.
+
+Substantially rewritten
+  src/Config.js              settings page rebuilt as a sectioned form
+  src/css/config.css         new stylesheet for the above
+  src/css/index.css          design tokens; type scale rebuilt on one root size
+  src/css/overlay.css        colour rules rewritten against CSS custom properties
+  src/locale.js              translations corrected across all five languages
+  src/CombatantHorizontal.js card geometry, roles, selectable left-hand stat
+  src/helpers.js             config defaults and migration, mock data, registries
+  src/index.js               single render tree replacing the two-tree structure
+
+Added
+  src/skewAlign.js           runtime measurement that keeps the skewed edges collinear
+  src/configStore.js         localStorage wrapper with an in-memory fallback
+  src/fonts/                 bundled webfont, see src/fonts/OFL.txt
+  src/images/bst.png         Beastmaster job icon, drawn to match the existing set
+  src/testing/               mock data harness for offline preview
+
+Removed
+  external font and asset requests; the overlay now runs fully offline
+
+Third-party components
+  Maple Mono NF CN
+    https://github.com/subframe7536/maple-font
+    Copyright (c) 2022, subframe7536, with Reserved Font Name Maple Mono
+    SIL Open Font License 1.1 -- full text in src/fonts/OFL.txt
+
+  Job icons are derived from FINAL FANTASY XIV artwork. FINAL FANTASY is a
+  registered trademark of Square Enix Holdings Co., Ltd. This project is
+  unaffiliated with and unendorsed by Square Enix.

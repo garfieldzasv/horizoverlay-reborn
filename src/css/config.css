@@ -1,176 +1,214 @@
+/* Everything is scoped under .config on purpose. This stylesheet is bundled
+   into the same file as the overlay's, so a bare `fieldset` or
+   `input[type=checkbox]` rule -- which is what the old one used -- reaches the
+   overlay too. */
+
 .config {
-  padding: 6px 8px;
-  background: black url(../images/bg.png) 50% 85%;
+  /* html/body are overflow:hidden for the overlay's sake, so the settings page
+     has to do its own scrolling. */
+  height: 100vh;
+  overflow-y: auto;
+  padding: 16px;
+  /* No background here on purpose -- see ::before. */
+  background: transparent;
+  color: #fff;
+  text-align: left;
 }
-.config > div {
-  text-align: center;
+/* The texture used to sit on .config itself, which is the scrolling box. A
+   background that stays put while its own content moves rules out the browser's
+   fast path: every frame has to re-tile the 102x102 image under the content
+   instead of just shifting one layer. Painting it on a fixed pseudo-element
+   behind the content leaves the scroller with nothing to repaint.
+
+   z-index -1 puts it behind the form but still above the page, which is why
+   .config itself must not paint a background -- an element's own background
+   paints after its negative-z children. */
+.config:before {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background: #15171c url(../images/bg.png) 50% 85%;
+  pointer-events: none;
 }
 
-fieldset {
+.cfg-grid {
+  /* One option per row inside a section; the sections themselves flow into as
+     many columns as fit, because an ACT overlay window is usually far wider
+     than it is tall and a single column would mean scrolling for everything.
+     Multicol rather than grid: sections differ a lot in height, and grid rows
+     are as tall as their tallest cell. */
+  column-width: 250px;
+  column-gap: 14px;
+}
+
+.cfg-section {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  padding: 10px 12px 12px;
+  margin: 0 0 14px;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+}
+
+.config h2 {
+  margin: 0 0 6px;
+  padding: 0 0 6px;
+  font-size: var(--text-base);
+  font-weight: normal;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* One option, one row: label on the left, control on the right. */
+.cfg-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 26px;
+  padding: 1px 0;
+  cursor: pointer;
+}
+.cfg-field + .cfg-field {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.cfg-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+.cfg-value {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* A section with a single control does not repeat its own heading as a label. */
+.config .cfg-field--solo {
+  cursor: default;
+}
+.config .cfg-field--solo input[type='text'],
+.config .cfg-field--solo select {
+  width: 100%;
+}
+
+/* A URL has no business sharing a line with its label. */
+.cfg-field--stack {
   display: block;
-  -webkit-margin-start: 2px;
-  -webkit-margin-end: 2px;
-  -webkit-padding-before: 0.35em;
-  -webkit-padding-start: 0.75em;
-  -webkit-padding-end: 0.75em;
-  -webkit-padding-after: 0.625em;
-  min-width: -webkit-min-content;
-  border-width: 2px;
-  border-style: groove;
-  border-color: rgba(0, 0, 0, 0.4);
-  border-image: initial;
-  text-align: center;
-  flex: 1;
+  cursor: default;
 }
-.fieldsToShow {
-  flex: 3;
-}
-.fieldsZoom {
-  flex: 2;
-}
-form {
-  display: flex;
-}
-
-/* form div:first-of-type {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+.cfg-field--stack .cfg-label {
+  display: block;
   margin-bottom: 5px;
-} */
-
-label {
-  margin: 0;
-  margin-right: 15px;
-  line-height: 32px;
-  cursor: pointer;
+  color: rgba(255, 255, 255, 0.55);
+}
+.config .cfg-field--stack input[type='text'] {
+  width: 100%;
 }
 
-input[type='radio'] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-
-  border-radius: 50%;
-
-  border: 2px solid #ddd;
+.config input[type='text'],
+.config input[type='number'],
+.config select {
+  flex: 0 0 auto;
+  width: 110px;
+  padding: 3px 6px;
+  font: inherit;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
 }
-input[type='radio']:checked {
-  border: 6px solid white;
+/* A fixed width silently clipped the longest option: French "Taux de coup
+   critique direct" rendered as "Taux de co", with no ellipsis to hint at it.
+   The labels have been shortened, but a select cannot be trusted to a constant
+   measured in one language -- sizing to content keeps whatever a translator
+   writes readable. min-width holds the short values (HPS, Job) at the same
+   width as the number inputs so the column does not look ragged, and
+   space-between still pins every control to the right edge.
+
+   The :not() matters: a --solo select is width:100% at the same specificity
+   this rule would have, and comes earlier in the file, so it would lose. */
+.config .cfg-field:not(.cfg-field--solo) > select {
+  flex: 0 1 auto;
+  width: auto;
+  min-width: 110px;
+  max-width: 100%;
 }
-input[type='radio'],
-input[type='checkbox'] {
-  width: 16px;
-  height: 16px;
-  transition: 0.2s all linear;
+
+.config input[type='text']:focus,
+.config input[type='number']:focus,
+.config select:focus {
   outline: none;
-  margin-right: 5px;
-
-  position: relative;
-  top: 3px;
+  border-color: rgba(255, 255, 255, 0.4);
 }
-input[type='text'] {
-  padding: 2px 6px;
-  background: #fff;
-  border: 0;
-}
-
-legend {
-  color: #fff;
-  background-color: rgba(0, 0, 0, 0.4);
-  padding: 5px 10px;
-  border-radius: 0;
-  border: 0;
-  font-size: 14px;
-}
-
-.reset {
-  margin-top: 15px;
-  background: rgba(0, 0, 0, 0.2);
-  color: #fff;
-  border: 2px solid rgba(0, 0, 0, 0.5);
-  transition: 0.2s all linear;
-}
-.reset:hover {
-  background: rgba(255, 56, 59, 0.8);
-}
-.reset > span {
-  transform: rotate(90deg);
-  display: inline-block;
-}
-.setup-btn span {
-  transform: rotate(-90deg);
-  display: inline-block;
-  white-space: nowrap;
-  margin-left: -28px;
-}
-.setup-btn {
-  border: 2px solid rgba(0, 0, 0, 0.5);
-  color: #fff;
-  background: rgba(255, 56, 215, 0.8);
-  -webkit-appearance: button;
+.config input[type='checkbox'],
+.config input[type='radio'] {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
   margin: 0;
-  padding: 0;
-  margin-top: 15px;
-  padding-top: 44px;
-  width: 50px;
   cursor: pointer;
 }
-.setup-btn.disabled {
-  background: rgba(0, 0, 0, 0.2);
-}
-.fieldsZoom label,
-.fieldsZoom button {
-  border: 2px solid rgba(23, 162, 184, 0.1);
-  background: rgba(23, 162, 184, 0.1);
-  color: #fff;
+.config input[type='range'] {
+  flex: 0 0 auto;
+  width: 130px;
+  margin: 0;
   cursor: pointer;
-  margin-right: 3px;
-  padding: 0.5rem 0.75rem;
-  line-height: 1.25;
-  margin: 0 8px 6px 0;
-}
-.fieldsZoom label:hover,
-.fieldsZoom button:hover {
-  color: #fff;
-  background-color: #138496;
-  border-color: #117a8b;
-}
-.fieldsZoom input[type='range'] {
-  display: none;
 }
 
-.form-discord {
-  margin: 0 auto;
-  justify-content: center;
-  padding: 6px 0;
-  border: 2px groove rgba(0, 0, 0, 0.4);
-  border-top: 0;
+.cfg-actions {
+  display: flex;
+  /* baseline, not center: the toggle and the buttons have different box heights
+     (padding + border), so centring them leaves their text off by a couple of
+     pixels. */
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  /* Sits above the settings, so the rule goes underneath it. */
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
-.form-discord label {
-  background-color: rgba(0, 0, 0, 0.4);
-  margin: 0;
-  padding: 0 20px;
-}
-.form-discord input[type='text'] {
-  min-width: 47%;
-}
-.form-discord span {
+/* inline-block so the label's own text baseline is what gets aligned; a flex
+   container would hand up the checkbox's box edge instead. */
+.cfg-toggle {
   display: inline-block;
-  margin-left: 12px;
-  line-height: 2.6;
+  cursor: pointer;
 }
-.form-discord span.help {
-  line-height: 1.1;
+.config .cfg-toggle input[type='checkbox'] {
+  vertical-align: -2px;
+  margin-right: 6px;
 }
-.form-discord input + label {
-  margin-left: 1.5em;
+
+.config button {
+  font: inherit;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 2px;
+  padding: 4px 12px;
+  cursor: pointer;
 }
-.hide {
-  display: none !important;
-  visibility: hidden;
+.config button:hover {
+  background: rgba(255, 255, 255, 0.18);
 }
-.combatants input {
-  width: 3em;
-  height: 2em;
+.cfg-reset {
+  background: rgba(214, 69, 65, 0.25);
+  border-color: rgba(214, 69, 65, 0.5);
+}
+.cfg-reset:hover {
+  background: rgba(214, 69, 65, 0.4);
+}
+
+.cfg-help {
+  /* two lines of text: keep it centred rather than hanging off its first
+     baseline */
+  align-self: center;
+  margin-left: auto;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.45);
 }

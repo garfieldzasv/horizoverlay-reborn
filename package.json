@@ -1,53 +1,30 @@
 {
-  "name": "horizoverlay",
-  "description": "A simple horizontal damage meter overlay for Final Fantasy XIV with ACT",
-  "version": "2.2.4",
-  "author": "Rafael 'BSIDES' Pereira (https://twitter.com/bsides)",
-  "contributors": [
-    "Please check this url for the whole list(https://github.com/bsides/horizoverlay/graphs/contributors)"
-  ],
+  "name": "horizoverlay-reborn",
+  "version": "1.0.0",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bsides/horizoverlay.git"
-  },
-  "bugs": {
-    "url": "https://github.com/bsides/horizoverlay/issues"
-  },
-  "homepage": "https://bsides.github.io/horizoverlay",
+  "homepage": ".",
   "dependencies": {
-    "raven-js": "^3.24.0",
-    "react": "^16.3.0",
-    "react-dom": "^16.3.0",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
-    "react-scripts": "^5.0.1"
-  },
-  "devDependencies": {
-    "gh-pages": "^4.0.0",
-    "serve": "^14.0.1"
+    "prop-types": "^15.8.1",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
+    "react-router-dom": "^5.3.4",
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "now-start": "serve -s build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "now": "npm-run-all -s build now-deploy",
-    "now-deploy": "now build --public",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "build": "react-scripts build"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "last 2 chrome version"
     ],
     "development": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "last 1 chrome version"
     ]
   }
 }

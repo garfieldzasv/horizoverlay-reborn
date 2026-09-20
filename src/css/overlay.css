@@ -5,95 +5,48 @@
   display: flex;
   text-align: center;
   justify-content: center;
+  /* Cards used to be clipped silently when the window was too narrow. Wrapping
+     makes running out of room visible, and resizable, instead. */
+  flex-wrap: wrap;
+  align-items: flex-start;
 }
 .row {
-  flex: 1;
+  /* No shrinking: a card is either full width or it wraps to the next line. */
+  flex: 0 0 var(--card-width);
   text-shadow: 0 0 8px #000;
-  margin: 0 6px;
-  max-width: 140px;
+  margin: 0 var(--card-gap) 4px;
+  max-width: var(--card-width);
 }
-.row.self.job-dps .data-items:before,
-.row.self.job-tank .data-items:before,
-.row.self.job-healer .data-items:before {
-  background: rgba(255, 255, 255, 0.8);
+/* Which colour a row paints with. These are the only selectors that know a role
+   exists; everything below is written once against --role. `.row.self` comes
+   last on purpose -- it ties .row.job-* on specificity and has to win. */
+.row {
+  --role: var(--role-other);
 }
-.row.job-dps .data-items:before {
-  background: rgba(244, 67, 54, 0.5);
+.row.job-tank {
+  --role: var(--role-tank);
 }
-.row.job-dps .data-items.highlight:before {
-  background-image: linear-gradient(
-    to left,
-    rgba(244, 67, 54, 0.5) 0%,
-    rgba(244, 67, 54, 0.5) 51%,
-    rgba(244, 67, 54, 0.1) 51%,
-    rgba(244, 67, 54, 0.1) 100%
-  );
-  background-repeat: no-repeat;
+.row.job-healer {
+  --role: var(--role-healer);
 }
-.row.job-tank .data-items:before {
-  background: rgba(32, 149, 243, 0.5);
+.row.job-melee {
+  --role: var(--role-melee);
 }
-.row.job-tank .data-items.highlight:before {
-  background-image: linear-gradient(
-    to left,
-    rgba(32, 149, 243, 0.5) 0%,
-    rgba(32, 149, 243, 0.5) 51%,
-    rgba(32, 149, 243, 0.1) 51%,
-    rgba(32, 149, 243, 0.1) 100%
-  );
-  background-repeat: no-repeat;
+.row.job-ranged {
+  --role: var(--role-ranged);
 }
-.row.job-healer .data-items:before {
-  background: rgba(139, 195, 74, 0.5);
+.row.job-caster {
+  --role: var(--role-caster);
 }
-.row.job-healer .data-items.highlight:before {
-  background-image: linear-gradient(
-    to left,
-    rgba(139, 195, 74, 0.5) 0%,
-    rgba(139, 195, 74, 0.5) 51%,
-    rgba(139, 195, 74, 0.1) 51%,
-    rgba(139, 195, 74, 0.1) 100%
-  );
-  background-repeat: no-repeat;
-}
-.row.job-healer .data-items.highlight.inverse:before {
-  background-image: linear-gradient(
-    to left,
-    rgba(139, 195, 74, 0.1) 0%,
-    rgba(139, 195, 74, 0.1) 51%,
-    rgba(139, 195, 74, 0.5) 51%,
-    rgba(139, 195, 74, 0.5) 100%
-  );
-  background-repeat: no-repeat;
-}
-.row.self .data-items:before,
-.row.self .data-items.highlight:before,
-.row.self .data-items.highlight.invert:before {
-  background: rgba(255, 255, 255, 0.8);
-}
-.row.job-dps .damage-percent-bg {
-  background: rgba(244, 67, 54, 0.3);
-}
-.row.job-tank .damage-percent-bg {
-  background: rgba(33, 150, 243, 0.3);
-}
-.row.job-healer .damage-percent-bg {
-  background: rgba(139, 195, 74, 0.3);
-}
-.row.self .damage-percent-bg {
-  background: rgba(255, 255, 255, 0.5);
-}
-.row.job-dps .damage-percent-fg {
-  background: rgba(244, 67, 54, 0.7);
-}
-.row.job-tank .damage-percent-fg {
-  background: rgba(33, 150, 243, 0.7);
-}
-.row.job-healer .damage-percent-fg {
-  background: rgba(139, 195, 74, 0.7);
-}
-.row.self .damage-percent-fg {
-  background: rgba(255, 255, 255, 1);
+.row.self {
+  --role: var(--role-self);
+  /* White in every theme. The lit half keeps the 0.8 it has always had; the dim
+     half only exists once 高亮色块 is on. */
+  --band-alpha: 0.8;
+  --band-hi-alpha: 0.8;
+  --band-dim-alpha: 0.45;
+  --track-alpha: 0.5;
+  --fill-alpha: 1;
 }
 /*
 .row.job-dps .dps.irrelevant {
@@ -112,33 +65,35 @@
   background: rgba(0, 0, 0, 0.1);
 }
     */
+/* Sheared like the band above, and pulled left by the distance its own shear has
+   carried that band's edge down to this row -- see src/skewAlign.js, which
+   measures the two offsets. Was a flat -8px, which only ever matched one layout. */
 .row .damage-percent-bg {
   height: 2px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(var(--role), var(--track-alpha));
   transform: skew(-30deg);
   position: relative;
-  left: -8px;
+  left: calc(-1 * var(--bar-shift-1));
   margin: 0;
+}
+/* damage first, healing under it, and one row further from the band */
+.row .damage-percent-bg + .damage-percent-bg {
+  margin-top: 1px;
+  left: calc(-1 * var(--bar-shift-2));
 }
 .row .damage-percent-fg {
   height: 2px;
-  background: rgba(0, 0, 0, 0.7);
-  transform: skew(-30deg);
+  background: rgba(var(--role), var(--fill-alpha));
+  /* No skew of its own: it is inside the track, which is already sheared, and
+     shearing again put the fill's leading edge at -60deg against everything
+     else's -30deg. */
   margin: 0;
-}
-.row .damage-percent {
-  position: relative;
-  text-align: right;
-  width: 100%;
-  font-size: 7px;
-  top: -2px;
-  right: 10px;
 }
 
 .row .dps {
   color: #fff;
   text-shadow: 0 0 5px #000;
-  padding: 0 0 2px 8px;
+  padding: 0 var(--icon-slot) 2px 8px;
   margin: 3px 0 0 0;
   flex-grow: 1;
   position: relative;
@@ -148,9 +103,56 @@
   color: #000;
   text-shadow: none;
 }
-
+.row .data-items.highlight:before {
+  background-image: linear-gradient(
+    to left,
+    rgba(var(--role), var(--band-hi-alpha)) 0%,
+    rgba(var(--role), var(--band-hi-alpha)) 51%,
+    rgba(var(--role), var(--band-dim-alpha)) 51%,
+    rgba(var(--role), var(--band-dim-alpha)) 100%
+  );
+  background-repeat: no-repeat;
+}
+/* healing is the relevant number on this row, so the emphasis swaps sides */
+.row .data-items.highlight.inverse:before {
+  background-image: linear-gradient(
+    to left,
+    rgba(var(--role), var(--band-dim-alpha)) 0%,
+    rgba(var(--role), var(--band-dim-alpha)) 51%,
+    rgba(var(--role), var(--band-hi-alpha)) 51%,
+    rgba(var(--role), var(--band-hi-alpha)) 100%
+  );
+  background-repeat: no-repeat;
+}
+.row.self .data-items:before {
+  background: rgba(var(--role), var(--band-alpha));
+}
+/* Written with the `background` shorthand, which drops the colour layer, so
+   this is a single layer of white rather than the gradient-over-solid the job
+   rows use. Stacking two layers of 0.8 white would come out at 0.96 and the
+   split would barely read. */
+.row.self .data-items.highlight:before {
+  background: linear-gradient(
+      to left,
+      rgba(var(--role), var(--band-hi-alpha)) 0%,
+      rgba(var(--role), var(--band-hi-alpha)) 51%,
+      rgba(var(--role), var(--band-dim-alpha)) 51%,
+      rgba(var(--role), var(--band-dim-alpha)) 100%
+    )
+    no-repeat;
+}
+.row.self .data-items.highlight.inverse:before {
+  background: linear-gradient(
+      to left,
+      rgba(var(--role), var(--band-dim-alpha)) 0%,
+      rgba(var(--role), var(--band-dim-alpha)) 51%,
+      rgba(var(--role), var(--band-hi-alpha)) 51%,
+      rgba(var(--role), var(--band-hi-alpha)) 100%
+    )
+    no-repeat;
+}
 .row .data-items:before {
-  background: rgba(0, 0, 0, 0.3);
+  background-color: rgba(var(--role), var(--band-alpha));
   transform: skew(-30deg);
   content: '';
   display: block;
@@ -167,32 +169,46 @@
 }
 
 .job {
-  width: 20px;
+  width: var(--job-icon);
   position: absolute;
   top: -5px;
-  left: 59px;
+  /* was a hard-coded 59px, i.e. the centre of the old fixed 140px card */
+  left: calc(50% - var(--job-icon) / 2);
   z-index: 1;
 }
-.name {
+/* .row .name, not .name: `.row > div` above sets the padding for every direct
+   child and would otherwise win on specificity. */
+.row .name {
+  /* Same step as the max-hit line under the card, so the two bits of text that
+     bracket the band read as one level rather than three. */
+  font-size: var(--text-small);
+  /* `.row > div` sets 1px, which left the name sitting on the band. */
+  padding-bottom: 0.35em;
   white-space: nowrap;
+  /* Long names used to run over the neighbouring card. */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .data-items {
   display: flex;
-  width: 140px;
+  width: 100%;
   position: relative;
 }
 .dps:last-child {
   text-align: right;
   padding-right: 8px;
-  padding-left: 0;
+  padding-left: var(--icon-slot);
 }
 .dps span.label {
-  font-size: 8px;
+  font-size: var(--text-label);
   margin: 0 0 0 1px;
 }
 .row .maxhit {
-  font-size: 0.85em;
-  margin-top: -0.3em;
+  font-size: var(--text-small);
+  /* Was -0.3em, pulling this up under the old percentage line, which sat 2px
+     high itself. That line is gone and a second share bar took its place, so
+     the negative margin left this touching the bars. */
+  margin-top: 0.3em;
   margin-left: -0.8em;
   text-align: center;
 }
@@ -200,4 +216,46 @@
 .streamer-mode {
   color: transparent;
   text-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+/* ── Themes ───────────────────────────────────────────────────────────────
+   byRole is the palette on :root. Each block below only restates what differs.
+   See `themes` in src/helpers.js for how one gets into the settings page. */
+
+/* Colour drained out; your own row stays white. The two gradient halves have to
+   separate by hand here, because they are the same black otherwise. */
+.blackWhite {
+  /* Black, spelled out rather than aliased to --role-other: that variable is
+     the pet grey now, and pets stay set apart here too -- grey is achromatic,
+     so it belongs in this theme as much as the black does. */
+  --role-tank: 0, 0, 0;
+  --role-healer: 0, 0, 0;
+  --role-melee: 0, 0, 0;
+  --role-ranged: 0, 0, 0;
+  --role-caster: 0, 0, 0;
+  --band-alpha: 0.3;
+  --band-hi-alpha: 0.6;
+  --band-dim-alpha: 0.15;
+  --fill-alpha: 0.9;
+}
+
+/* 细分职业 -- the five roles the game draws on its own job icons: tank blue,
+   healer green, melee red, physical ranged gold, magical ranged purple.
+
+   Blue, green and red are byRole's, unchanged. Purple is Material Purple 500,
+   which sits far enough from the blue -- Deep Purple read as a second blue at
+   these alphas.
+
+   The gold is NOT a ramp step. Material 500 is not iso-luminant: Amber 500
+   composites to a relative luminance of 0.34 here against 0.14-0.25 for the
+   other four, which left the white numbers on it at 2.7:1 and flattened the
+   highlight's own light/dark split. Dropped to a muted gold that lands at 0.24,
+   level with the green -- which is also closer to the mustard the game uses on
+   its physical ranged icon. */
+.byJob {
+  --role-tank: 33, 150, 243;
+  --role-healer: 139, 195, 74;
+  --role-melee: 244, 67, 54;
+  --role-ranged: 205, 160, 45;
+  --role-caster: 156, 39, 176;
 }

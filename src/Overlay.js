@@ -1,13 +1,14 @@
 import React from 'react'
 import Encounter from './Encounter'
 import Combatants from './Combatants'
-import { withHelper } from './helpers'
 
 import './css/reboot.css'
 import './css/index.css'
 import './css/overlay.css'
 
-class OverlayRaw extends React.Component {
+// No withHelper here: index.js wraps the Overlay/SetupMode choice in a single
+// one, because the thing that chooses between them is itself a config option.
+class Overlay extends React.Component {
   state = {
     limitBreak: 0,
     discordData: []
@@ -65,7 +66,9 @@ class OverlayRaw extends React.Component {
     const props = this.props
     return (
       <div
-        className={`damage-meter${props.isActive ? '' : ' inactive'}${
+        className={`damage-meter ${props.config.color}${
+          props.isActive ? '' : ' inactive'
+        }${
           props.config.locale === 'zhCN' || props.config.locale === 'zhHK'
             ? ' chinese'
             : ''
@@ -76,6 +79,7 @@ class OverlayRaw extends React.Component {
         <Combatants
           data={props.Combatant}
           encounterDamage={props.Encounter.damage}
+          encounterHealed={props.Encounter.healed}
           config={props.config}
         />
         <Encounter
@@ -89,5 +93,4 @@ class OverlayRaw extends React.Component {
   }
 }
 
-const Overlay = withHelper({ WrappedComponent: OverlayRaw })
 export default Overlay

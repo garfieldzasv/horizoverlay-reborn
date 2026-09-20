@@ -40,6 +40,7 @@ class Combatants extends Component {
       rows.push(
         <CombatantHorizontal
           encounterDamage={this.props.encounterDamage}
+          encounterHealed={this.props.encounterHealed}
           rank={rank}
           data={combatant}
           config={this.props.config}

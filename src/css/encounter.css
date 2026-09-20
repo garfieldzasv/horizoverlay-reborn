@@ -16,6 +16,8 @@
   text-shadow: 0 0 8px #000;
   text-align: center;
   margin: 5px 0 0;
+  /* the Discord banner is positioned against this */
+  position: relative;
 }
 .encounter .skewer:before {
   transform: skew(-30deg);
@@ -30,43 +32,67 @@
 .encounter .skewer {
   display: flex;
   margin: 0 auto;
-  /* years of css and never heard of this */
-  width: -webkit-fit-content;
+  /* Sized and placed so both of its skewed edges continue the card edges above
+     it, rather than sized by whatever text happens to be in it. See
+     --banner-width, and note the offset is what buys the right-hand edge. */
+  width: var(--banner-width);
   padding: 0 2px;
   position: relative;
+  left: calc(-1 * var(--skew-reach));
   justify-content: center;
 }
 /* Encounter name, Raid DPS and Encounter Duration boxes */
 .encounter .skewer > div {
-  flex: 1;
-
+  /* The numbers keep their natural width -- they are the point of the banner. */
+  flex: 0 0 auto;
   white-space: nowrap;
   margin: 2px 4px;
   z-index: 1;
   padding: 0 8px 0 12px;
 }
 .encounter .skewer > div:first-child {
-  flex: 3;
+  /* Only the zone name gives way when the fixed width runs short. */
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   padding: 0 8px;
 }
-.encounter .skewer .encounter-discord {
-  position: relative;
-  z-index: 1;
+/* A banner of its own, beside the stats one rather than inside it. Absolute so
+   that it cannot pull the stats banner off the centre its edge alignment
+   depends on.
+
+   Exactly one card wide, starting where the next card in the row would: the
+   stats banner ends on the right edge of card N/2+1, and the next card's left
+   edge is two gaps further on. That puts both of this banner's skewed edges on
+   card edge lines too, instead of wherever the button text happened to end. */
+.encounter-discord {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: calc(
+    var(--banner-width) / 2 - var(--skew-reach) + 2 * var(--card-gap)
+  );
+  width: var(--card-width);
   padding: 0;
-  margin: 2px 0;
+  z-index: 1;
 }
 .encounter-discord button {
   color: white;
   border: 0;
   background: transparent;
-  padding: 0 8px 0 12px;
+  width: 100%;
+  /* matches .skewer > div, so the two banners come out the same height */
+  margin: 2px 0;
+  padding: 0;
   text-shadow: 0 0 5px rgba(0, 0, 0, 1);
   z-index: 2;
   position: relative;
   cursor: pointer;
 }
 .encounter-discord:before {
-  background: rgba(255, 255, 255, 0.2);
+  /* same slab as the stats banner */
+  background: rgba(0, 0, 0, 0.25);
   transform: skew(-30deg);
   content: "";
   display: block;

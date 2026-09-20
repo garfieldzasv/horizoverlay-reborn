@@ -14,9 +14,23 @@
 .setupMode .notice {
   color: rgba(255, 255, 255, 0.7);
   display: none;
+  /* This is the whole window when nothing is happening, so it gets room to
+     breathe rather than sitting flush against the top edge. */
+  padding: 14px 16px 16px;
+  line-height: 1.8;
+}
+.notice .notice-title {
+  display: block;
+  letter-spacing: 0.34em;
+  /* letter-spacing trails the last glyph too, which throws centred text off by
+     half a step */
+  text-indent: 0.34em;
+  margin-bottom: 8px;
 }
 .notice > div {
-  color: rgba(255, 255, 255, 0.3);
+  /* 0.3 was close to unreadable against a light scene, and this line is the
+     only thing telling a first-time user how to reach the settings. */
+  color: rgba(255, 255, 255, 0.5);
 }
 .setupMode .wrapper.hide + .notice {
   display: block;
@@ -26,30 +40,3 @@
   margin-top: 6px;
 }
 
-.combatants {
-  display: flex;
-  text-align: center;
-}
-.row {
-  flex: 1;
-  text-shadow: 0 0 8px #000;
-  margin: 0 6px;
-  max-width: 140px;
-}
-
-.row.self div.data-items:before,
-.byRole .row.self .data-items:before {
-  background: rgba(255, 255, 255, 0.8);
-}
-.row.self .dps {
-  text-shadow: none;
-}
-.default .row .dps {
-  background: rgba(0, 0, 0, 0.3);
-  color: #fff;
-  text-shadow: 0 0 5px #000;
-}
-.row > div {
-  margin: 0px auto;
-  padding: 0 0 1px;
-}

@@ -13,14 +13,17 @@ DataText.propTypes = {
   show: bool,
   data: object
 }
-DamageBar.propTypes = {
-  width: string,
-  show: bool.isRequired
+ShareBars.propTypes = {
+  damage: string,
+  heal: string,
+  showDamage: bool,
+  showHeal: bool
 }
 
 export default class CombatantHorizontal extends Component {
   static propTypes = {
     encounterDamage: oneOfType([string, number]).isRequired,
+    encounterHealed: oneOfType([string, number]),
     rank: number,
     data: object.isRequired,
     config: object.isRequired,
@@ -39,34 +42,35 @@ export default class CombatantHorizontal extends Component {
     // Also don't need to render if the player is in solo mode and this isn't the player's info
     if (!isSelf && config.enableSoloMode) return null
 
-    // Color theme byRole
-    if (config.color === 'byRole') {
-      for (const role in jobRoles) {
-        if (jobRoles[role].indexOf(data.Job.toLowerCase()) >= 0)
-          jobStyleClass = ` job-${role}`
-        if (data.Job === '') {
-          for (const job of jobRoles[role]) {
-            if (name.indexOf(job) >= 0) jobStyleClass = ` job-${role}`
-          }
+    // Role class, always. An unrecognised job leaves it empty rather than
+    // undefined, which used to end up in the class list verbatim.
+    jobStyleClass = ''
+    let roleName = ''
+    for (const role in jobRoles) {
+      if (jobRoles[role].indexOf(data.Job.toLowerCase()) >= 0) roleName = role
+      if (data.Job === '') {
+        for (const job of jobRoles[role]) {
+          if (name.indexOf(job) >= 0) roleName = role
         }
       }
-    } else {
-      jobStyleClass = ''
     }
+    if (roleName) jobStyleClass = ` job-${roleName}`
 
-    // Damage Percent
-    damageWidth = `${parseInt(
-      data.damage / this.props.encounterDamage * 100,
-      10
-    )}%`
+    // Share of the encounter's damage and of its healing. ACT can report either
+    // total as 0 or absent before anything has landed, so guard the divide.
+    damageWidth = share(data.damage, this.props.encounterDamage)
+    const healWidth = share(data.healed, this.props.encounterHealed)
 
     // Job icon
     if (config.showJobIcon) {
       jobIcon = './'
       if (data.Job === '') {
-        // well there are a lot of things that doesn't have a job, like summoner's pets and alike. Lets assume them all.
-        let newIcon
-        newIcon = 'error'
+        // Pets and other jobless combatants are only identifiable by name, and
+        // otherIcons is an English list -- on a Chinese client ACT reports 陆行鸟,
+        // 宝石兽 and friends, none of which match. The fallback used to be the
+        // error icon, which read as "something is broken" rather than "this is a
+        // pet". A carbuncle is at least the right kind of thing.
+        let newIcon = 'carbuncle'
         for (const otherIcon of otherIcons) {
           if (name.indexOf(otherIcon) >= 0) newIcon = otherIcon
         }
@@ -85,7 +89,13 @@ export default class CombatantHorizontal extends Component {
     // Character name (self, instead of 'YOU')
     const characterName = isSelf ? config.characterName : data.name
 
-    const isHealing = data.ENCHPS > data.ENCDPS
+    // Which half of the band gets the emphasis is the role's call. It used to
+    // be `data.ENCHPS > data.ENCDPS`, but ACT hands those over as strings, so
+    // that was a lexicographic compare: "2169" > "113605" is true, and a DPS
+    // with any healing at all got flagged as a healer.
+    // Only meaningful while the left cell is HPS: that is the one case where a
+    // healer's important number sits on the left and the emphasis should flip.
+    const isHealing = config.leftStat === 'hps' && roleName === 'healer'
 
     let maxhit
     if (data.maxhit) maxhit = data.maxhit.replace(/-([^-]*)$/, ": $1")
@@ -110,25 +120,43 @@ export default class CombatantHorizontal extends Component {
           }`}
         >
           {jobIcon && <img src={jobIcon} className="job" alt={jobName} />}
-          <DataText type="hps" show={config.showHps} {...data} />
-          <DataText type="job" show={!config.showHps} {...data} />
-          <DataText type="dps" {...data} />
+          <DataText type={config.leftStat} isHealing={isHealing} {...data} />
+          <DataText type="dps" isHealing={isHealing} {...data} />
         </div>
-        <DamageBar width={damageWidth} show={config.showDamagePercent} />
+        <ShareBars
+          damage={damageWidth}
+          heal={healWidth}
+          showDamage={config.showDamageBar}
+          showHeal={config.showHealBar}
+        />
         <div className="maxhit">{config.showMaxhit && maxhit}</div>
       </div>
     )
   }
 }
 
-function DamageBar({ width, show }) {
-  if (!show) return null
+function share(part, total) {
+  const whole = parseFloat(total)
+  if (!whole) return '0%'
+  return `${parseInt((part / whole) * 100, 10)}%`
+}
+
+// Both bars use the same classes on purpose -- they are the same bar, one for
+// damage dealt and one for healing done, stacked in that order.
+function ShareBars({ damage, heal, showDamage, showHeal }) {
+  if (!showDamage && !showHeal) return null
   return (
     <div>
-      <div className="damage-percent-bg">
-        <div className="damage-percent-fg" style={{ width }} />
-      </div>
-      <div className="damage-percent">{width}</div>
+      {showDamage && (
+        <div className="damage-percent-bg">
+          <div className="damage-percent-fg" style={{ width: damage }} />
+        </div>
+      )}
+      {showHeal && (
+        <div className="damage-percent-bg">
+          <div className="damage-percent-fg" style={{ width: heal }} />
+        </div>
+      )}
     </div>
   )
 }
@@ -144,22 +172,46 @@ function DataWrapper(props) {
   )
 }
 
-function DataText({ type, show = true, ...data } = {}) {
+function DataText({ type, show = true, isHealing = false, ...data } = {}) {
   if (!show) return null
   let text, label, relevant
   switch (type) {
+    // same story as the band: the role says which number matters, not a
+    // string comparison of the two
     case 'hps':
       text = data.ENCHPS
       label = ' HPS'
-      relevant = data.ENCHPS > data.ENCDPS
+      relevant = isHealing
       break
     case 'dps':
       text = data.ENCDPS
       label = ' DPS'
-      relevant = data.ENCDPS > data.ENCHPS
+      relevant = !isHealing
+      break
+    // ACT hands these over already carrying their % sign
+    case 'crit':
+      text = data['crithit%'] || '0%'
+      label = ' CRIT'
+      relevant = '1'
+      break
+    case 'dhit':
+      text = data.DirectHitPct || '0%'
+      label = ' DH'
+      relevant = '1'
+      break
+    case 'cdh':
+      // The FFXIV plugin renamed this: 1.5.1.3 spelled it DirectCritHitPct and
+      // later builds CritDirectHitPct, so read both.
+      text = data.CritDirectHitPct || data.DirectCritHitPct || '0%'
+      label = ' CDH'
+      relevant = '1'
       break
     case 'job':
-      text = data.Job.toUpperCase()
+      // Pets arrive with an empty Job, which left this slot blank while every
+      // other card carried a three-letter code. PET rather than SMN (taken by
+      // Summoner) or a summon-specific word -- chocobos and turrets land here
+      // too.
+      text = data.Job ? data.Job.toUpperCase() : 'PET'
       label = ''
       relevant = '1'
       break

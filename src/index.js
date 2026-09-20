@@ -1,6 +1,3 @@
-// uncomment for testing
-// import './testing/testing'
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -8,9 +5,10 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 
 import Overlay from './Overlay'
 import Config from './Config'
-import NotFound from './NotFound'
 import SetupMode from './SetupMode'
+import { withHelper } from './helpers'
 import initActWebSocket from './actwebsocket'
+import initMockData from './testing/testing'
 
 // import Raven from 'raven-js'
 // import { sentryUrl } from './sentry'
@@ -18,31 +16,49 @@ import initActWebSocket from './actwebsocket'
 require(`./images/handle.png`)
 
 initActWebSocket()
+initMockData()
 
 // Raven.config(sentryUrl).install()
 
+// The last payload ACT sent, kept so the window can be re-rendered for reasons
+// other than new data -- switching the preview on is one.
 window.lastData = {}
-const Inactive = detail => {
+
+// There used to be two trees: one rendered at startup with SetupMode on `/`,
+// and one rendered on every data update with Overlay on `/`. The first update
+// swapped the second in for good, and since showSetup is only read inside
+// SetupMode, turning the preview on after a fight had already been recorded
+// did nothing at all -- the component that reads the flag was no longer in the
+// tree. One tree now, and this is the only place that decides what `/` shows.
+//
+// withHelper lives here rather than inside Overlay and SetupMode because the
+// choice between them is itself a config option; it also gives them the
+// storage listener that makes the settings window's toggle arrive here.
+const Screen = withHelper({
+  WrappedComponent: props =>
+    // Before the first payload there is nothing to draw, and the "no data yet"
+    // page is SetupMode's too -- it renders the notice with the mock list
+    // hidden behind the same flag.
+    props.config.showSetup || !props.Combatant ? (
+      <SetupMode {...props} />
+    ) : (
+      <Overlay {...props} />
+    )
+})
+
+const Root = detail => {
   return (
-    <Router basename={`${process.env.PUBLIC_URL}`}>
+    <Router>
       <Switch>
-        <Route path={`/config`} component={Config} />
-        <Route component={SetupMode} />
+        <Route exact path={`/config`} component={Config} />
+        <Route path={`/`} render={() => <Screen {...detail} />} />
       </Switch>
     </Router>
   )
 }
 
-const Root = detail => {
-  return (
-    <Router basename={`${process.env.PUBLIC_URL}`}>
-      <Switch>
-        <Route path={`/`} render={() => <Overlay {...detail} />} />
-        <Route exact path={`/config`} component={Config} />
-        <Route render={() => <NotFound text="Page Not Found!" />} />
-      </Switch>
-    </Router>
-  )
+function render() {
+  ReactDOM.render(<Root {...window.lastData} />, document.getElementById('root'))
 }
 
 // This will run when data is ON
@@ -65,12 +81,11 @@ function onOverlayDataUpdate(e) {
   //   document.getElementById('root')
   // )
   // }
-  const detail = (e.detail.msg ? e.detail.msg : e.detail)
-  
-  ReactDOM.render(<Root {...detail} />, document.getElementById('root'))
+  window.lastData = e.detail.msg ? e.detail.msg : e.detail
+  render()
 }
-// This will run when there's no data
-ReactDOM.render(<Inactive />, document.getElementById('root'))
+// Nothing has arrived yet, so this draws the notice page.
+render()
 
 // :: Events
 // https://github.com/RainbowMage/OverlayPlugin/wiki/JavaScript-API-reference
@@ -78,6 +93,16 @@ ReactDOM.render(<Inactive />, document.getElementById('root'))
 
 // - onOverlayDataUpdate
 // This event occurs when the OverlayPlugin sends the new data.
+// The overlay's own right-click handler covers the cards, but not the empty
+// space around them, and that is most of the window. Blanket it at the document
+// instead -- except on the settings page, where you want the native menu to
+// paste a webhook URL.
+document.addEventListener('contextmenu', function(e) {
+  const target = e.target
+  if (target && target.closest && target.closest('.config')) return
+  e.preventDefault()
+})
+
 document.addEventListener('onOverlayDataUpdate', onOverlayDataUpdate)
 
 // - onLogLine

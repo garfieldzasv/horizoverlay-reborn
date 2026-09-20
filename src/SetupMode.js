@@ -1,15 +1,44 @@
 import React from 'react'
-import { withHelper } from './helpers'
+import Encounter from './Encounter'
+import { mockEncounter, getMockData, getMockPet } from './helpers'
 import locale from './locale'
 
 import './css/reboot.css'
+import './css/overlay.css'
 import './css/setupMode.css'
 
 var images = require.context('./images', false, /\.png$/)
 
-function SetupModeRaw(props) {
-  const { mockData } = props
+// Mirrors DataText in CombatantHorizontal.js -- setup mode renders its own
+// markup, so the two have to be kept saying the same thing.
+function leftValue(stat, mock) {
+  if (stat === 'crit') return mock.crit
+  if (stat === 'dhit') return mock.dhit
+  if (stat === 'cdh') return mock.cdh
+  if (stat === 'job') return mock.jobLabel
+  return mock.hps
+}
+function leftLabel(stat) {
+  if (stat === 'crit') return ' CRIT'
+  if (stat === 'dhit') return ' DH'
+  if (stat === 'cdh') return ' CDH'
+  if (stat === 'job') return null
+  return ' HPS'
+}
+
+// No withHelper here: index.js wraps the Overlay/SetupMode choice in a single
+// one, because the thing that chooses between them is itself a config option.
+function SetupMode(props) {
   const { maxCombatants } = props.config
+  // 显示无职业单位 is about whether pets show up at all, so the preview spends its
+  // last slot on one rather than growing the list -- the slot count is what the
+  // window is being sized against.
+  const roster = getMockData(props.config.locale)
+  const mockData = props.config.showJobless
+    ? roster
+        .slice(0, maxCombatants - 1)
+        .concat(getMockPet(props.config.locale, maxCombatants))
+    : roster
   const colorClass = props.config.color
   const isVisible = props.config.showSetup ? 'show' : 'hide'
   const loc = locale[props.config.locale]
@@ -29,13 +58,13 @@ function SetupModeRaw(props) {
             if (index >= maxCombatants) return false
             if (!mock.isSelf && props.config.enableSoloMode) return false
             let maxhit
-            if (mock.maxhit) maxhit = mock.maxhit.replace('-', ': ')
+            if (mock.maxhit) maxhit = mock.maxhit.replace(/-([^-]*)$/, ': $1')
             return (
               mock.name.toLowerCase() !== 'limit break' && (
                 <div
-                  className={`row${mock.isSelf ? ' self' : ''} ${
-                    props.config.color === 'byRole' ? mock.jobRole : ''
-                  } ${mock.jobClass} `}
+                  className={`row${
+                    mock.isSelf && props.config.showSelf ? ' self' : ''
+                  } ${mock.jobRole} ${mock.jobClass} `}
                   style={{ order: mock.rank }}
                   key={mock.rank}
                 >
@@ -52,7 +81,11 @@ function SetupModeRaw(props) {
                   <div
                     className={`data-items${
                       props.config.showHighlight ? ' highlight' : ''
-                    }${mock.isHealing ? ' inverse' : ''}`}
+                    }${
+                      props.config.leftStat === 'hps' && mock.isHealing
+                        ? ' inverse'
+                        : ''
+                    }`}
                   >
                     {props.config.showJobIcon ? (
                       <img
@@ -68,12 +101,10 @@ function SetupModeRaw(props) {
                     >
                       <div>
                         <span className="damage-stats">
-                          {props.config.showHps
-                            ? mock.hps
-                            : mock.job.toUpperCase()}
+                          {leftValue(props.config.leftStat, mock)}
                         </span>
                         <span className="label">
-                          {props.config.showHps ? ' HPS' : null}
+                          {leftLabel(props.config.leftStat)}
                         </span>
                       </div>
                     </div>
@@ -88,17 +119,27 @@ function SetupModeRaw(props) {
                       </div>
                     </div>
                   </div>
-                  {props.config.showDamagePercent ? (
+                  {(props.config.showDamageBar ||
+                    props.config.showHealBar) && (
                     <div>
-                      <div className="damage-percent-bg">
-                        <div
-                          className="damage-percent-fg"
-                          style={{ width: `${mock.damagePct}px` }}
-                        />
-                      </div>
-                      <div className="damage-percent">{mock.damagePct}%</div>
+                      {props.config.showDamageBar && (
+                        <div className="damage-percent-bg">
+                          <div
+                            className="damage-percent-fg"
+                            style={{ width: `${mock.damagePct}%` }}
+                          />
+                        </div>
+                      )}
+                      {props.config.showHealBar && (
+                        <div className="damage-percent-bg">
+                          <div
+                            className="damage-percent-fg"
+                            style={{ width: `${mock.healPct}%` }}
+                          />
+                        </div>
+                      )}
                     </div>
-                  ) : null}
+                  )}
                   <div className="maxhit">
                     {props.config.showMaxhit && maxhit}
                   </div>
@@ -107,6 +148,12 @@ function SetupModeRaw(props) {
             )
           })}
         </div>
+        <Encounter
+          {...mockEncounter}
+          CurrentZoneName={loc.setupMode.sampleZone}
+          discordData={[]}
+          config={props.config}
+        />
         <div className="instructions">
           <div
             dangerouslySetInnerHTML={{
@@ -121,7 +168,7 @@ function SetupModeRaw(props) {
         </div>
       </div>
       <div className={`notice`}>
-        <span>H O R I Z O V E R L A Y</span>
+        <span className="notice-title">Horizoverlay Reborn</span>
         <div
           dangerouslySetInnerHTML={{
             __html: loc.initial.help
@@ -132,5 +179,4 @@ function SetupModeRaw(props) {
   )
 }
 
-const SetupMode = withHelper({ WrappedComponent: SetupModeRaw, willMock: true })
 export default SetupMode

@@ -9,3 +9,6 @@ preview/
 # build/ is deliberately NOT ignored: the overlay is used by pointing ACT at
 # build/index.html, so the artefact has to be here for anyone who just wants to
 # run it rather than build it.
+
+# Release archives are attached to a GitHub Release, not committed.
+*.zip

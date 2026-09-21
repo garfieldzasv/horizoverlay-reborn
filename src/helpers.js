@@ -14,6 +14,7 @@ export const defaultConfig = {
   showSelf: true,
   showMaxhit: false,
   showRates: false,
+  showDeaths: true,
   showDuration: true,
   showTotalDps: true,
   showDamageBar: true,
@@ -348,6 +349,7 @@ export function getMockPet(locale, rank) {
     crit: '12%',
     dhit: '9%',
     cdh: '2%',
+    deaths: '0',
     damagePct: '1',
     healPct: '0',
     maxhit: (zh ? '喙突' : 'Choco Beak') + '-14820'
@@ -379,6 +381,9 @@ export function getMockData(locale) {
       crit: 18 + ((row.rank * 7) % 16) + '%',
       dhit: 22 + ((row.rank * 11) % 19) + '%',
       cdh: 6 + ((row.rank * 5) % 9) + '%',
+      // Two of the eight, because the marker earns its place by being rare --
+      // a preview where every card carries one does not show that.
+      deaths: String(row.rank === 3 ? 2 : row.rank === 7 ? 1 : 0),
       damagePct: String(Math.round((row.dps / totalDps) * 100)),
       healPct: String(totalHps ? Math.round((row.hps / totalHps) * 100) : 0),
       maxhit: skill + '-' + row.hit

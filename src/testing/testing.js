@@ -13,7 +13,9 @@ const PARTY = [
   // name,            job,   role,   dps,  hps,  deaths
   ['光之战士', 'PLD', 'tank', 6820, 320, 0],
   ['Yshtola Rhul', 'DRK', 'tank', 7140, 180, 0],
-  ['Alphinaud Leveilleur', 'WHM', 'healer', 4210, 9840, 0],
+  // The longest name FFXIV allows, carrying a death: this is the case where
+  // the name line runs out of room, and the fixture should exercise it.
+  ['Alphinaud Leveilleur', 'WHM', 'healer', 4210, 9840, 1],
   ['星极大魔法使', 'AST', 'healer', 3980, 8760, 1],
   ['Zidane Tribal', 'NIN', 'dps', 12480, 0, 0],
   ['龙骑士小明', 'DRG', 'dps', 13150, 0, 0],

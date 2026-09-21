@@ -159,6 +159,7 @@ class ConfigRaw extends Component {
               {this.field('showHealBar', loc.toggleOption8)}
               {this.field('showRates', loc.toggleOption16)}
               {this.field('showMaxhit', loc.toggleOption11)}
+              {this.field('showDeaths', loc.toggleOption17)}
               {this.field('showHighlight', loc.toggleOption4)}
             </section>
 

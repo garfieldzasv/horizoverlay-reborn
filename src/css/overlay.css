@@ -184,8 +184,34 @@
   font-size: var(--text-small);
   /* `.row > div` sets 1px, which left the name sitting on the band. */
   padding-bottom: 0.35em;
+  /* Flex so the line can say which part gives way when it does not fit. As one
+     text run with overflow on the line itself, the ellipsis ate whatever came
+     last -- which is the death marker, so a long-named player's death count
+     vanished exactly when it mattered. Now only the name shrinks. */
+  display: flex;
+  /* Only bites when the death slot is off; with it on, the pad and the slot
+     take the slack between them and there is none left to distribute. */
+  justify-content: center;
+  align-items: baseline;
+}
+/* Left third. Mirrors the death slot's flex so the two cancel out and the name
+   lands on the card's centre line whether or not anyone died. */
+.row .name .name-pad {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.row .name .rank {
+  flex: 0 0 auto;
+  /* The rank is written `1. ` with a trailing space, and flex collapses
+     trailing whitespace at the end of an inline box. */
+  white-space: pre;
+}
+.row .name .character-name {
+  /* The only part that gives. min-width:0 because a flex item will not shrink
+     below its content otherwise, whatever overflow says. */
+  flex: 0 1 auto;
+  min-width: 0;
   white-space: nowrap;
-  /* Long names used to run over the neighbouring card. */
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -234,6 +260,34 @@
   font-size: var(--text-label);
   margin-left: 1px;
   opacity: 0.75;
+}
+
+/* Right third, right-aligned inside itself, so the count sits on the card's
+   edge and in the same place on every card.
+
+   flex-basis has to be 0, matching the pad, or the two sides are not equal:
+   with `auto` this box starts at its content width and the name ends up half a
+   marker left of centre -- small enough to pass a look and obvious in a pixel
+   diff of the same card with the marker on and off. min-content is the floor,
+   so the count is never clipped; past that the name is what gives way. */
+.row .deaths {
+  flex: 1 1 0;
+  min-width: min-content;
+  /* The gap has to live inside the box: this page is content-box, so as
+     padding it would otherwise add to the flex size and tilt the balance the
+     basis was just fixed to keep. */
+  box-sizing: border-box;
+  padding-left: 0.35em;
+  text-align: right;
+  color: rgb(var(--role-death));
+  white-space: nowrap;
+}
+/* Same treatment as the unit on the rates line, so the two lines of the card
+   that carry a value plus a unit are set the same way. */
+.row .deaths .label {
+  font-size: var(--text-label);
+  margin-left: 1px;
+  opacity: 0.85;
 }
 
 /*  blur effect */

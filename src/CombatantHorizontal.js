@@ -107,12 +107,16 @@ export default class CombatantHorizontal extends Component {
         style={{ order }}
       >
         <div className="name">
+          {/* Balances the death slot on the right so the name stays centred on
+              the card. Paired with it: both appear, or neither does. */}
+          {config.showDeaths && <span className="name-pad" />}
           {config.showRank ? (
             <span className="rank">{`${this.props.rank}. `}</span>
           ) : (
             ''
           )}
           <span className={`character-name ${ !isSelf && config.enableStreamerMode ? 'streamer-mode' : '' }`}>{characterName}</span>
+          {config.showDeaths && <DeathMark deaths={data.deaths} />}
         </div>
         <div
           className={`data-items${config.showHighlight ? ' highlight' : ''}${
@@ -198,6 +202,29 @@ export function RateLine({ crit, dhit, cdh }) {
         <span className="label">CDH</span>
       </span>
     </div>
+  )
+}
+
+// Deaths are an event, not a rate, and in most fights most people have none,
+// so a permanent `死:0` on every card would be noise. Nothing is drawn at zero.
+// The box is still rendered though: it is the right-hand third of the name
+// line, and an equally flexed pad holds the left-hand third, which is what
+// keeps the name on the card's centre line whether or not anyone died.
+//
+// Written in the card's own grammar -- a value with a label-sized unit after
+// it, the same construction as `23%CRIT` above and `127613 DPS` in the band.
+// The unit is DTH and not D, because a label-sized D beside a digit reads as a
+// zero: `2D` becomes `20` in a screenshot, and three letters cannot. Not DEATH
+// either -- that overruns the name line, which has nothing to spare once a
+// name is long.
+export function DeathMark({ deaths }) {
+  const n = parseInt(deaths, 10)
+  if (!n) return <span className="deaths" />
+  return (
+    <span className="deaths">
+      {n}
+      <span className="label">{n > 1 ? 'DTHS' : 'DTH'}</span>
+    </span>
   )
 }
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import Encounter from './Encounter'
 import { mockEncounter, getMockData, getMockPet } from './helpers'
-import { RateLine } from './CombatantHorizontal'
+import { RateLine, DeathMark } from './CombatantHorizontal'
 import locale from './locale'
 
 import './css/reboot.css'
@@ -70,6 +70,7 @@ function SetupMode(props) {
                   key={mock.rank}
                 >
                   <div className="name">
+                    {props.config.showDeaths && <span className="name-pad" />}
                     {props.config.showRank ? (
                       <span className="rank">{`${mock.rank}. `}</span>
                     ) : null}
@@ -78,6 +79,7 @@ function SetupMode(props) {
                         ? props.config.characterName
                         : mock.name}
                     </span>
+                    {props.config.showDeaths && <DeathMark deaths={mock.deaths} />}
                   </div>
                   <div
                     className={`data-items${

@@ -58,6 +58,12 @@
      enough to read as deliberate rather than as a card that failed to paint. */
   --role-other: 158, 158, 158;
   --role-self: 255, 255, 255;
+  /* The death marker. Deliberately not aliased to --role-melee, which happens
+     to be the same red: a theme is free to repaint the roles, and blackWhite
+     takes all five to black. This is not a role, it is the one alert on the
+     card, and it has to stay findable in every theme -- including the one
+     whose whole point is that nothing else is coloured. */
+  --role-death: 244, 67, 54;
 
   /* band = the skewed slab behind the numbers; track/fill = the share bars.
      -hi and -dim are the two halves the 高亮色块 gradient splits the band into,

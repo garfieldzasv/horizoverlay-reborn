@@ -5,8 +5,18 @@
   margin: 0 auto;
   text-shadow: 0 0 6px #000;
 }
+/* Setup mode is the one state that gets a background. Everywhere else the
+   overlay is transparent, and it has to stay that way -- but that is structural
+   rather than a thing to be careful about here: normal combat renders
+   .damage-meter and never mounts .setupMode at all, and with the preview off
+   .wrapper is display:none, leaving only the notice text.
+
+   Dark and neutral rather than the old 10% red, which tinted every card. Nearly
+   opaque on purpose: this is the state you size and place the window in, so the
+   panel doubles as the window's outline. The colour is the settings page's
+   #15171c, so the two surfaces the user configures from match. */
 .setupMode .wrapper {
-  background: rgba(150, 0, 0, 0.1);
+  background: rgba(21, 23, 28, 0.88);
 }
 .setupMode .wrapper.hide {
   display: none;

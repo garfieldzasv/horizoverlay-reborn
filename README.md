@@ -9,7 +9,12 @@ A horizontal damage meter overlay for Final Fantasy XIV, showing the whole party
 ## Install
 
 1. In OverlayPlugin, create a new overlay of type MiniParse
-2. Set its URL to `https://garfieldzasv.github.io/horizoverlay-reborn/`
+2. Set its URL to:
+
+   ```
+   https://garfieldzasv.github.io/horizoverlay-reborn/
+   ```
+
 3. Turn off **Enable clickthru** for this overlay, or right-click will not open the settings
 4. Right-click the overlay to open the settings
 

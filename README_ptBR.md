@@ -9,7 +9,12 @@ Um medidor de dano horizontal para Final Fantasy XIV, que mostra o DPS e o HPS d
 ## Instalação
 
 1. No OverlayPlugin, crie um overlay do tipo MiniParse
-2. Coloque `https://garfieldzasv.github.io/horizoverlay-reborn/` na URL
+2. Coloque esta URL:
+
+   ```
+   https://garfieldzasv.github.io/horizoverlay-reborn/
+   ```
+
 3. Desligue o **Enable clickthru** desse overlay, senão o botão direito não abre as configurações
 4. Clique com o botão direito no overlay para abrir as configurações
 

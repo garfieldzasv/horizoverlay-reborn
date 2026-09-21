@@ -9,7 +9,12 @@ Un compteur de dégâts horizontal pour Final Fantasy XIV, qui affiche le DPS et
 ## Installation
 
 1. Dans OverlayPlugin, créez un overlay de type MiniParse
-2. Mettez `https://garfieldzasv.github.io/horizoverlay-reborn/` comme URL
+2. Mettez cette URL :
+
+   ```
+   https://garfieldzasv.github.io/horizoverlay-reborn/
+   ```
+
 3. Désactivez **Enable clickthru** sur cet overlay, sinon le clic droit n'ouvre pas les paramètres
 4. Faites un clic droit sur l'overlay pour ouvrir les paramètres
 

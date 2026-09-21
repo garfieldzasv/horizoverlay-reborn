@@ -9,7 +9,12 @@ FF14 的 ACT 横向悬浮窗，一排卡片显示全队的 DPS 和 HPS。基于 
 ## 安装
 
 1. 在 OverlayPlugin 里新建一个 MiniParse 类型的悬浮窗
-2. URL 填 `https://garfieldzasv.github.io/horizoverlay-reborn/`
+2. URL 填：
+
+   ```
+   https://garfieldzasv.github.io/horizoverlay-reborn/
+   ```
+
 3. 关掉这个悬浮窗的「滑鼠穿透 / Enable clickthru」，不然右键呼不出配置
 4. 在悬浮窗上右键，打开配置页
 

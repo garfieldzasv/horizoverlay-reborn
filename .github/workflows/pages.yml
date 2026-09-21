@@ -35,12 +35,11 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      # enablement turns Pages on for the repository if it is off, so the first
-      # run does not need anyone to visit Settings first. It is a no-op once
-      # Pages is already on.
+      # Pages has to be switched on once by hand, under Settings -> Pages with
+      # the source set to GitHub Actions. Asking this step to do it instead
+      # (enablement: true) failed here, and a step that cannot succeed until
+      # someone visits Settings anyway is not worth keeping.
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: build

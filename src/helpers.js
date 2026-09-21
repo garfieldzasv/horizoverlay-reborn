@@ -13,6 +13,7 @@ export const defaultConfig = {
   showHighlight: false,
   showSelf: true,
   showMaxhit: false,
+  showRates: false,
   showDuration: true,
   showTotalDps: true,
   showDamageBar: true,

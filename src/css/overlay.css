@@ -212,6 +212,30 @@
   margin-left: -0.8em;
   text-align: center;
 }
+/* Crit / direct hit / crit direct hit, under the bars. Sits on the same
+   baseline grid as .maxhit and borrows the band's grammar: the number in
+   --text-small, the unit in --text-label. Gaps come from margins rather than a
+   separator glyph -- a middot between each pair costs about as much width as
+   all three % signs together. */
+.row .rates {
+  font-size: var(--text-small);
+  margin-top: 0.3em;
+  /* Matches .maxhit: both of these hang under a band that is sheared -30deg,
+     so they are nudged left to sit under its visual centre rather than its
+     box. */
+  margin-left: -0.8em;
+  text-align: center;
+  white-space: nowrap;
+}
+.row .rates > span + span {
+  margin-left: 0.55em;
+}
+.row .rates .label {
+  font-size: var(--text-label);
+  margin-left: 1px;
+  opacity: 0.75;
+}
+
 /*  blur effect */
 .streamer-mode {
   color: transparent;

@@ -129,6 +129,13 @@ export default class CombatantHorizontal extends Component {
           showDamage={config.showDamageBar}
           showHeal={config.showHealBar}
         />
+        {config.showRates && (
+          <RateLine
+            crit={data['crithit%']}
+            dhit={data.DirectHitPct}
+            cdh={data.CritDirectHitPct || data.DirectCritHitPct}
+          />
+        )}
         <div className="maxhit">{config.showMaxhit && maxhit}</div>
       </div>
     )
@@ -157,6 +164,39 @@ function ShareBars({ damage, heal, showDamage, showHeal }) {
           <div className="damage-percent-fg" style={{ width: heal }} />
         </div>
       )}
+    </div>
+  )
+}
+
+// ACT usually hands the rates over with their % already attached, but not every
+// build does, and a line reading `35CRIT` invites being read as a count rather
+// than a rate. Normalising here keeps the three columns saying the same thing.
+function pct(value) {
+  if (value === undefined || value === null || value === '') return '0%'
+  const s = String(value)
+  return s.endsWith('%') ? s : s + '%'
+}
+
+// Crit, direct hit and crit direct hit, on one line under the bars. Same
+// grammar as the band above it -- value in the small size, unit in the label
+// size -- so it reads as part of the card rather than as a footnote. Separated
+// by spacing alone: a middot between each pair costs 19px, which is most of
+// what the three % signs need, and buys nothing.
+export function RateLine({ crit, dhit, cdh }) {
+  return (
+    <div className="rates">
+      <span>
+        {pct(crit)}
+        <span className="label">CRIT</span>
+      </span>
+      <span>
+        {pct(dhit)}
+        <span className="label">DH</span>
+      </span>
+      <span>
+        {pct(cdh)}
+        <span className="label">CDH</span>
+      </span>
     </div>
   )
 }

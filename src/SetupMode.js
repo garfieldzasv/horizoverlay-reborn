@@ -1,6 +1,7 @@
 import React from 'react'
 import Encounter from './Encounter'
 import { mockEncounter, getMockData, getMockPet } from './helpers'
+import { RateLine } from './CombatantHorizontal'
 import locale from './locale'
 
 import './css/reboot.css'
@@ -139,6 +140,9 @@ function SetupMode(props) {
                         </div>
                       )}
                     </div>
+                  )}
+                  {props.config.showRates && (
+                    <RateLine crit={mock.crit} dhit={mock.dhit} cdh={mock.cdh} />
                   )}
                   <div className="maxhit">
                     {props.config.showMaxhit && maxhit}

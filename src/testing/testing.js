@@ -74,6 +74,10 @@ function buildData(seconds, size, scale, withPet) {
       deaths: String(r.deaths),
       'crithit%': (18 + Math.floor(Math.random() * 12)) + '%',
       DirectHitPct: (22 + Math.floor(Math.random() * 15)) + '%',
+      // Crit and direct hit are independent rolls, so the joint rate is roughly
+      // their product. Faking it as a third unrelated random number produced
+      // previews where CDH came out above DH, which cannot happen.
+      CritDirectHitPct: (5 + Math.floor(Math.random() * 8)) + '%',
       maxhit: r.maxhit
     }
   })

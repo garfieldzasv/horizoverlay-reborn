@@ -4,7 +4,7 @@
 
 Un compteur de dégâts horizontal pour Final Fantasy XIV, qui affiche le DPS et le HPS de toute l'équipe sur une rangée de cartes. Une refonte de [Horizoverlay](https://github.com/bsides/horizoverlay).
 
-![](screenshots/overlay-byrole.png)
+![](screenshots/frFR/overlay-byrole.png)
 
 ## Installation
 
@@ -23,7 +23,7 @@ ACTWebSocket fonctionne aussi, il suffit d'ajouter `?HOST_PORT=ws://127.0.0.1:10
 
 Clic droit pour ouvrir les paramètres. Tout prend effet immédiatement et se sauvegarde tout seul.
 
-<img src="screenshots/config.png" width="420">
+<img src="screenshots/frFR/config.png" width="420">
 
 * Cinq langues d'interface : anglais, portugais, chinois simplifié, chinois traditionnel, français
 * Trois thèmes de couleurs : par rôle, noir & blanc, et par rôle détaillé
@@ -39,15 +39,15 @@ Clic droit pour ouvrir les paramètres. Tout prend effet immédiatement et se sa
 
 Le thème détaillé, une couleur par sous-rôle :
 
-![](screenshots/overlay-byjob.png)
+![](screenshots/frFR/overlay-byjob.png)
 
 Noir & blanc :
 
-![](screenshots/overlay-blackwhite.png)
+![](screenshots/frFR/overlay-blackwhite.png)
 
 Mode config :
 
-![](screenshots/setup-mode.png)
+![](screenshots/frFR/setup-mode.png)
 
 ## Ce qui change par rapport à l'original
 
@@ -69,7 +69,7 @@ L'original, avec une police proportionnelle et des cartes plus étroites :
 
 Six chiffres rentrent maintenant :
 
-![](screenshots/overlay-6digit.png)
+![](screenshots/frFR/overlay-6digit.png)
 
 Mêmes 900px, mêmes huit joueurs. L'original perd la première et la dernière carte :
 
@@ -77,7 +77,7 @@ Mêmes 900px, mêmes huit joueurs. L'original perd la première et la dernière 
 
 Maintenant ça passe sur deux rangées :
 
-![](screenshots/wrap-900px.png)
+![](screenshots/frFR/wrap-900px.png)
 
 ## Questions fréquentes
 

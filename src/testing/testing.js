@@ -9,30 +9,44 @@
 //   &mockInterval=1000   update period in ms (0 = send once)
 //   &mockParty=8         how many combatants to send (1-24)
 
-const PARTY = [
-  // name,            job,   role,   dps,  hps,  deaths
-  ['光之战士', 'PLD', 'tank', 6820, 320, 0],
-  ['Yshtola Rhul', 'DRK', 'tank', 7140, 180, 0],
-  // The longest name FFXIV allows, carrying a death: this is the case where
-  // the name line runs out of room, and the fixture should exercise it.
-  ['Alphinaud Leveilleur', 'WHM', 'healer', 4210, 9840, 1],
-  ['星极大魔法使', 'AST', 'healer', 3980, 8760, 1],
-  ['Zidane Tribal', 'NIN', 'dps', 12480, 0, 0],
-  ['龙骑士小明', 'DRG', 'dps', 13150, 0, 0],
-  ['Vivi Ornitier', 'BLM', 'dps', 13890, 0, 0],
-  ['Freya Crescent', 'BRD', 'dps', 11620, 210, 0],
-  ['召唤宝宝', 'SMN', 'dps', 12940, 0, 0],
-  ['Garnet Alexandros', 'RDM', 'dps', 11980, 640, 0],
-  ['Adelbert Steiner', 'GNB', 'tank', 7310, 90, 0],
-  ['Quina Quen', 'SGE', 'healer', 4460, 9210, 0]
-]
+import { mockRoster, mockZoneFor, defaultConfig } from '../helpers'
+import { read as readConfig } from '../configStore'
 
-const MAXHITS = [
-  '天辉-38921',
-  '深恶痛绝-42210',
-  'Meteor-71203',
-  '背刺-29104',
-  '苍天龙炎冲-33180'
+// This runs before React mounts, so there is no config prop to read from yet;
+// the stored value is the same one withHelper will pick up a moment later.
+// The fallback is defaultConfig's rather than a literal: an overlay nobody has
+// configured would otherwise come up with its interface in one language and
+// these names in another.
+function storedLocale() {
+  try {
+    return JSON.parse(readConfig() || '{}').locale || defaultConfig.locale
+  } catch (e) {
+    return defaultConfig.locale
+  }
+}
+
+// Per-row numbers only. Who these people are -- name, job, and the skill on
+// their biggest hit -- comes from the shared roster in helpers.js, which tracks
+// the interface language. The roster used to be spelled out here as a fixed
+// mix of Chinese and Latin names, which is not what either service looks like:
+// CN characters have Chinese names, Global characters have Latin ones.
+//
+// Rates are second-by-second here rather than the whole-fight totals setup mode
+// shows, so these are an order of magnitude smaller on purpose.
+const NUMBERS = [
+  // dps,  hps, deaths
+  [13890, 0, 0],
+  [13150, 0, 0],
+  [12480, 0, 0],
+  [11620, 210, 1],
+  [7310, 90, 0],
+  [12940, 0, 0],
+  [3980, 8760, 1],
+  [11980, 640, 0],
+  [12100, 0, 0],
+  [11450, 0, 0],
+  [10980, 0, 0],
+  [11730, 320, 0]
 ]
 
 function jitter(base, pct) {
@@ -43,18 +57,25 @@ function jitter(base, pct) {
 // 职业单位 is on, and they take a different code path for both icon and colour.
 // `mockPet=1` puts one in, named the way a Chinese client reports it so the
 // English name matching genuinely misses.
-const PET = ['陆行鸟', '', 'other', 9200, 0, 0]
+// Named the way a Chinese client reports it even in the English preview: the
+// point of this row is that the English name matching misses and the icon has
+// to fall back, which an English name would not exercise.
+const PET = ['陆行鸟', '', '喙突', 9200, 0, 0]
 
-function buildData(seconds, size, scale, withPet) {
-  const members = PARTY.slice(0, size).concat(withPet ? [PET] : [])
-  const rows = members.map(([name, job, role, dps, hps, deaths], i) => ({
+function buildData(seconds, size, scale, withPet, locale) {
+  const cast = mockRoster(locale)
+  const members = NUMBERS.slice(0, size)
+    .map((n, i) => [cast[i].name, cast[i].job, cast[i].skill].concat(n))
+    .concat(withPet ? [PET] : [])
+  const rows = members.map(([name, job, skill, dps, hps, deaths], i) => ({
     name,
     job,
-    role,
     dps: jitter(dps * scale, 0.04),
     hps: hps ? jitter(hps * scale, 0.06) : 0,
     deaths,
-    maxhit: MAXHITS[i % MAXHITS.length]
+    // Roughly a few seconds of output. Indexing a fixed list instead put the
+    // biggest hit of the fight on a healer and the smallest on the top DPS.
+    maxhit: skill + '-' + Math.round(dps * 3.2)
   }))
 
   // The overlay ranks by insertion order, so sort by the relevant number.
@@ -106,8 +127,8 @@ function buildData(seconds, size, scale, withPet) {
   return {
     isActive: 'true',
     Encounter: {
-      title: '绝欧米茄验证战',
-      CurrentZoneName: '绝欧米茄验证战',
+      title: mockZoneFor(locale),
+      CurrentZoneName: mockZoneFor(locale),
       duration: `${mm}:${ss}`,
       damage: String(totalDamage),
       healed: String(totalHealed),
@@ -136,6 +157,7 @@ export default function initMockData() {
 
   if (!wantsMock) return
 
+  const locale = storedLocale()
   const size = Math.min(24, Math.max(1, parseInt(params.get('mockParty'), 10) || 8))
   // `mockStress=1` pushes DPS/HPS into 6 digits, which is the widest the layout
   // has to survive. Keep the default realistic so the preview still looks real.
@@ -149,7 +171,7 @@ export default function initMockData() {
   const send = () => {
     document.dispatchEvent(
       new CustomEvent('onOverlayDataUpdate', {
-        detail: buildData(seconds, size, scale, withPet)
+        detail: buildData(seconds, size, scale, withPet, locale)
       })
     )
   }

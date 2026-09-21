@@ -58,7 +58,7 @@ const locale = {
         'Everything saves automatically.<br /><strong>Right click</strong> to open this window',
     },
     setupMode: {
-      sampleZone: 'Striking Dummy',
+      sampleZone: 'Dummy',
       instructionsTitle:
         '<strong>Right click anywhere this window to open settings!</strong>',
       instructions:
@@ -113,7 +113,7 @@ const locale = {
         'Tudo salva automaticamente.<br /><strong>Botão direito</strong> abre essa janela.',
     },
     setupMode: {
-      sampleZone: 'Boneco de Treino',
+      sampleZone: 'Dummy',
       instructionsTitle:
         '<strong>Botão direito por aqui para abrir as configurações!</strong>',
       instructions:
@@ -278,7 +278,7 @@ const locale = {
         'Tout est sauvegardé automatiquement.<br /><strong>Clic droit</strong> pour ouvrir cette fenêtre',
     },
     setupMode: {
-      sampleZone: "Mannequin d'entraînement",
+      sampleZone: 'Mannequin',
       instructionsTitle:
         "<strong>Clic droit n'importe où dans cette fenêtre pour ouvrir les paramètres !</strong>",
       instructions:

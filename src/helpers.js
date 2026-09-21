@@ -266,8 +266,25 @@ export const mockEncounter = {
 // the widest a CN character ID and skill name can be in game. ACT always reports
 // limit break in English, so that row keeps its English name in both sets.
 // Order matches mockRows.
+// Which set of fake names and skills a locale gets. Not one set per locale:
+// what matters is the client the player is actually looking at, because that is
+// what ACT reads its log from.
+//
+// Chinese players are on the CN service, whose client is Simplified; Traditional
+// has no client of its own, so 正體中文 is that same list converted -- the names
+// a 正體 reader recognises, not a different game. Everyone else is on Global and
+// sees English, French included: there is no French service, so a French player
+// is reading the same English log as everyone else on Global.
+const labelSet = {
+  enUS: 'en',
+  ptBR: 'en',
+  frFR: 'en',
+  zhCN: 'zhCN',
+  zhHK: 'zhHK'
+}
+
 const mockLabels = {
-  zh: [
+  zhCN: [
     ['黑魔法师阿三', '万象灵炎'],
     ['龙骑士小明', '苍天龙炎'],
     ['机工士小钢', '回转飞锯'],
@@ -292,6 +309,33 @@ const mockLabels = {
     ['贤者小贤', '智识之灵'],
     ['占星术士小星', '大宇宙'],
     ['白魔法师小白', '天赐祝福'],
+    ['Limit Break', 'Limit Break']
+  ],
+  zhHK: [
+    ['黑魔法師阿三', '萬象靈炎'],
+    ['龍騎士小明', '蒼天龍炎'],
+    ['機工士小鋼', '迴轉飛鋸'],
+    ['光之戰士', '死亡宣告'],
+    ['騎士鐵壁', '聖盾陣'],
+    ['馴獸師阿狼', '野獸咆哮'],
+    ['星極大魔法使', '天輝'],
+    ['青魔法師小藍', '月之笛'],
+    ['武士一刀齋', '照破'],
+    ['忍者影', '水遁之術'],
+    ['武僧鐵拳', '爭雷'],
+    ['赤魔法師小紅', '赤復活'],
+    ['召喚師小綠', '死星核爆'],
+    ['舞者踏歌', '強音之劍'],
+    ['戰士怒濤', '原初解放'],
+    ['暗黑騎士小黑', '血濺五步'],
+    ['絕槍戰士鐵', '血壤'],
+    ['騎士堅盾', '神聖陣'],
+    ['戰士裂空', '原初之魂'],
+    ['白魔導師小花', '熾天迴向'],
+    ['學者書蟲', '穢濁之災'],
+    ['賢者小賢', '智識之靈'],
+    ['占星術士小星', '大宇宙'],
+    ['白魔法師小白', '天賜祝福'],
     ['Limit Break', 'Limit Break']
   ],
   en: [
@@ -329,10 +373,12 @@ const mockLabels = {
 // the icon here because setup mode looks it up directly, with none of the live
 // path's name matching.
 export function getMockPet(locale, rank) {
-  const zh = locale === 'zhCN' || locale === 'zhHK'
+  const set = labelSet[locale] || 'en'
+  const chocobo = { zhCN: '陆行鸟', zhHK: '陸行鳥', en: 'Chocobo' }
+  const beak = { zhCN: '喙突', zhHK: '喙突', en: 'Choco Beak' }
   return {
     isSelf: false,
-    name: zh ? '陆行鸟' : 'Chocobo',
+    name: chocobo[set],
     jobClass: '',
     jobFull: 'Chocobo',
     // `job` only picks the icon here; the text is its own field, because a pet
@@ -352,12 +398,39 @@ export function getMockPet(locale, rank) {
     deaths: '0',
     damagePct: '1',
     healPct: '0',
-    maxhit: (zh ? '喙突' : 'Choco Beak') + '-14820'
+    maxhit: beak[set] + '-14820'
   }
 }
 
+// The cast, without any of the layout-mode shaping. Setup mode and the live
+// mock feed both draw from this, so the two previews show the same party
+// rather than two unrelated ones. Limit break is the last row and is left to
+// the caller: the live feed reports it as a pseudo-combatant, setup mode folds
+// it into the encounter bar.
+export function mockRoster(locale) {
+  const labels = mockLabels[labelSet[locale] || 'en']
+  return mockRows.map((row, i) => ({
+    name: labels[i][0],
+    skill: labels[i][1],
+    job: row.job.toUpperCase()
+  }))
+}
+
+// The zone the fake encounter claims to be in. Setup mode has its own from the
+// locale file (a striking dummy); this is the live feed's, where a real fight
+// name reads more like the thing being previewed.
+export const mockZone = {
+  en: 'The Omega Protocol',
+  zhCN: '绝欧米茄验证战',
+  zhHK: '絕歐米茄驗證戰'
+}
+
+export function mockZoneFor(locale) {
+  return mockZone[labelSet[locale] || 'en']
+}
+
 export function getMockData(locale) {
-  const labels = mockLabels[locale === 'zhCN' || locale === 'zhHK' ? 'zh' : 'en']
+  const labels = mockLabels[labelSet[locale] || 'en']
   // Shares are derived, not written down: hand-maintained percentages have to be
   // rebalanced every time a row changes, and had already drifted off 100 twice.
   const totalDps = mockTotalDps()

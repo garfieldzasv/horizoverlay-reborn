@@ -4,7 +4,7 @@
 
 FF14 的 ACT 横向悬浮窗，一排卡片显示全队的 DPS 和 HPS。基于 [Horizoverlay](https://github.com/bsides/horizoverlay) 重做。
 
-![](screenshots/overlay-byrole.png)
+![](screenshots/zhCN/overlay-byrole.png)
 
 ## 安装
 
@@ -23,7 +23,7 @@ FF14 的 ACT 横向悬浮窗，一排卡片显示全队的 DPS 和 HPS。基于 
 
 右键打开配置页，所有改动即时生效并自动保存。
 
-<img src="screenshots/config.png" width="420">
+<img src="screenshots/zhCN/config.png" width="420">
 
 * 五种界面语言：英语、葡萄牙语、简体中文、正體中文、法语
 * 三套颜色主题：职业特有、黑白色调、细分职业
@@ -39,15 +39,15 @@ FF14 的 ACT 横向悬浮窗，一排卡片显示全队的 DPS 和 HPS。基于 
 
 细分职业主题，五职能各一色：
 
-![](screenshots/overlay-byjob.png)
+![](screenshots/zhCN/overlay-byjob.png)
 
 黑白色调：
 
-![](screenshots/overlay-blackwhite.png)
+![](screenshots/zhCN/overlay-blackwhite.png)
 
 配置模式：
 
-![](screenshots/setup-mode.png)
+![](screenshots/zhCN/setup-mode.png)
 
 ## 和原版的区别
 
@@ -69,7 +69,7 @@ FF14 的 ACT 横向悬浮窗，一排卡片显示全队的 DPS 和 HPS。基于 
 
 现在六位数也放得下：
 
-![](screenshots/overlay-6digit.png)
+![](screenshots/zhCN/overlay-6digit.png)
 
 同样 900px 宽、同样 8 个人，原版把首尾两张卡裁掉了：
 
@@ -77,7 +77,7 @@ FF14 的 ACT 横向悬浮窗，一排卡片显示全队的 DPS 和 HPS。基于 
 
 现在折成两行：
 
-![](screenshots/wrap-900px.png)
+![](screenshots/zhCN/wrap-900px.png)
 
 ## 常见问题
 

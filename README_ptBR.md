@@ -4,7 +4,7 @@
 
 Um medidor de dano horizontal para Final Fantasy XIV, que mostra o DPS e o HPS do grupo inteiro numa fileira de cartões. Uma reconstrução do [Horizoverlay](https://github.com/bsides/horizoverlay).
 
-![](screenshots/overlay-byrole.png)
+![](screenshots/ptBR/overlay-byrole.png)
 
 ## Instalação
 
@@ -23,7 +23,7 @@ O ACTWebSocket também funciona, é só acrescentar `?HOST_PORT=ws://127.0.0.1:1
 
 Clique com o botão direito para abrir as configurações. Tudo vale na hora e se salva sozinho.
 
-<img src="screenshots/config.png" width="420">
+<img src="screenshots/ptBR/config.png" width="420">
 
 * Cinco idiomas de interface: inglês, português, chinês simplificado, chinês tradicional e francês
 * Três temas de cor: por função, preto & branco, e por função detalhada
@@ -39,15 +39,15 @@ Clique com o botão direito para abrir as configurações. Tudo vale na hora e s
 
 O tema detalhado, uma cor por subfunção:
 
-![](screenshots/overlay-byjob.png)
+![](screenshots/ptBR/overlay-byjob.png)
 
 Preto & branco:
 
-![](screenshots/overlay-blackwhite.png)
+![](screenshots/ptBR/overlay-blackwhite.png)
 
 Modo config:
 
-![](screenshots/setup-mode.png)
+![](screenshots/ptBR/setup-mode.png)
 
 ## O que mudou em relação ao original
 
@@ -69,7 +69,7 @@ O original, com fonte proporcional e cartões mais estreitos:
 
 Agora seis dígitos cabem:
 
-![](screenshots/overlay-6digit.png)
+![](screenshots/ptBR/overlay-6digit.png)
 
 Mesmos 900px, mesmos oito jogadores. O original perde o primeiro e o último cartão:
 
@@ -77,7 +77,7 @@ Mesmos 900px, mesmos oito jogadores. O original perde o primeiro e o último car
 
 Agora quebra em duas fileiras:
 
-![](screenshots/wrap-900px.png)
+![](screenshots/ptBR/wrap-900px.png)
 
 ## Perguntas frequentes
 

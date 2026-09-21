@@ -4,7 +4,7 @@ English · [简体中文](README_zhCN.md) · [正體中文](README_zhHK.md) · [
 
 A horizontal damage meter overlay for Final Fantasy XIV, showing the whole party's DPS and HPS in one row of cards. A rebuild of [Horizoverlay](https://github.com/bsides/horizoverlay).
 
-![](screenshots/overlay-byrole.png)
+![](screenshots/enUS/overlay-byrole.png)
 
 ## Install
 
@@ -23,7 +23,7 @@ ACTWebSocket works too, just append `?HOST_PORT=ws://127.0.0.1:10501/` to the UR
 
 Right-click to open the settings. Everything takes effect immediately and saves itself.
 
-<img src="screenshots/config.png" width="420">
+<img src="screenshots/enUS/config.png" width="420">
 
 * Five interface languages: English, Portuguese, Simplified Chinese, Traditional Chinese, French
 * Three color themes: by role, black & white, and by role in detail
@@ -39,15 +39,15 @@ Right-click to open the settings. Everything takes effect immediately and saves 
 
 The detailed theme, one color per sub-role:
 
-![](screenshots/overlay-byjob.png)
+![](screenshots/enUS/overlay-byjob.png)
 
 Black & white:
 
-![](screenshots/overlay-blackwhite.png)
+![](screenshots/enUS/overlay-blackwhite.png)
 
 Setup mode:
 
-![](screenshots/setup-mode.png)
+![](screenshots/enUS/setup-mode.png)
 
 ## What changed from the original
 
@@ -69,7 +69,7 @@ The original, with a proportional font and narrower cards:
 
 Six digits fit now:
 
-![](screenshots/overlay-6digit.png)
+![](screenshots/enUS/overlay-6digit.png)
 
 Same 900px, same eight players. The original drops the first and last card:
 
@@ -77,7 +77,7 @@ Same 900px, same eight players. The original drops the first and last card:
 
 Now it wraps onto two rows:
 
-![](screenshots/wrap-900px.png)
+![](screenshots/enUS/wrap-900px.png)
 
 ## FAQ
 

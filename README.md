@@ -8,16 +8,16 @@ A horizontal damage meter overlay for Final Fantasy XIV, showing the whole party
 
 ## Install
 
-Grab the zip from [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) and unpack it, or clone this repository and use the `build/` directory.
-
 1. In OverlayPlugin, create a new overlay of type MiniParse
-2. Point the URL at `index.html` using its full `file://` path
+2. Set its URL to `https://garfieldzasv.github.io/horizoverlay-reborn/`
 3. Turn off **Enable clickthru** for this overlay, or right-click will not open the settings
 4. Right-click the overlay to open the settings
 
+If you would rather not depend on the network, grab the zip from [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases), unpack it, and point the URL at `index.html` by its full `file://` path instead. Both are the same build, though the hosted one keeps your settings more reliably, because browsers block `localStorage` on `file://` paths.
+
 Window width: a row of 4 needs 759px, 6 needs 1138px, 8 needs 1517px, 12 needs 2276px, 24 needs 4551px. Cards wrap when they do not fit.
 
-ACTWebSocket works too, just append `?HOST_PORT=ws://127.0.0.1:10501/` to the URL.
+ACTWebSocket works too, just append `?HOST_PORT=ws://127.0.0.1:10501/` to the URL. Use the local copy for that; a page served over https may not be allowed to open a plain `ws://` connection.
 
 ## Features
 
@@ -61,7 +61,7 @@ Setup mode:
 * 59 job icons, including Beastmaster <img src="screenshots/bst-icon.png" width="18"> from patch 7.56
 * Pets use a summon icon in neutral grey, instead of a disconnected-network icon in black
 * A rebuilt settings page
-* Fully offline; nothing is fetched at runtime
+* No third-party requests and no analytics; fonts and icons are bundled (the original's hosted page carries Google Analytics)
 
 The original, with a proportional font and narrower cards:
 
@@ -83,7 +83,7 @@ Now it wraps onto two rows:
 
 **Right-click does nothing.** Check that Enable clickthru is off. You can also append `#/config` to the URL to open the settings directly.
 
-**Settings are lost on restart.** `localStorage` is blocked on a `file://` path; serve the unpacked directory over local HTTP instead.
+**Settings are lost on restart.** `localStorage` is blocked on a `file://` path. Use the hosted URL, or serve the unpacked directory over local HTTP.
 
 **A percentage reads 0% for everyone.** Your build of ACT does not provide that field. Pick another one.
 

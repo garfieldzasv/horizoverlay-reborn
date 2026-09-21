@@ -8,16 +8,16 @@ FF14 的 ACT 横向悬浮窗，一排卡片显示全队的 DPS 和 HPS。基于 
 
 ## 安装
 
-到 [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) 下载 zip 解压，或者 clone 本仓库用里面的 `build/` 目录。
-
 1. 在 OverlayPlugin 里新建一个 MiniParse 类型的悬浮窗
-2. URL 填 `index.html` 的完整 `file://` 地址
+2. URL 填 `https://garfieldzasv.github.io/horizoverlay-reborn/`
 3. 关掉这个悬浮窗的「滑鼠穿透 / Enable clickthru」，不然右键呼不出配置
 4. 在悬浮窗上右键，打开配置页
 
+不想依赖网络的话，到 [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) 下载 zip 解压，URL 改填 `index.html` 的完整 `file://` 地址。两者是同一份产物，不过在线那份设置保存得更可靠，因为浏览器会拦掉 `file://` 下的 `localStorage`。
+
 窗口宽度：一行放下 4 个人需要 759px，6 个人 1138px，8 个人 1517px，12 个人 2276px，24 个人 4551px。放不下会自动折行。
 
-也支持 ACTWebSocket，URL 后面加 `?HOST_PORT=ws://127.0.0.1:10501/`。
+也支持 ACTWebSocket，URL 后面加 `?HOST_PORT=ws://127.0.0.1:10501/`。这种用法请用本地那份，https 页面不一定允许连明文 `ws://`。
 
 ## 功能
 
@@ -61,7 +61,7 @@ FF14 的 ACT 横向悬浮窗，一排卡片显示全队的 DPS 和 HPS。基于 
 * 职业图标补到 59 个，含 7.56 的驯兽师 <img src="screenshots/bst-icon.png" width="18">
 * 宠物改用召唤兽图标和中性灰，原版显示成断网图标加纯黑
 * 配置页重做
-* 完全离线，运行时不请求任何外部地址
+* 不请求任何第三方地址，也没有统计代码，字体和图标全部内嵌（原版的在线页内嵌了 Google Analytics）
 
 原版用比例字体，卡片也窄：
 
@@ -83,7 +83,7 @@ FF14 的 ACT 横向悬浮窗，一排卡片显示全队的 DPS 和 HPS。基于 
 
 **右键没反应。** 确认「滑鼠穿透 / Enable clickthru」是关闭的。也可以在 URL 末尾加 `#/config` 直接打开配置页。
 
-**设置改了但重启就丢。** `localStorage` 在 `file://` 下被拦了，改用本地 HTTP 服务指向解压出来的目录。
+**设置改了但重启就丢。** `localStorage` 在 `file://` 下被拦了。改用在线地址，或者用本地 HTTP 服务指向解压出来的目录。
 
 **某个百分比全是 0%。** 你这个版本的 ACT 没提供那个字段，换一项。
 

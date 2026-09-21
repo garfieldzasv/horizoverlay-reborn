@@ -1,0 +1,48 @@
+# Publishes the committed build/ directory to GitHub Pages.
+#
+# It uploads the artefact rather than rebuilding from source on purpose: the
+# same build/ is what the repository carries and what the Release zip is made
+# from, so all three ways of getting the overlay stay byte-identical. A rebuild
+# here could drift from them on a dependency bump and nobody would notice.
+
+name: Deploy to Pages
+
+on:
+  push:
+    branches: [master]
+    # A README-only commit does not change what is served.
+    paths:
+      - 'build/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it; a half-published site
+# is worse than a slightly stale one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      # enablement turns Pages on for the repository if it is off, so the first
+      # run does not need anyone to visit Settings first. It is a no-op once
+      # Pages is already on.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+      - id: deployment
+        uses: actions/deploy-pages@v4

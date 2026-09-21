@@ -8,16 +8,16 @@ Un compteur de dégâts horizontal pour Final Fantasy XIV, qui affiche le DPS et
 
 ## Installation
 
-Téléchargez le zip depuis [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) et décompressez-le, ou clonez ce dépôt et utilisez le dossier `build/`.
-
 1. Dans OverlayPlugin, créez un overlay de type MiniParse
-2. Pointez l'URL vers `index.html` avec son chemin `file://` complet
+2. Mettez `https://garfieldzasv.github.io/horizoverlay-reborn/` comme URL
 3. Désactivez **Enable clickthru** sur cet overlay, sinon le clic droit n'ouvre pas les paramètres
 4. Faites un clic droit sur l'overlay pour ouvrir les paramètres
 
+Si vous préférez ne pas dépendre du réseau, téléchargez le zip depuis [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases), décompressez-le et pointez l'URL vers `index.html` par son chemin `file://` complet. C'est la même build, mais la version hébergée conserve mieux vos paramètres, les navigateurs bloquant `localStorage` sur les chemins `file://`.
+
 Largeur de fenêtre : une rangée de 4 demande 759px, 6 en demandent 1138px, 8 en demandent 1517px, 12 en demandent 2276px, 24 en demandent 4551px. Les cartes passent à la ligne quand elles ne rentrent pas.
 
-ACTWebSocket fonctionne aussi, il suffit d'ajouter `?HOST_PORT=ws://127.0.0.1:10501/` à l'URL.
+ACTWebSocket fonctionne aussi, il suffit d'ajouter `?HOST_PORT=ws://127.0.0.1:10501/` à l'URL. Utilisez la copie locale pour cela ; une page servie en https peut ne pas être autorisée à ouvrir une connexion `ws://` en clair.
 
 ## Fonctionnalités
 
@@ -61,7 +61,7 @@ Mode config :
 * 59 icônes de job, dont le Beastmaster <img src="screenshots/bst-icon.png" width="18"> du patch 7.56
 * Les familiers utilisent une icône d'invocation en gris neutre, au lieu d'une icône de réseau déconnecté en noir
 * Une page de paramètres refaite
-* Entièrement hors ligne ; rien n'est récupéré sur le réseau à l'exécution
+* Aucune requête vers un tiers et pas d'analytics ; polices et icônes sont embarquées (la page hébergée de l'original embarque Google Analytics)
 
 L'original, avec une police proportionnelle et des cartes plus étroites :
 
@@ -83,7 +83,7 @@ Maintenant ça passe sur deux rangées :
 
 **Le clic droit ne fait rien.** Vérifiez qu'Enable clickthru est désactivé. Vous pouvez aussi ajouter `#/config` à l'URL pour ouvrir les paramètres directement.
 
-**Les paramètres sont perdus au redémarrage.** `localStorage` est bloqué sur un chemin `file://` ; servez le dossier décompressé en HTTP local.
+**Les paramètres sont perdus au redémarrage.** `localStorage` est bloqué sur un chemin `file://`. Utilisez l'URL hébergée, ou servez le dossier décompressé en HTTP local.
 
 **Un pourcentage affiche 0% pour tout le monde.** Votre version d'ACT ne fournit pas ce champ. Choisissez-en une autre.
 

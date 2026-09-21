@@ -8,16 +8,16 @@ FF14 的 ACT 橫向懸浮窗，一排卡片顯示全隊的 DPS 和 HPS。基於 
 
 ## 安裝
 
-到 [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) 下載 zip 解壓縮，或者 clone 本儲存庫用裡面的 `build/` 目錄。
-
 1. 在 OverlayPlugin 裡新建一個 MiniParse 類型的懸浮窗
-2. URL 填 `index.html` 的完整 `file://` 位址
+2. URL 填 `https://garfieldzasv.github.io/horizoverlay-reborn/`
 3. 關掉這個懸浮窗的「滑鼠穿透 / Enable clickthru」，不然右鍵呼不出設定
 4. 在懸浮窗上按右鍵，打開設定頁
 
+不想依賴網路的話，到 [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) 下載 zip 解壓縮，URL 改填 `index.html` 的完整 `file://` 位址。兩者是同一份產物，不過線上那份設定儲存得更可靠，因為瀏覽器會擋掉 `file://` 下的 `localStorage`。
+
 視窗寬度：一行放下 4 個人需要 759px，6 個人 1138px，8 個人 1517px，12 個人 2276px，24 個人 4551px。放不下會自動折行。
 
-也支援 ACTWebSocket，URL 後面加 `?HOST_PORT=ws://127.0.0.1:10501/`。
+也支援 ACTWebSocket，URL 後面加 `?HOST_PORT=ws://127.0.0.1:10501/`。這種用法請用本機那份，https 頁面不一定允許連明文 `ws://`。
 
 ## 功能
 
@@ -61,7 +61,7 @@ FF14 的 ACT 橫向懸浮窗，一排卡片顯示全隊的 DPS 和 HPS。基於 
 * 職業圖示補到 59 個，含 7.56 的馴獸師 <img src="screenshots/bst-icon.png" width="18">
 * 寵物改用召喚獸圖示和中性灰，原版顯示成斷網圖示加純黑
 * 設定頁重做
-* 完全離線，執行時不請求任何外部位址
+* 不請求任何第三方位址，也沒有統計程式碼，字型和圖示全部內建（原版的線上頁內嵌了 Google Analytics）
 
 原版用比例字型，卡片也窄：
 
@@ -83,7 +83,7 @@ FF14 的 ACT 橫向懸浮窗，一排卡片顯示全隊的 DPS 和 HPS。基於 
 
 **右鍵沒反應。** 確認「滑鼠穿透 / Enable clickthru」是關閉的。也可以在 URL 末尾加 `#/config` 直接打開設定頁。
 
-**設定改了但重啟就丟。** `localStorage` 在 `file://` 下被擋了，改用本機 HTTP 服務指向解壓出來的目錄。
+**設定改了但重啟就丟。** `localStorage` 在 `file://` 下被擋了。改用線上位址，或者用本機 HTTP 服務指向解壓出來的目錄。
 
 **某個百分比全是 0%。** 你這個版本的 ACT 沒提供那個欄位，換一項。
 

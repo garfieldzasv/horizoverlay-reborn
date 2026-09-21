@@ -8,16 +8,16 @@ Um medidor de dano horizontal para Final Fantasy XIV, que mostra o DPS e o HPS d
 
 ## Instalação
 
-Baixe o zip em [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) e descompacte, ou clone este repositório e use a pasta `build/`.
-
 1. No OverlayPlugin, crie um overlay do tipo MiniParse
-2. Aponte a URL para o `index.html` usando o caminho `file://` completo
+2. Coloque `https://garfieldzasv.github.io/horizoverlay-reborn/` na URL
 3. Desligue o **Enable clickthru** desse overlay, senão o botão direito não abre as configurações
 4. Clique com o botão direito no overlay para abrir as configurações
 
+Se preferir não depender da rede, baixe o zip em [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases), descompacte e aponte a URL para o `index.html` pelo caminho `file://` completo. É a mesma build, mas a versão hospedada guarda suas configurações de forma mais confiável, porque os navegadores bloqueiam `localStorage` em caminhos `file://`.
+
 Largura da janela: uma fileira de 4 precisa de 759px, 6 precisam de 1138px, 8 precisam de 1517px, 12 precisam de 2276px, 24 precisam de 4551px. Os cartões quebram linha quando não cabem.
 
-O ACTWebSocket também funciona, é só acrescentar `?HOST_PORT=ws://127.0.0.1:10501/` à URL.
+O ACTWebSocket também funciona, é só acrescentar `?HOST_PORT=ws://127.0.0.1:10501/` à URL. Para isso use a cópia local; uma página servida por https pode não conseguir abrir uma conexão `ws://` sem criptografia.
 
 ## Funcionalidades
 
@@ -61,7 +61,7 @@ Modo config:
 * 59 ícones de job, incluindo o Beastmaster <img src="screenshots/bst-icon.png" width="18"> do patch 7.56
 * Pets usam um ícone de invocação em cinza neutro, no lugar do ícone de rede desconectada em preto
 * Página de configurações refeita
-* Totalmente offline; nada é buscado na rede em tempo de execução
+* Nenhuma requisição a terceiros e nenhum analytics; fontes e ícones vêm embutidos (a página hospedada do original carrega Google Analytics)
 
 O original, com fonte proporcional e cartões mais estreitos:
 
@@ -83,7 +83,7 @@ Agora quebra em duas fileiras:
 
 **O botão direito não faz nada.** Confira se o Enable clickthru está desligado. Dá também para acrescentar `#/config` à URL e abrir as configurações direto.
 
-**As configurações somem quando reinicio.** O `localStorage` fica bloqueado num caminho `file://`; sirva a pasta descompactada por HTTP local.
+**As configurações somem quando reinicio.** O `localStorage` fica bloqueado num caminho `file://`. Use a URL hospedada, ou sirva a pasta descompactada por HTTP local.
 
 **Uma porcentagem marca 0% para todo mundo.** Sua versão do ACT não fornece esse campo. Escolha outra.
 

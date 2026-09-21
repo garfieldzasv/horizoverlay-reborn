@@ -107,9 +107,9 @@ export default class CombatantHorizontal extends Component {
         style={{ order }}
       >
         <div className="name">
-          {/* Balances the death slot on the right so the name stays centred on
-              the card. Paired with it: both appear, or neither does. */}
-          {config.showDeaths && <span className="name-pad" />}
+          {/* A hidden copy of the death slot, balancing it so the name stays
+              centred on the card. Paired with it: both appear, or neither. */}
+          {config.showDeaths && <DeathMark deaths={data.deaths} pad />}
           {config.showRank ? (
             <span className="rank">{`${this.props.rank}. `}</span>
           ) : (
@@ -217,11 +217,18 @@ export function RateLine({ crit, dhit, cdh }) {
 // zero: `2D` becomes `20` in a screenshot, and three letters cannot. Not DEATH
 // either -- that overruns the name line, which has nothing to spare once a
 // name is long.
-export function DeathMark({ deaths }) {
+// `pad` renders the same box, hidden, on the other side of the name. Balancing
+// it with an empty span did not hold: this box floors at its own min-content --
+// its padding when empty, its text when not -- and an empty pad floors at zero,
+// so the two sides were never equal and the name sat about 2px left of centre
+// whatever the count was. A hidden copy has the same intrinsic width by
+// construction, for every count and every name length.
+export function DeathMark({ deaths, pad }) {
   const n = parseInt(deaths, 10)
-  if (!n) return <span className="deaths" />
+  const className = pad ? 'deaths deaths-pad' : 'deaths'
+  if (!n) return <span className={className} />
   return (
-    <span className="deaths">
+    <span className={className} aria-hidden={pad ? 'true' : undefined}>
       {n}
       <span className="label">{n > 1 ? 'DTHS' : 'DTH'}</span>
     </span>

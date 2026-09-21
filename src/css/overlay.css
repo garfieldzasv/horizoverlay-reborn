@@ -194,11 +194,11 @@
   justify-content: center;
   align-items: baseline;
 }
-/* Left third. Mirrors the death slot's flex so the two cancel out and the name
-   lands on the card's centre line whether or not anyone died. */
-.row .name .name-pad {
-  flex: 1 1 0;
-  min-width: 0;
+/* The left third is a hidden copy of the right one, so both sides have the
+   same intrinsic width and the name lands on the card's centre line -- for any
+   death count, and for none. */
+.row .deaths-pad {
+  visibility: hidden;
 }
 .row .name .rank {
   flex: 0 0 auto;

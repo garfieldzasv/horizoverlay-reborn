@@ -70,7 +70,7 @@ function SetupMode(props) {
                   key={mock.rank}
                 >
                   <div className="name">
-                    {props.config.showDeaths && <span className="name-pad" />}
+                    {props.config.showDeaths && <DeathMark deaths={mock.deaths} pad />}
                     {props.config.showRank ? (
                       <span className="rank">{`${mock.rank}. `}</span>
                     ) : null}

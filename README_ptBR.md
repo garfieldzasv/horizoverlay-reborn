@@ -111,6 +111,6 @@ Para desenvolver use `npm start` e acrescente `?mock=1#/` à URL para dados fals
 
 Derivado de [bsides/horizoverlay](https://github.com/bsides/horizoverlay), Copyright 2017 Rafael "BSIDES" Pereira, Apache-2.0, e publicado sob a mesma licença. O [NOTICE](NOTICE) lista o que mudou.
 
-A Maple Mono NF CN embutida vem de [subframe7536/maple-font](https://github.com/subframe7536/maple-font) sob a SIL Open Font License 1.1.
+A Maple Mono CN embutida vem de [subframe7536/maple-font](https://github.com/subframe7536/maple-font) sob a SIL Open Font License 1.1, apenas reempacotada como woff2 e sem outras alterações.
 
 Os ícones de job derivam de arte de FINAL FANTASY XIV. FINAL FANTASY é marca registrada da Square Enix Holdings Co., Ltd. Este projeto não tem vínculo com a Square Enix nem endosso dela.

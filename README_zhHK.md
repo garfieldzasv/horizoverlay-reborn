@@ -111,6 +111,6 @@ npm run build
 
 衍生自 [bsides/horizoverlay](https://github.com/bsides/horizoverlay)，Copyright 2017 Rafael "BSIDES" Pereira，Apache-2.0，本專案沿用同一授權。改動清單見 [NOTICE](NOTICE)。
 
-內建的 Maple Mono NF CN 來自 [subframe7536/maple-font](https://github.com/subframe7536/maple-font)，SIL Open Font License 1.1。
+內建的 Maple Mono CN 來自 [subframe7536/maple-font](https://github.com/subframe7536/maple-font)，SIL Open Font License 1.1，只重新打包為 woff2，字型本身未作改動。
 
 職業圖示取自 FINAL FANTASY XIV。FINAL FANTASY 是 Square Enix Holdings Co., Ltd. 的註冊商標，本專案與 Square Enix 無關聯，也未獲其背書。

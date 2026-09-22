@@ -111,6 +111,6 @@ For development use `npm start` and add `?mock=1#/` to the URL for mock data. [D
 
 Derived from [bsides/horizoverlay](https://github.com/bsides/horizoverlay), Copyright 2017 Rafael "BSIDES" Pereira, Apache-2.0, and released under the same license. [NOTICE](NOTICE) lists what changed.
 
-The bundled Maple Mono NF CN comes from [subframe7536/maple-font](https://github.com/subframe7536/maple-font) under the SIL Open Font License 1.1.
+The bundled Maple Mono CN comes from [subframe7536/maple-font](https://github.com/subframe7536/maple-font) under the SIL Open Font License 1.1, repacked as woff2 and otherwise unmodified.
 
 Job icons are derived from FINAL FANTASY XIV artwork. FINAL FANTASY is a registered trademark of Square Enix Holdings Co., Ltd. This project is unaffiliated with and unendorsed by Square Enix.

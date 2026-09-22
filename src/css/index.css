@@ -1,13 +1,21 @@
 /* Bundled locally: no network, and ACT's CEF never reaches the internet for it.
    Monospaced so the DPS columns stop jittering as the numbers update. SIL OFL-1.1.
+
+   This is the CN release, not the NF CN one the overlay used to carry. The
+   Nerd Font build adds ~10,400 private-use icon glyphs that nothing here
+   draws -- every icon on a card is a PNG -- and they cost 866KB. Upstream
+   ships CN as a TTF only, so the file is that TTF repacked as woff2 with
+   fonttools and otherwise untouched: same version, same advance widths, same
+   outlines, same hinting.
+
    Swapping fonts: drop a woff2 in ../fonts and change the family here plus the
    html/body stack below -- those two places are the only references. */
 @font-face {
-  font-family: 'Maple Mono NF CN';
+  font-family: 'Maple Mono CN';
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url('../fonts/MapleMono-NF-CN-Regular.woff2') format('woff2');
+  src: url('../fonts/MapleMono-CN-Regular.woff2') format('woff2');
 }
 :root {
   /* The overlay's base type size. The original wrote it as
@@ -111,7 +119,7 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Maple Mono NF CN', Consolas, 'Microsoft YaHei', monospace;
+  font-family: 'Maple Mono CN', Consolas, 'Microsoft YaHei', monospace;
   background: transparent;
   overflow: hidden;
   height: 100%;

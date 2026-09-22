@@ -32,10 +32,13 @@ Removed
   external font and asset requests; the overlay now runs fully offline
 
 Third-party components
-  Maple Mono NF CN
+  Maple Mono CN -- src/fonts/MapleMono-CN-Regular.woff2
     https://github.com/subframe7536/maple-font
     Copyright (c) 2022, subframe7536, with Reserved Font Name Maple Mono
     SIL Open Font License 1.1 -- full text in src/fonts/OFL.txt
+
+    Taken from the upstream v7.9 MapleMono-CN release, which ships TTF only,
+    and repacked as woff2 with fonttools. The font itself is unmodified.
 
   Job icons are derived from FINAL FANTASY XIV artwork. FINAL FANTASY is a
   registered trademark of Square Enix Holdings Co., Ltd. This project is

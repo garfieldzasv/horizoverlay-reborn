@@ -345,7 +345,7 @@ export const themes = [ …, { value: 'myTheme', label: 'themeOption4' } ]
 
 字体是等宽的，所以 `1ch` 正好是一个数字的宽度，**卡片宽度会跟着字号自动走** —— 调字号不用重算几何。
 
-当前实测（Maple Mono NF CN，advance 0.6em）：
+当前实测（Maple Mono CN，advance 0.6em）：
 
 - `1ch` = **7.78px**，`--card-width` = **177.6px**（原来是写死的 140px），卡片间距 = **189.6px**
 - 一行放下 4 / 6 / 8 / 12 / 24 人分别需要约 **759 / 1138 / 1517 / 2276 / 4551px**

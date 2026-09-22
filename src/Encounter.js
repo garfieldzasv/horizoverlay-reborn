@@ -8,55 +8,150 @@ class Encounter extends Component {
     config: object.isRequired,
     discordData: array
   }
+  // The button used to fire and forget: no response check, no catch. Every way
+  // this can fail -- webhook not filled in, URL wrong, no network, Discord
+  // refusing the payload -- looked exactly like success from the overlay, and
+  // the only place the reason appeared was a console nobody opens mid-fight.
+  state = { status: null }
+  componentWillUnmount() {
+    clearTimeout(this.statusTimer)
+  }
+  // Says what happened on the button itself, then puts the label back. There
+  // is nowhere else to say it: the overlay is one strip of text over the game.
+  report = status => {
+    clearTimeout(this.statusTimer)
+    this.setState({ status })
+    this.statusTimer = setTimeout(() => this.setState({ status: null }), 4000)
+  }
+  // ACT reports the biggest hit as `WHO-SKILL-AMOUNT`. Split from the right:
+  // the amount and the skill are the last two fields, and whatever precedes
+  // them is the name, which may itself contain a hyphen.
+  topHit() {
+    const parts = String(this.props.maxhit || '').split('-')
+    if (parts.length < 3) return null
+    const amount = parts.pop()
+    const skill = parts.pop()
+    const who = parts.join('-')
+    return { who, skill, amount }
+  }
+
   sendToDiscord = () => {
     // finish the fight for ACT
     // Right now bugging everything so it's off
     // window.OverlayPluginApi.endEncounter()
 
-    // Converts 'YOU-Shot-1500' into 'Character Name, Shot (1500)'
-    const maxhitName = this.props.maxhit
-      .replace(/YOU/g, this.props.config.characterName)
-      .replace(/-/, ', ')
-      .replace(/-/, ' (')
-      .concat(')')
-    const encData = {
-      title: this.props.title,
-      zone: this.props.CurrentZoneName,
-      duration: this.props.duration,
-      totalDps: this.props.ENCDPS,
-      maxhit: maxhitName
+    const { config } = this.props
+    const data = this.props.discordData || []
+
+    if (!data.length) {
+      // Nothing has come through from ACT yet. Sending anyway posted a header
+      // with an empty table under it, which reads like the fight had no one in
+      // it rather than like the overlay had nothing to send.
+      this.report('No data yet')
+      return
     }
-    const encounterRow = `\`${'='.repeat(
-      85
-    )}\`\n\`${encData.title} | ${encData.zone} | ${encData.duration} | ${encData.totalDps} | ${encData.maxhit}\`\n\`${'-'.repeat(
-      85
-    )}\``
 
-    const data = this.props.discordData
+    const webhook = (config.discord || '').trim()
+    if (!webhook) {
+      this.report('No webhook set')
+      return
+    }
 
-    // [JOB] CHARACTER | 💪 DPS (DPS%) | 💊 HEAL (HEAL%) | 💀 DEATH | 💣 CRIT% | 🎯 DHIT% |`
-    const combatantRow = data.map(combatant => {
-      return `\n**[${combatant.job}] ${combatant.characterName}** \`| DPS: ${combatant.dps} (${combatant.damage}%) | HPS: ${combatant.hps} (${combatant.healed}) | DIE: ${combatant.deaths} | CRIT: ${combatant.crit} | DHIT: ${combatant.dhit} |\`\n\`${'-'.repeat(
-        85
-      )}\``
-    })
+    // Under anonymous mode the roster is reported by finishing position, so a
+    // log can be shared without naming anyone in it. Position, not identity:
+    // Player 1 is whoever ACT sorted first, and the numbering does not survive
+    // between pulls.
+    const shown = (name, index) =>
+      config.discordAnonymous ? `Player ${index + 1}` : name
 
-    fetch(this.props.config.discord, {
+    // Laid out as one fenced code block. Every column ahead of the name is
+    // ASCII, so the widths hold whatever the names are: Discord's monospace
+    // face draws a CJK glyph at about 1.67 times a Latin one rather than the
+    // 2 that padding by display width assumes, and a name column ahead of the
+    // numbers pulled every row out of line by up to 6px. Last column, nothing
+    // after it to misalign.
+    const cols = [
+      { head: 'JOB', left: true, get: c => c.job || 'PET' },
+      { head: 'DPS', get: c => c.dps },
+      // Both shares arrive from helpers' share(), already carrying their sign.
+      { head: 'DMG', get: c => c.damage },
+      { head: 'HPS', get: c => c.hps },
+      { head: 'HEAL', get: c => c.healed },
+      { head: 'DIE', get: c => c.deaths },
+      { head: 'CRIT', get: c => c.crit },
+      { head: 'DHIT', get: c => c.dhit }
+    ]
+    // Sized to the contents so six-figure numbers cannot push a column over.
+    const cells = data.map(c => cols.map(col => String(col.get(c))))
+    const widths = cols.map((col, i) =>
+      Math.max(col.head.length, ...cells.map(row => row[i].length))
+    )
+    const line = values =>
+      values
+        .map((v, i) => (cols[i].left ? v.padEnd(widths[i]) : v.padStart(widths[i])))
+        .join('  ')
+    const header = `${line(cols.map(c => c.head))}  NAME`
+    const table = [
+      header,
+      '-'.repeat(header.length),
+      ...cells.map((row, i) => `${line(row)}  ${shown(data[i].characterName, i)}`)
+    ].join('\n')
+
+    // The overlay collapses ACT's placeholder title the same way.
+    const zone =
+      this.props.title === 'Encounter' ? this.props.CurrentZoneName : this.props.title
+    const hit = this.topHit()
+    let summary = `${zone}  ${this.props.duration}  ${this.props.ENCDPS} DPS`
+    if (hit) {
+      const real = hit.who === 'YOU' ? config.characterName : hit.who
+      const at = data.findIndex(c => c.characterName === real)
+      // Anonymous mode has to cover this line too. Naming the top hit while
+      // the table is numbered would give the whole thing away, and an unknown
+      // name is left off rather than guessed at.
+      const by = config.discordAnonymous
+        ? at >= 0 ? `Player ${at + 1} ` : ''
+        : `${real} `
+      summary += `  |  Top hit ${by}${hit.skill} ${hit.amount}`
+    }
+
+    this.report('Sending...')
+    fetch(webhook, {
       method: 'post',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        username: 'H O R I Z O V E R L A Y',
-        avatar_url:
-          'https://68.media.tumblr.com/2d83ce19282a68c3e2365be87254ae6a/tumblr_oh9wzyYbdb1u9t5z9o1_500.gif',
-        content: `${encounterRow}${combatantRow.join('', ',')}`
+        username: 'Horizoverlay Reborn',
+        // Blank line between the summary and the table: the summary is prose
+        // about the pull, the table is the roster, and without the gap the
+        // header row reads as a second line of the summary.
+        content: `\`\`\`\n${summary}\n\n${table}\n\`\`\``
       })
     })
+      .then(response => {
+        if (response.ok) {
+          this.report('Sent')
+          return
+        }
+        // Discord caps a message at 2000 characters. A row costs about 51 of
+        // them now, so a full 24-player alliance comes to roughly 1350 and
+        // this should not fire -- it used to at eleven players. Kept because
+        // it is the one refusal with a cause worth naming, and silence is what
+        // this whole branch exists to avoid.
+        this.report(
+          response.status === 400
+            ? 'Too long for Discord'
+            : `Discord error ${response.status}`
+        )
+      })
+      // Anything that never reached Discord: no network, DNS, a URL that is
+      // not a webhook at all. fetch rejects without a status for these.
+      .catch(() => this.report('No connection'))
   }
   render() {
     const { config } = this.props
+    const { status } = this.state
     let dps =
       this.props.encdps.length <= 7 ? this.props.encdps : this.props.ENCDPS
     let totalDps = parseFloat(dps)
@@ -104,8 +199,17 @@ class Encounter extends Component {
         <div
           className={`encounter-discord${config.showDiscord ? '' : ' hide'}`}
         >
-          <button type="button" onClick={this.sendToDiscord}>
-            Send to Discord
+          <button
+            type="button"
+            onClick={this.sendToDiscord}
+            disabled={status === 'Sending...'}
+            className={
+              status && status !== 'Sent' && status !== 'Sending...'
+                ? 'failed'
+                : ''
+            }
+          >
+            {status || 'Send to Discord'}
           </button>
         </div>
       </div>

@@ -89,6 +89,23 @@
   z-index: 2;
   position: relative;
   cursor: pointer;
+  /* The button reports what happened to a send, so its text is not always the
+     same length. The slab behind it is one card wide and its skewed edges line
+     up with the cards above; a message long enough to wrap would make the
+     banner taller and pull those edges off. Roughly 22 characters fit -- this
+     keeps anything longer on one line rather than trusting that it does. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.encounter-discord button:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+/* Same red the death count uses -- the one colour in here that already means
+   "this did not go well". */
+.encounter-discord button.failed {
+  color: rgb(var(--role-death));
 }
 .encounter-discord:before {
   /* same slab as the stats banner */

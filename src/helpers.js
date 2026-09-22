@@ -20,6 +20,7 @@ export const defaultConfig = {
   showDamageBar: true,
   showHealBar: true,
   showDiscord: false,
+  discordAnonymous: false,
   showJobless: false,
   enableSoloMode: false,
   enableStreamerMode: false,
@@ -141,6 +142,17 @@ export function withHelper({ WrappedComponent, isConfig = false }) {
       )
     }
   }
+}
+
+// One combatant's cut of an encounter total, as a percentage string. Shared
+// because the share bar on a card and the share column in the Discord report
+// are the same number: when each worked it out its own way they disagreed.
+// ACT can report a total as 0 or absent before anything has landed, so the
+// divide is guarded.
+export function share(part, total) {
+  const whole = parseFloat(total)
+  if (!whole) return '0%'
+  return `${parseInt(part / whole * 100, 10)}%`
 }
 
 export function getRandom(min, max) {

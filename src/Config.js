@@ -223,6 +223,7 @@ class ConfigRaw extends Component {
             <section className="cfg-section">
               <h2>{loc.discordTitle}</h2>
               {this.field('showDiscord', loc.discordToggle)}
+              {this.field('discordAnonymous', loc.discordAnonymous)}
               <label className="cfg-field cfg-field--solo" htmlFor="discord">
                 <input
                   type="text"

@@ -52,6 +52,7 @@ const locale = {
       resetTitle: 'Reset',
       discordTitle: 'Discord Webhook URL',
       discordToggle: 'Show send button',
+      discordAnonymous: 'Send names as Player 1, 2, 3',
       discordHelp: 'Get this from your Discord channel',
       localeTitle: 'Language',
       help:
@@ -107,6 +108,7 @@ const locale = {
       resetTitle: 'Resetar',
       discordTitle: 'Discord Webhook URL',
       discordToggle: 'Mostrar botão de envio',
+      discordAnonymous: 'Enviar nomes como Player 1, 2, 3',
       discordHelp: 'Pegue no seu canal do Discord',
       localeTitle: 'Língua',
       help:
@@ -162,6 +164,7 @@ const locale = {
       resetTitle: '初始化',
       discordTitle: 'Discord Webhook 链接',
       discordToggle: '显示发送按钮',
+      discordAnonymous: '角色名发送为 Player 1、2、3',
       discordHelp: '从你的Discord频道中获取',
       localeTitle: '模板语言',
       help:
@@ -217,6 +220,7 @@ const locale = {
       resetTitle: '初始化',
       discordTitle: 'Discord Webhook 連結',
       discordToggle: '顯示發送按鈕',
+      discordAnonymous: '角色名發送為 Player 1、2、3',
       discordHelp: '從你的Discord頻道中獲取',
       localeTitle: '模板語言',
       help:
@@ -272,6 +276,7 @@ const locale = {
       resetTitle: 'Réinitialiser',
       discordTitle: 'Discord Webhook URL',
       discordToggle: "Afficher le bouton d'envoi",
+      discordAnonymous: 'Envoyer les noms en Player 1, 2, 3',
       discordHelp: "Obtenez l'adresse depuis votre canal Discord",
       localeTitle: 'Langue',
       help:

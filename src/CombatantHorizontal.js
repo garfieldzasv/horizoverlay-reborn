@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { bool, string, number, object, oneOfType } from 'prop-types'
-import { jobRoles, otherIcons } from './helpers'
+import { jobRoles, otherIcons, share } from './helpers'
 var images = require.context('./images', false, /\.png$/)
 
 DataWrapper.propTypes = {
@@ -144,12 +144,6 @@ export default class CombatantHorizontal extends Component {
       </div>
     )
   }
-}
-
-function share(part, total) {
-  const whole = parseFloat(total)
-  if (!whole) return '0%'
-  return `${parseInt((part / whole) * 100, 10)}%`
 }
 
 // Both bars use the same classes on purpose -- they are the same bar, one for

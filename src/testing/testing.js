@@ -93,7 +93,12 @@ function buildData(seconds, size, scale, withPet, locale) {
       ENCHPS: String(r.hps),
       damage: String(r.dps * seconds),
       healed: String(r.hps * seconds),
-      'healed%': '12%',
+      // ACT sends this, so the mock does too. It used to be a flat '12%' for
+      // everyone, which is not a number any encounter could produce -- it had
+      // a DPS with no healing at all claiming the same cut as the healer.
+      'healed%': totalHealed
+        ? Math.round(r.hps * seconds / totalHealed * 100) + '%'
+        : '0%',
       deaths: String(r.deaths),
       'crithit%': (18 + Math.floor(Math.random() * 12)) + '%',
       DirectHitPct: (22 + Math.floor(Math.random() * 15)) + '%',

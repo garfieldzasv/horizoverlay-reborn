@@ -54,7 +54,7 @@ npm run build      # 产物在 build/，7.0MB，自包含
 在 OverlayPlugin 里新建一个 **MiniParse** 类型的悬浮窗，URL 填：
 
 ```
-file:///D:/Workspace/Dump/Horizoverlay Reborn/build/index.html
+file:///<build 目录的绝对路径>/index.html
 ```
 
 事件契约和原版完全一致（`onOverlayDataUpdate`），所以原来指向 `overlays.ffcafe.cn` 的配置
@@ -82,7 +82,7 @@ file:///D:/Workspace/Dump/Horizoverlay Reborn/build/index.html
 - ACT 里该悬浮窗的**「滑鼠穿透 / Enable clickthru」必须关闭**，否则鼠标事件直接穿过去
 - 直接把 URL 改成下面这个，能打开就说明只是右键没传进来：
   ```
-  file:///D:/Workspace/Dump/Horizoverlay Reborn/build/index.html#/config
+  file:///<build 目录的绝对路径>/index.html#/config
   ```
 - 也可以在 OverlayPlugin 里单独再建一个悬浮窗指向上面这个 URL，专门用来改配置
 

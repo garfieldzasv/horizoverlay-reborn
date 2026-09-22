@@ -119,6 +119,11 @@ node <任意静态服务器> preview/
 `preview/` 是把原版 bundle 的 `publicPath` 改成相对路径、并强制注入模拟数据的副本，
 不需要 `npm install`。
 
+## 仓库迁移
+
+2026-09-22 由 `bsides/horizoverlay` 的 fork 迁为独立仓库，旧仓库已归档。
+提交历史、tag、release 与 Pages 地址均未变动。
+
 ## 已修复
 
 ### 配置模式缺整条底栏

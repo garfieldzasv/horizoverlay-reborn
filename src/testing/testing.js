@@ -53,13 +53,12 @@ function jitter(base, pct) {
   return Math.round(base * (1 + (Math.random() * 2 - 1) * pct))
 }
 
-// Jobless combatants -- pets, companions -- only reach the overlay when 显示无
-// 职业单位 is on, and they take a different code path for both icon and colour.
-// `mockPet=1` puts one in, named the way a Chinese client reports it so the
-// English name matching genuinely misses.
-// Named the way a Chinese client reports it even in the English preview: the
-// point of this row is that the English name matching misses and the icon has
-// to fall back, which an English name would not exercise.
+// Jobless combatants -- pets, companions -- only reach the overlay when the
+// Show "jobless" Combatants option is on, and they take a different code path
+// for both icon and colour.
+// `mockPet=1` puts one in, named the way a Chinese client reports it even in
+// the English preview: the point of this row is that the English name matching
+// misses and the icon has to fall back, which a Latin name would not exercise.
 const PET = ['陆行鸟', '', '喙突', 9200, 0, 0]
 
 function buildData(seconds, size, scale, withPet, locale) {

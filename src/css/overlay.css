@@ -41,7 +41,7 @@
 .row.self {
   --role: var(--role-self);
   /* White in every theme. The lit half keeps the 0.8 it has always had; the dim
-     half only exists once 高亮色块 is on. */
+     half only exists once Highlight is on. */
   --band-alpha: 0.8;
   --band-hi-alpha: 0.8;
   --band-dim-alpha: 0.45;
@@ -317,7 +317,8 @@
   --fill-alpha: 0.9;
 }
 
-/* 细分职业 -- the five roles the game draws on its own job icons: tank blue,
+/* Color By Role (detailed) -- the five roles the game draws on its own job
+   icons: tank blue,
    healer green, melee red, physical ranged gold, magical ranged purple.
 
    Blue, green and red are byRole's, unchanged. Purple is Material Purple 500,

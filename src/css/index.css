@@ -89,8 +89,8 @@
 
   /* Vertical distance between the card band and the encounter band. This value
      is only the fallback for the first paint: src/skewAlign.js measures the real
-     layout and overwrites it, because the optional rows inside a card (伤害条,
-     占比数字, 最强伤害) and the font size all move it. */
+     layout and overwrites it, because the optional rows inside a card (DPS Bar,
+     Crit / DH / CDH, Max Hit) and the font size all move it. */
   --band-gap-y: 61.1px;
   /* How far a -30deg edge drifts left over that distance. tan(30deg) = 0.5774,
      spelled out because CSS tan() is too new to rely on in ACT's CEF. */

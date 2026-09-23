@@ -66,8 +66,8 @@ export default class CombatantHorizontal extends Component {
       jobIcon = './'
       if (data.Job === '') {
         // Pets and other jobless combatants are only identifiable by name, and
-        // otherIcons is an English list -- on a Chinese client ACT reports 陆行鸟,
-        // 宝石兽 and friends, none of which match. The fallback used to be the
+        // otherIcons is an English list -- on a Chinese client ACT reports the
+        // localised names, none of which match. The fallback used to be the
         // error icon, which read as "something is broken" rather than "this is a
         // pet". A carbuncle is at least the right kind of thing.
         let newIcon = 'carbuncle'
@@ -200,7 +200,7 @@ export function RateLine({ crit, dhit, cdh }) {
 }
 
 // Deaths are an event, not a rate, and in most fights most people have none,
-// so a permanent `死:0` on every card would be noise. Nothing is drawn at zero.
+// so a permanent zero on every card would be noise. Nothing is drawn at zero.
 // The box is still rendered though: it is the right-hand third of the name
 // line, and an equally flexed pad holds the left-hand third, which is what
 // keeps the name on the card's centre line whether or not anyone died.

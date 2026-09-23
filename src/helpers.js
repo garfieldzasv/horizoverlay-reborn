@@ -224,7 +224,7 @@ export const otherIcons = [
 const mockTotalDps = () => mockRows.reduce((sum, r) => sum + r.dps, 0)
 const mockTotalHps = () => mockRows.reduce((sum, r) => sum + r.hps, 0)
 
-// A full alliance, because 最强战员 goes up to 24 and the preview has to be able
+// A full alliance, because Max Combatants goes up to 24 and the preview has to
 // to show whatever that is set to.
 //
 // Ranks 1-8 are deliberately not the top eight by DPS: eight cards is the common
@@ -283,8 +283,9 @@ export const mockEncounter = {
 // what ACT reads its log from.
 //
 // Chinese players are on the CN service, whose client is Simplified; Traditional
-// has no client of its own, so 正體中文 is that same list converted -- the names
-// a 正體 reader recognises, not a different game. Everyone else is on Global and
+// has no client of its own, so the Traditional set is that same list converted
+// -- the names a Traditional reader recognises, not a different game. Everyone
+// else is on Global and
 // sees English, French included: there is no French service, so a French player
 // is reading the same English log as everyone else on Global.
 const labelSet = {

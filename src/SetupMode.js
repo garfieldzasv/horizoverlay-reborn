@@ -31,7 +31,8 @@ function leftLabel(stat) {
 // one, because the thing that chooses between them is itself a config option.
 function SetupMode(props) {
   const { maxCombatants } = props.config
-  // 显示无职业单位 is about whether pets show up at all, so the preview spends its
+  // Show "jobless" Combatants is about whether pets show up at all, so the
+  // preview spends its
   // last slot on one rather than growing the list -- the slot count is what the
   // window is being sized against.
   const roster = getMockData(props.config.locale)

@@ -14,11 +14,11 @@
   color: #fff;
   text-align: left;
 }
-/* The texture used to sit on .config itself, which is the scrolling box. A
+/* The backdrop sits here rather than on .config, which is the scrolling box. A
    background that stays put while its own content moves rules out the browser's
-   fast path: every frame has to re-tile the 102x102 image under the content
-   instead of just shifting one layer. Painting it on a fixed pseudo-element
-   behind the content leaves the scroller with nothing to repaint.
+   fast path: every frame has to repaint it under the content instead of just
+   shifting one layer. Painting it on a fixed pseudo-element behind the content
+   leaves the scroller with nothing to repaint.
 
    z-index -1 puts it behind the form but still above the page, which is why
    .config itself must not paint a background -- an element's own background
@@ -31,7 +31,16 @@
   bottom: 0;
   left: 0;
   z-index: -1;
-  background: #15171c url(../images/bg.png) 50% 85%;
+  /* The colour this declaration always named, now that it can be seen. It used
+     to read `#15171c url(../images/bg.png) 50% 85%`, and the tile -- 102x102 of
+     per-pixel random noise, fully opaque -- covered the colour entirely: the
+     backdrop measured luminance 47 on the page rather than the 23 this asks
+     for, swinging between 36 and 57 from one pixel to the next. At that
+     amplitude the grain reads as a dirty screen rather than as texture, and it
+     resamples into blotches wherever Windows is running at 125% or 150%. Flat
+     also lets the sections read: they are rgba(255,255,255,0.04), which is four
+     levels of lift and needs a steady surface under it to register at all. */
+  background: #15171c;
   pointer-events: none;
 }
 

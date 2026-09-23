@@ -72,7 +72,14 @@
   justify-content: space-between;
   gap: 10px;
   min-height: 26px;
-  padding: 1px 0;
+  /* The row's breathing room is inside it, not between rows. reboot gives every
+     label `margin-bottom: .5rem`, and these are labels -- so each row sat on an
+     8px gap that fell entirely above the next row's border-top. The line ended
+     up 8px under the row before it and hard against the row after, which reads
+     as every row being a few pixels high in its own band. Padding puts the same
+     space on both sides of the border instead. */
+  margin: 0;
+  padding: 7px 0;
   cursor: pointer;
 }
 .cfg-field + .cfg-field {

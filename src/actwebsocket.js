@@ -1,5 +1,4 @@
 let overlayWindowId = undefined
-let querieSet = undefined
 
 const getHost = () => /HOST_PORT=(wss?:\/\/.+)/.exec(window.location.search)
 
@@ -139,8 +138,20 @@ class ActWebsocketInterface {
     const vars = query.split('&')
     for (let i = 0; i < vars.length; i++) {
       try {
-        const pair = vars[i].split('=')
-        querieSet[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1])
+        // Split on the first `=` only: HOST_PORT's value is a URL and may
+        // carry a query string of its own. Splitting on every `=` and taking
+        // [1] would hand back everything up to that second one.
+        //
+        // This used to write to `querieSet`, a module-level variable that was
+        // never assigned -- so every iteration threw on an undefined, the
+        // empty catch swallowed it, and the function returned an empty object.
+        // Harmless in the end, because initActWebSocket had already worked the
+        // URI out for itself, but it meant the branch in the constructor that
+        // reads HOST_PORT back could never run.
+        const eq = vars[i].indexOf('=')
+        const key = eq < 0 ? vars[i] : vars[i].slice(0, eq)
+        const value = eq < 0 ? '' : vars[i].slice(eq + 1)
+        querySet[decodeURIComponent(key)] = decodeURIComponent(value)
       } catch (e) {}
     }
     return querySet

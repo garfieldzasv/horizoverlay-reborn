@@ -11,7 +11,10 @@ import './css/overlay.css'
 // one, because the thing that chooses between them is itself a config option.
 class Overlay extends React.Component {
   state = {
-    limitBreak: 0,
+    // Null until a limit break lands, and null again for one that did no
+    // damage: a tank's has none by design, so there is nothing to show a
+    // share of. { damage, share } once there is.
+    limitBreak: null,
     discordData: []
   }
   handleLimitBreak = value => {
@@ -33,15 +36,24 @@ class Overlay extends React.Component {
     // maxCombatants means that many players in the report as well as on
     // screen. Handling it inside the loop instead used to cost a player
     // whenever it sorted above one.
-    const limitBreak = dataArray.filter(isLimitBreak)[0]
-    if (limitBreak !== undefined) {
-      this.handleLimitBreak(
-        parseInt(
-          this.props.Combatant.damage / this.props.Encounter.damage * 100,
-          10
-        )
-      )
-    }
+    // The share used to come out of `this.props.Combatant.damage` -- the
+    // combatant dictionary's own `damage` property, which does not exist. That
+    // is undefined, so the whole expression was NaN, so `limitBreak > 0` in
+    // the banner was always false and the readout never appeared. It has been
+    // broken for as long as the banner has had a slot for it.
+    //
+    // ACT reports limit break as one pseudo combatant keyed 'Limit Break', so
+    // every cast in the encounter accumulates into this single record and the
+    // share covers all of them together. There is no per-cast breakdown, and
+    // no way to tell who cast it: the record carries 86 fields and not one of
+    // them names a player.
+    const lbKey = dataArray.filter(isLimitBreak)[0]
+    const lb = lbKey === undefined ? null : this.props.Combatant[lbKey]
+    this.handleLimitBreak(
+      lb && parseFloat(lb.damage) > 0
+        ? { damage: lb.damage, share: share(lb.damage, this.props.Encounter.damage) }
+        : null
+    )
 
     let battler = dataArray.filter(key => !isLimitBreak(key)).slice(0, maxRows)
     let combatant

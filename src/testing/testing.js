@@ -80,7 +80,8 @@ function buildData(seconds, size, scale, withPet, locale) {
   // The overlay ranks by insertion order, so sort by the relevant number.
   rows.sort((a, b) => Math.max(b.dps, b.hps) - Math.max(a.dps, a.hps))
 
-  const totalDamage = rows.reduce((sum, r) => sum + r.dps * seconds, 0)
+  // Not const: limit break is added to it below, the way ACT counts it.
+  let totalDamage = rows.reduce((sum, r) => sum + r.dps * seconds, 0)
   const totalHealed = rows.reduce((sum, r) => sum + r.hps * seconds, 0)
   const Combatant = {}
 
@@ -109,13 +110,18 @@ function buildData(seconds, size, scale, withPet, locale) {
     }
   })
 
-  // Limit break is reported as a pseudo combatant with no job.
+  // Limit break is reported as a pseudo combatant with no job, keyed by that
+  // exact English name on every client. One record however many times the
+  // party used it: the combatant list is an object, so every cast accumulates
+  // here. Checked against a captured payload -- the record carries 86 fields
+  // and none of them says who cast it.
+  const limitBreakDamage = 1820 * seconds
   Combatant['Limit Break'] = {
     name: 'Limit Break',
     Job: '',
     ENCDPS: '1820',
     ENCHPS: '0',
-    damage: String(1820 * seconds),
+    damage: String(limitBreakDamage),
     healed: '0',
     'healed%': '0%',
     deaths: '0',
@@ -123,6 +129,13 @@ function buildData(seconds, size, scale, withPet, locale) {
     DirectHitPct: '0%',
     maxhit: 'Limit Break-92104'
   }
+
+  // The encounter total includes limit break. Verified on a captured payload:
+  // the players summed to 14,666,377, limit break to 620,310, and the
+  // encounter reported 15,286,687 -- the two to the unit. The mock used to
+  // total the players alone and add limit break afterwards, which made every
+  // share in the preview slightly larger than the same fight would show.
+  totalDamage += limitBreakDamage
 
   const totalDps = Math.round(totalDamage / seconds)
   const mm = String(Math.floor(seconds / 60)).padStart(2, '0')

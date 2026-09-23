@@ -17,6 +17,7 @@ export const defaultConfig = {
   showDeaths: true,
   showDuration: true,
   showTotalDps: true,
+  showLimitBreak: false,
   showDamageBar: true,
   showHealBar: true,
   showDiscord: false,
@@ -271,7 +272,14 @@ export const mockEncounter = {
   damage: String(mockTotalDps() * 323),
   healed: String(mockTotalHps() * 323),
   maxhit: 'Vivi Ornitier-Meteor-284910',
-  limitBreak: Math.round((18200 / mockTotalDps()) * 100)
+  // Same shape the live overlay builds: { damage, share }. It was a bare
+  // number, which setup mode spread straight onto the readout -- truthy, so
+  // the banner appeared, with both fields undefined, so it read "LB" and
+  // nothing else. The live path was fine; only the preview was wrong.
+  limitBreak: {
+    damage: String(18200 * 323),
+    share: Math.round(18200 / mockTotalDps() * 100) + '%'
+  }
 }
 
 // Chinese names run to the 6-character maximum and skill names to 4, which is

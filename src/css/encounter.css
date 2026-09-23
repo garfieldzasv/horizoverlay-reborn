@@ -1,12 +1,13 @@
+/* .encounter-limitBreak used to be listed here: a cell inside the stats banner
+   that never once rendered, because the share feeding it was NaN. The readout
+   lives in its own banner now, so the cell and its rules are gone. */
 .encounter,
 .encounter-totaldps,
-.encounter-limitBreak,
 .encounter .hide,
 .encounter-duration {
   display: none;
 }
 .encounter-totaldps.show,
-.encounter-limitBreak.show,
 .encounter-duration.show,
 .encounter.show {
   display: block;
@@ -48,7 +49,12 @@
   white-space: nowrap;
   margin: 2px 4px;
   z-index: 1;
-  padding: 0 8px 0 12px;
+  /* The banner is a fixed width, so whatever these two cells do not take is
+     what the zone name gets -- and the name is the only part that truncates.
+     Trimming 8px off each buys it 16px, about one more Chinese character, and
+     moves the numbers right by the same token: the cells start further along
+     once the name's cell has grown. */
+  padding: 0 4px 0 8px;
 }
 .encounter .skewer > div:first-child {
   /* Only the zone name gives way when the fixed width runs short. */
@@ -58,24 +64,46 @@
   text-overflow: ellipsis;
   padding: 0 8px;
 }
-/* A banner of its own, beside the stats one rather than inside it. Absolute so
-   that it cannot pull the stats banner off the centre its edge alignment
-   depends on.
+/* Two banners of their own, one either side of the stats banner rather than
+   inside it -- which has no room: its three cells already fill it to within a
+   pixel, so anything added there comes out of the zone name.
 
-   Exactly one card wide, starting where the next card in the row would: the
-   stats banner ends on the right edge of card N/2+1, and the next card's left
-   edge is two gaps further on. That puts both of this banner's skewed edges on
-   card edge lines too, instead of wherever the button text happened to end. */
-.encounter-discord {
+   Absolute, so neither can pull the stats banner off the centre its edge
+   alignment depends on. Each is exactly one card wide, starting where the next
+   card in the row would: the stats banner ends on the right edge of card
+   N/2+1, and the next card's left edge is two gaps further on. That puts their
+   skewed edges on card edge lines too, instead of wherever the text happened
+   to end.
+
+   The button sits on the left and the readout on the right, and each keeps its
+   place whether or not the other is there. The left side is the tighter of the
+   two -- the stats banner is shifted left by --skew-reach to buy its right-hand
+   edge, which leaves about 50px less room on that side -- so on a window sized
+   for a 4-player party the button loses roughly 19px off its left edge. That is
+   the accepted cost: windows are sized for a full party of 8 and left there. */
+.encounter-discord,
+.encounter-limitbreak {
   position: absolute;
   top: 0;
   left: 50%;
-  margin-left: calc(
-    var(--banner-width) / 2 - var(--skew-reach) + 2 * var(--card-gap)
-  );
   width: var(--card-width);
   padding: 0;
   z-index: 1;
+}
+.encounter-limitbreak {
+  margin-left: calc(
+    var(--banner-width) / 2 - var(--skew-reach) + 2 * var(--card-gap)
+  );
+  color: white;
+}
+.encounter-discord {
+  margin-left: calc(
+    -1 *
+      (
+        var(--banner-width) / 2 + var(--skew-reach) + 2 * var(--card-gap) +
+          var(--card-width)
+      )
+  );
 }
 .encounter-discord button {
   color: white;
@@ -107,7 +135,8 @@
 .encounter-discord button.failed {
   color: rgb(var(--role-death));
 }
-.encounter-discord:before {
+.encounter-discord:before,
+.encounter-limitbreak:before {
   /* same slab as the stats banner */
   background: rgba(0, 0, 0, 0.25);
   transform: skew(-30deg);
@@ -117,4 +146,70 @@
   width: 100%;
   height: 100%;
   z-index: 0;
+}
+/* Carries everything the Discord button carries, for the same reasons: the
+   margin because that is what gives a slab its height -- put it on the slab
+   instead and the readout comes out shorter than the button beside it and
+   offset from the stats banner -- and the z-index because the slab is a
+   positioned pseudo-element, which paints after inline text in the same
+   stacking context and would otherwise cover it.
+
+   Padding is what the stats banner insets its own end text by: 2px of banner
+   padding, 4px of cell margin and 8px of cell padding come to 14 on each side.
+   The 12/8 asymmetry on .skewer > div only ever falls between two cells, never
+   at the ends -- copying it here left the share 6px tighter to the right edge
+   than the duration is, and pushed the middle 2px off centre with it. */
+.encounter-limitbreak > span {
+  display: flex;
+  align-items: baseline;
+  margin: 2px 0;
+  padding: 0 14px;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 1);
+  position: relative;
+  z-index: 2;
+}
+/* Read in the card's grammar: the label on one edge, the share on the other,
+   the number between them. Both edges flex from a zero basis, so they come out
+   the same width whatever they hold and the damage lands on the slab's centre
+   line -- the same trick the name line uses to balance the death slot. Sizing
+   them to their contents instead would move the number every time the share
+   went from 9% to 10%. */
+.encounter-limitbreak .lb-label,
+.encounter-limitbreak .lb-share {
+  flex: 1 1 0;
+  min-width: 0;
+}
+/* Both edges need saying: .encounter centres its text, so a cell that does not
+   claim a side comes out centred inside its own third -- which reads as the
+   label floating rather than sitting on the edge. */
+.encounter-limitbreak .lb-label {
+  text-align: left;
+}
+.encounter-limitbreak .lb-share {
+  text-align: right;
+}
+/* No overflow clipping here: the unit is positioned out past this box's right
+   edge on purpose, and `overflow: hidden` ate it whole. Nothing needs clipping
+   anyway -- the widest this ever holds is a seven-figure total, and the two
+   flexible cells either side give way long before the slab runs out. */
+.encounter-limitbreak .lb-damage {
+  flex: 0 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+}
+/* A number and then its unit, exactly as the card band spells it: the unit at
+   label size, one space in the text, one pixel of margin. The banner's own DPS
+   used to be full-size text, which read as part of the number rather than as
+   what the number is -- and it had to be settled anyway once the limit break
+   readout arrived, since that one reports a total rather than a rate and the
+   difference is the whole reason it needs a unit at all. */
+.encounter-totaldps .label,
+.encounter-limitbreak .lb-damage .label {
+  font-size: var(--text-label);
+  margin: 0 0 0 1px;
+}
+/* The balancing copy of the unit. In flow, so the real one keeps the baseline
+   it shares with the number; hidden, so only its width counts. */
+.encounter-limitbreak .lb-pad {
+  visibility: hidden;
 }

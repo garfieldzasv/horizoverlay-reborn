@@ -6,7 +6,9 @@ import './css/encounter.css'
 class Encounter extends Component {
   static propTypes = {
     config: object.isRequired,
-    discordData: array
+    discordData: array,
+    // { damage, share }, or null when no limit break has dealt damage yet
+    limitBreak: object
   }
   // The button used to fire and forget: no response check, no catch. Every way
   // this can fail -- webhook not filled in, URL wrong, no network, Discord
@@ -164,10 +166,37 @@ class Encounter extends Component {
       this.props.title === 'Encounter'
         ? this.props.CurrentZoneName
         : this.props.title
+    // The button is only worth a slot once it can do something. It used to
+    // appear on `showDiscord` alone, webhook or not, which put a permanent
+    // slab on every overlay whose owner had never set one up.
+    const showSend = config.showDiscord && Boolean((config.discord || '').trim())
+    const limitBreak = this.props.limitBreak
+    const showLimitBreak = Boolean(config.showLimitBreak && limitBreak)
     let hasOptions =
-      config.showTotalDps || config.showDuration || config.showDiscord
+      config.showTotalDps || config.showDuration || showSend || showLimitBreak
     return (
       <div className={`encounter${hasOptions ? ' show' : ''}`}>
+        {/* Two side slabs flank the banner, one card wide each, on the same
+            skewed grammar. Neither moves when the other is absent: the button
+            is a click target, and one that slides sideways the first time
+            somebody uses limit break -- mid-fight, which is exactly when it
+            gets pressed -- is worse than an empty gap. */}
+        {showSend && (
+          <div className="encounter-discord">
+            <button
+              type="button"
+              onClick={this.sendToDiscord}
+              disabled={status === 'Sending...'}
+              className={
+                status && status !== 'Sent' && status !== 'Sending...'
+                  ? 'failed'
+                  : ''
+              }
+            >
+              {status || 'Send to Discord'}
+            </button>
+          </div>
+        )}
         <div className="skewer">
           <div className="encounter-title">{title}</div>
           <div
@@ -175,15 +204,8 @@ class Encounter extends Component {
               ? ' show'
               : ''}`}
           >
-            {totalDps} DPS
-          </div>
-          <div
-            className={`encounter-limitBreak${config.showTotalDps &&
-            this.props.limitBreak > 0
-              ? ' show'
-              : ''}`}
-          >
-            LB {this.props.limitBreak}%
+            {totalDps}
+            <span className="label">{' DPS'}</span>
           </div>
           <div
             className={`encounter-duration${config.showDuration
@@ -196,22 +218,32 @@ class Encounter extends Component {
             {this.props.duration}
           </div>
         </div>
-        <div
-          className={`encounter-discord${config.showDiscord ? '' : ' hide'}`}
-        >
-          <button
-            type="button"
-            onClick={this.sendToDiscord}
-            disabled={status === 'Sending...'}
-            className={
-              status && status !== 'Sent' && status !== 'Sending...'
-                ? 'failed'
-                : ''
-            }
-          >
-            {status || 'Send to Discord'}
-          </button>
-        </div>
+        {showLimitBreak && (
+          <div className="encounter-limitbreak">
+            <span>
+              <span className="lb-label">LB</span>
+              <span className="lb-damage">
+                {/* A hidden copy of the unit on the other side of the number,
+                    so the two balance and the number itself lands on the
+                    slab's centre line -- the unit is small and dim enough to
+                    read as punctuation, so centring the pair put the number
+                    about 10px left of where it looked like it belonged. Same
+                    construction the card's name line uses for the death slot;
+                    positioning the real one absolutely instead either got it
+                    clipped or turned it into a superscript. */}
+                <span className="label lb-pad" aria-hidden="true">
+                  {' DMG'}
+                </span>
+                {limitBreak.damage}
+                {/* Leading space, the way the band's ' DPS' and ' HPS' carry
+                    one -- without it a seven-figure total runs straight into
+                    its unit. */}
+                <span className="label">{' DMG'}</span>
+              </span>
+              <span className="lb-share">{limitBreak.share}</span>
+            </span>
+          </div>
+        )}
       </div>
     )
   }

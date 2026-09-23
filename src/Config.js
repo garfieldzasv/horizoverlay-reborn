@@ -167,6 +167,7 @@ class ConfigRaw extends Component {
               <h2>{loc.sectionBanner}</h2>
               {this.field('showDuration', loc.toggleOption6)}
               {this.field('showTotalDps', loc.toggleOption7)}
+              {this.field('showLimitBreak', loc.toggleOption18)}
             </section>
 
             <section className="cfg-section">

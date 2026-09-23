@@ -18,7 +18,7 @@ Um medidor de dano horizontal para Final Fantasy XIV, que mostra o DPS e o HPS d
 3. Desligue o **Enable clickthru** desse overlay, senão o botão direito não abre as configurações
 4. Clique com o botão direito no overlay para abrir as configurações
 
-Se preferir não depender da rede, baixe o zip em [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases), descompacte e aponte a URL para o `index.html` pelo caminho `file://` completo. É a mesma build, mas a versão hospedada guarda suas configurações de forma mais confiável, porque os navegadores bloqueiam `localStorage` em caminhos `file://`.
+Se preferir não depender da rede, baixe o zip em [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) e descompacte. Um OverlayPlugin recente -- o que vem nos pacotes prontos de ACT -- tem um botão `...` ao lado do campo de URL: clique nele e escolha o `index.html` dentro da pasta, sem precisar montar o caminho. Em versões antigas, digite o caminho `file://` completo. É a mesma build da página hospedada, mas a hospedada guarda suas configurações de forma mais confiável, porque os navegadores bloqueiam `localStorage` em caminhos `file://`.
 
 Largura da janela: uma fileira de 4 precisa de 759px, 6 precisam de 1138px, 8 precisam de 1517px, 12 precisam de 2276px, 24 precisam de 4551px. Os cartões quebram linha quando não cabem.
 
@@ -35,12 +35,12 @@ Clique com o botão direito para abrir as configurações. Tudo vale na hora e s
 * A metade direita do cartão é DPS; a esquerda alterna entre HPS, taxa de crítico, taxa de acerto direto, taxa de crítico direto e o código do job
 * Duas barras de participação, uma de DPS e outra de HPS
 * Ordem, ícone do job, maior golpe e destaque, cada um com seu interruptor
-* Barra do combate com duração e DPS total
+* Barra do combate com duração, DPS total e, se você quiser, o dano que o limit break rendeu
 * De 1 a 24 combatentes, com opção de incluir chocobos, egis e outras unidades sem job
 * Seu próprio cartão fixado em branco; dá também para mostrar só você, ou borrar o nome dos outros
 * Zoom de 0,5x a 2x
 * Modo config, uma prévia com dados falsos para ajustar tudo fora de combate
-* Webhook do Discord, que publica a luta no seu canal
+* Webhook do Discord, que publica a luta no seu canal, se quiser com os nomes trocados por Player 1, 2, 3
 
 O tema detalhado, uma cor por subfunção:
 

@@ -18,7 +18,7 @@ FF14 的 ACT 橫向懸浮窗，一排卡片顯示全隊的 DPS 和 HPS。基於 
 3. 關掉這個懸浮窗的「滑鼠穿透 / Enable clickthru」，不然右鍵呼不出設定
 4. 在懸浮窗上按右鍵，打開設定頁
 
-不想依賴網路的話，到 [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) 下載 zip 解壓縮，URL 改填 `index.html` 的完整 `file://` 位址。兩者是同一份產物，不過線上那份設定儲存得更可靠，因為瀏覽器會擋掉 `file://` 下的 `localStorage`。
+不想依賴網路的話，到 [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) 下載 zip 解壓縮。較新的 OverlayPlugin（整合包裡一般都是）在 URL 輸入框旁邊有個 `...` 按鈕，點它直接選取解壓出來的 `index.html` 即可，不用自己拼路徑。舊版本則手動填 `index.html` 的完整 `file://` 位址。本機和線上是同一份產物，不過線上那份設定儲存得更可靠，因為瀏覽器會擋掉 `file://` 下的 `localStorage`。
 
 視窗寬度：一行放下 4 個人需要 759px，6 個人 1138px，8 個人 1517px，12 個人 2276px，24 個人 4551px。放不下會自動折行。
 
@@ -35,12 +35,12 @@ FF14 的 ACT 橫向懸浮窗，一排卡片顯示全隊的 DPS 和 HPS。基於 
 * 卡片右半格是 DPS，左半格可切換 HPS、暴擊率、直擊率、直暴率或職業縮寫
 * DPS 和 HPS 兩條佔比橫條
 * 排名序號、職業圖示、最強一擊、高亮色塊，各自可開關
-* 總覽橫幅顯示戰鬥時間和總 DPS
+* 總覽橫幅顯示戰鬥時間和總 DPS，也可以顯示極限技造成的傷害
 * 顯示人數 1 到 24，可選是否顯示陸行鳥、召喚獸等無職業單位
 * 自己的卡片固定為白色；也可以只顯示自己，或者模糊掉別人的名字
 * 整體縮放 0.5 到 2 倍
 * 配置模式，用模擬數據預覽，沒開打也能調
-* Discord Webhook，一鍵把戰績發到頻道
+* Discord Webhook，一鍵把戰績發到頻道，可選擇把角色名換成 Player 1、2、3 再發
 
 細分職業主題，五職能各一色：
 

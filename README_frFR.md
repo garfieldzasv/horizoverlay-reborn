@@ -18,7 +18,7 @@ Un compteur de dégâts horizontal pour Final Fantasy XIV, qui affiche le DPS et
 3. Désactivez **Enable clickthru** sur cet overlay, sinon le clic droit n'ouvre pas les paramètres
 4. Faites un clic droit sur l'overlay pour ouvrir les paramètres
 
-Si vous préférez ne pas dépendre du réseau, téléchargez le zip depuis [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases), décompressez-le et pointez l'URL vers `index.html` par son chemin `file://` complet. C'est la même build, mais la version hébergée conserve mieux vos paramètres, les navigateurs bloquant `localStorage` sur les chemins `file://`.
+Si vous préférez ne pas dépendre du réseau, téléchargez le zip depuis [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) et décompressez-le. Un OverlayPlugin récent -- celui que livrent les packs ACT tout-en-un -- a un bouton `...` à côté du champ URL : cliquez dessus et choisissez `index.html` dans le dossier, sans chemin à composer. Sur une version plus ancienne, saisissez vous-même le chemin `file://` complet. C'est la même build que la page hébergée, mais l'hébergée conserve mieux vos paramètres, les navigateurs bloquant `localStorage` sur les chemins `file://`.
 
 Largeur de fenêtre : une rangée de 4 demande 759px, 6 en demandent 1138px, 8 en demandent 1517px, 12 en demandent 2276px, 24 en demandent 4551px. Les cartes passent à la ligne quand elles ne rentrent pas.
 
@@ -35,12 +35,12 @@ Clic droit pour ouvrir les paramètres. Tout prend effet immédiatement et se sa
 * La moitié droite de la carte est le DPS ; la moitié gauche bascule entre HPS, taux de critique, taux de coup direct, taux de critique direct et le code du job
 * Deux barres de répartition, une pour le DPS et une pour le HPS
 * Rang, icône de job, coup le plus fort et surbrillance, chacun avec son interrupteur
-* Une barre de combat avec la durée et le DPS total
+* Une barre de combat avec la durée, le DPS total et, si vous le souhaitez, les dégâts du limit break
 * De 1 à 24 combattants, avec une option pour inclure chocobos, égis et autres unités sans job
 * Votre propre carte figée en blanc ; on peut aussi n'afficher que vous, ou flouter le nom des autres
 * Zoom de 0,5x à 2x
 * Mode config, un aperçu avec des données fictives pour tout régler hors combat
-* Un webhook Discord qui publie le combat sur votre canal
+* Un webhook Discord qui publie le combat sur votre canal, au besoin avec les noms remplacés par Player 1, 2, 3
 
 Le thème détaillé, une couleur par sous-rôle :
 

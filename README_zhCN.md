@@ -18,7 +18,7 @@ FF14 的 ACT 横向悬浮窗，一排卡片显示全队的 DPS 和 HPS。基于 
 3. 关掉这个悬浮窗的「滑鼠穿透 / Enable clickthru」，不然右键呼不出配置
 4. 在悬浮窗上右键，打开配置页
 
-不想依赖网络的话，到 [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) 下载 zip 解压，URL 改填 `index.html` 的完整 `file://` 地址。两者是同一份产物，不过在线那份设置保存得更可靠，因为浏览器会拦掉 `file://` 下的 `localStorage`。
+不想依赖网络的话，到 [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) 下载 zip 解压。较新的 OverlayPlugin（整合包里一般都是）在 URL 输入框旁边有个 `...` 按钮，点它直接选中解压出来的 `index.html` 就行，不用自己拼路径。老版本则手动填 `index.html` 的完整 `file://` 地址。本地和在线是同一份产物，不过在线那份设置保存得更可靠，因为浏览器会拦掉 `file://` 下的 `localStorage`。
 
 窗口宽度：一行放下 4 个人需要 759px，6 个人 1138px，8 个人 1517px，12 个人 2276px，24 个人 4551px。放不下会自动折行。
 
@@ -35,12 +35,12 @@ FF14 的 ACT 横向悬浮窗，一排卡片显示全队的 DPS 和 HPS。基于 
 * 卡片右半格是 DPS，左半格可切换 HPS、暴击率、直击率、直暴率或职业缩写
 * DPS 和 HPS 两条占比横条
 * 排名序号、职业图标、最强一击、高亮色块，各自可开关
-* 总览横幅显示战斗时间和总 DPS
+* 总览横幅显示战斗时间和总 DPS，也可以显示极限技造成的伤害
 * 显示人数 1 到 24，可选是否显示陆行鸟、召唤兽等无职业单位
 * 自己的卡片固定为白色；也可以只显示自己，或者模糊掉别人的名字
 * 整体缩放 0.5 到 2 倍
 * 配置模式，用模拟数据预览，没开打也能调
-* Discord Webhook，一键把战绩发到频道
+* Discord Webhook，一键把战绩发到频道，可选择把角色名换成 Player 1、2、3 再发
 
 细分职业主题，五职能各一色：
 

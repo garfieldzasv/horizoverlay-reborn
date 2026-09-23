@@ -18,7 +18,7 @@ A horizontal damage meter overlay for Final Fantasy XIV, showing the whole party
 3. Turn off **Enable clickthru** for this overlay, or right-click will not open the settings
 4. Right-click the overlay to open the settings
 
-If you would rather not depend on the network, grab the zip from [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases), unpack it, and point the URL at `index.html` by its full `file://` path instead. Both are the same build, though the hosted one keeps your settings more reliably, because browsers block `localStorage` on `file://` paths.
+If you would rather not depend on the network, grab the zip from [Releases](https://github.com/garfieldzasv/horizoverlay-reborn/releases) and unpack it. A recent OverlayPlugin -- the one the all-in-one ACT packages ship -- has a `...` button beside the URL field: click it and pick `index.html` out of the folder, no path to work out. On an older build, type the full `file://` path yourself. Both are the same build as the hosted page, though the hosted one keeps your settings more reliably, because browsers block `localStorage` on `file://` paths.
 
 Window width: a row of 4 needs 759px, 6 needs 1138px, 8 needs 1517px, 12 needs 2276px, 24 needs 4551px. Cards wrap when they do not fit.
 
@@ -35,12 +35,12 @@ Right-click to open the settings. Everything takes effect immediately and saves 
 * The right half of a card is DPS; the left half switches between HPS, crit rate, direct hit rate, crit direct hit rate and the job code
 * Two share bars, one for DPS and one for HPS
 * Rank number, job icon, max hit and highlight, each toggled separately
-* An encounter bar with duration and total DPS
+* An encounter bar with duration, total DPS and, if you want it, the damage limit break contributed
 * 1 to 24 combatants, with an option to include chocobos, egis and other jobless units
 * Your own card pinned to white; you can also show only yourself, or blur everyone else's name
 * Zoom from 0.5x to 2x
 * Setup mode, a mock-data preview so you can set things up outside a fight
-* A Discord webhook that posts the fight to your channel
+* A Discord webhook that posts the fight to your channel, optionally with the names replaced by Player 1, 2, 3
 
 The detailed theme, one color per sub-role:
 

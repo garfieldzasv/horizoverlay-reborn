@@ -20,9 +20,12 @@ class Encounter extends Component {
   }
   // Says what happened on the button itself, then puts the label back. There
   // is nowhere else to say it: the overlay is one strip of text over the game.
-  report = status => {
+  //
+  // `kind` is carried separately from the text so that nothing has to compare
+  // against the wording to know what state it is in.
+  report = (text, kind) => {
     clearTimeout(this.statusTimer)
-    this.setState({ status })
+    this.setState({ status: { text, kind } })
     this.statusTimer = setTimeout(() => this.setState({ status: null }), 4000)
   }
   // ACT reports the biggest hit as `WHO-SKILL-AMOUNT`. Split from the right:
@@ -49,13 +52,13 @@ class Encounter extends Component {
       // Nothing has come through from ACT yet. Sending anyway posted a header
       // with an empty table under it, which reads like the fight had no one in
       // it rather than like the overlay had nothing to send.
-      this.report('No data yet')
+      this.report('No data yet', 'error')
       return
     }
 
     const webhook = (config.discord || '').trim()
     if (!webhook) {
-      this.report('No webhook set')
+      this.report('No webhook set', 'error')
       return
     }
 
@@ -75,10 +78,13 @@ class Encounter extends Component {
     const cols = [
       { head: 'JOB', left: true, get: c => c.job || 'PET' },
       { head: 'DPS', get: c => c.dps },
-      // Both shares arrive from helpers' share(), already carrying their sign.
-      { head: 'DMG', get: c => c.damage },
+      // Both shares arrive from helpers' share(), already carrying their sign,
+      // and both headers carry it too. Bare DMG and HEAL read as totals beside
+      // DPS and HPS, which are the real thing -- and DMG collided with the
+      // banner's own DMG, where it does mean a total.
+      { head: 'DMG%', get: c => c.damage },
       { head: 'HPS', get: c => c.hps },
-      { head: 'HEAL', get: c => c.healed },
+      { head: 'HEAL%', get: c => c.healed },
       { head: 'DIE', get: c => c.deaths },
       { head: 'CRIT', get: c => c.crit },
       { head: 'DHIT', get: c => c.dhit }
@@ -116,7 +122,7 @@ class Encounter extends Component {
       summary += `  |  Top hit ${by}${hit.skill} ${hit.amount}`
     }
 
-    this.report('Sending...')
+    this.report('Sending...', 'sending')
     fetch(webhook, {
       method: 'post',
       headers: {
@@ -133,7 +139,7 @@ class Encounter extends Component {
     })
       .then(response => {
         if (response.ok) {
-          this.report('Sent')
+          this.report('Sent', 'ok')
           return
         }
         // Discord caps a message at 2000 characters. A row costs about 51 of
@@ -144,12 +150,13 @@ class Encounter extends Component {
         this.report(
           response.status === 400
             ? 'Too long for Discord'
-            : `Discord error ${response.status}`
+            : `Discord error ${response.status}`,
+          'error'
         )
       })
       // Anything that never reached Discord: no network, DNS, a URL that is
       // not a webhook at all. fetch rejects without a status for these.
-      .catch(() => this.report('No connection'))
+      .catch(() => this.report('No connection', 'error'))
   }
   render() {
     const { config } = this.props
@@ -186,14 +193,16 @@ class Encounter extends Component {
             <button
               type="button"
               onClick={this.sendToDiscord}
-              disabled={status === 'Sending...'}
-              className={
-                status && status !== 'Sent' && status !== 'Sending...'
-                  ? 'failed'
-                  : ''
-              }
+              // Disabled for as long as the status shows, not just while
+              // the request is in flight. Against a fast endpoint a send
+              // finishes inside the gap between the two halves of a
+              // double-click, so the button was live again in time to post
+              // the same report twice -- measured: two clicks 300ms apart
+              // put two identical messages in the channel.
+              disabled={Boolean(status)}
+              className={status ? status.kind : ''}
             >
-              {status || 'Send to Discord'}
+              {status ? status.text : 'Send to Discord'}
             </button>
           </div>
         )}

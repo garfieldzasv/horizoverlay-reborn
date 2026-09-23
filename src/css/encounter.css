@@ -128,11 +128,17 @@
 }
 .encounter-discord button:disabled {
   cursor: default;
+}
+/* Dimmed only while the request is out. The states after it -- sent, or a
+   reason it did not -- stay at full strength: the button is still disabled
+   then, but that is to swallow a second click, not something to grey out a
+   message the reader is meant to read. */
+.encounter-discord button.sending {
   opacity: 0.7;
 }
 /* Same red the death count uses -- the one colour in here that already means
    "this did not go well". */
-.encounter-discord button.failed {
+.encounter-discord button.error {
   color: rgb(var(--role-death));
 }
 .encounter-discord:before,

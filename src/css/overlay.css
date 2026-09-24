@@ -237,6 +237,15 @@
   margin-top: 0.3em;
   margin-left: -0.8em;
   text-align: center;
+  /* A skill name long enough to wrap used to make the card taller -- 73px
+     became 89px -- and a row then held cards of two different heights, which
+     the skewed edges are aligned against. Real skill names get there: "The
+     Rose of Destruction" is a Blue Mage action, and Japanese katakana runs
+     longer still. One line, clipped with an ellipsis, keeps every card the
+     same height whatever the game reports. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 /* Crit / direct hit / crit direct hit, under the bars. Sits on the same
    baseline grid as .maxhit and borrows the band's grammar: the number in

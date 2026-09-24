@@ -396,18 +396,22 @@ const mockLabels = {
   // Latin names on purpose -- see labelSet. Skills are the JP client's own
   // wording, not a translation of the English: 乱れ雪月花 and 氷遁の術 are what
   // the Japanese game prints, and taking them back through English would have
-  // produced something no JP player has ever seen. The few that come from FFIX
-  // rather than FFXIV (Meteor, Alexander, Power Break, Frog Drop) use that
-  // game's Japanese wording for the same reason.
+  // produced something no JP player has ever seen.
+  //
+  // Every one of these is a real FFXIV action for the job on that row, which
+  // matters more than it sounds: this list is what the card's width is measured
+  // against, so a made-up name would give a made-up limit. The English set still
+  // carries FFIX skills on its first rows (Meteor, Rei's Wind, Alexander) and
+  // wants the same treatment -- see the DEVLOG.
   jaJP: [
-    ['Vivi Ornitier', 'メテオ'],
-    ['Freya Crescent', 'レイウィンド'],
+    ['Vivi Ornitier', 'フレアスター'],
+    ['Freya Crescent', 'スターダイバー'],
     ['Cid Fabool', 'チェーンソー'],
-    ['Garnet Alexandros', 'アレキサンダー'],
-    ['Adelbert Steiner', 'パワーブレイク'],
-    ['Amarant Coral', 'ビーストロア'],
-    ['Eiko Carol', 'ホーリー'],
-    ['Quina Quen', 'カエルおとし'],
+    ['Garnet Alexandros', 'エンピリアルアロー'],
+    ['Adelbert Steiner', 'レクイエスカット'],
+    ['Amarant Coral', 'クェリングウェーブ'],
+    ['Eiko Carol', 'アーサリースター'],
+    ['Quina Quen', 'ホワイトウィンド'],
     ['Hien Rijin', '乱れ雪月花'],
     ['Yugiri Mistwalker', '氷遁の術'],
     ['Lyse Hext', '紅蓮の極意'],

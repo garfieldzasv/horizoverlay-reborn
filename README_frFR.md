@@ -30,7 +30,7 @@ Clic droit pour ouvrir les paramètres. Tout prend effet immédiatement et se sa
 
 <img src="screenshots/frFR/config.png" width="420">
 
-* Cinq langues d'interface : anglais, portugais, chinois simplifié, chinois traditionnel, français
+* Six langues d'interface : anglais, japonais, portugais, chinois simplifié, chinois traditionnel, français
 * Trois thèmes de couleurs : par rôle, noir & blanc, et par rôle détaillé
 * La moitié droite de la carte est le DPS ; la moitié gauche bascule entre HPS, taux de critique, taux de coup direct, taux de critique direct et le code du job
 * Deux barres de répartition, une pour le DPS et une pour le HPS

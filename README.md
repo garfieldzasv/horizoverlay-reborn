@@ -30,7 +30,7 @@ Right-click to open the settings. Everything takes effect immediately and saves 
 
 <img src="screenshots/enUS/config.png" width="420">
 
-* Five interface languages: English, Portuguese, Simplified Chinese, Traditional Chinese, French
+* Six interface languages: English, Japanese, Portuguese, Simplified Chinese, Traditional Chinese, French
 * Three color themes: by role, black & white, and by role in detail
 * The right half of a card is DPS; the left half switches between HPS, crit rate, direct hit rate, crit direct hit rate and the job code
 * Two share bars, one for DPS and one for HPS

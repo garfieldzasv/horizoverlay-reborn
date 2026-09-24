@@ -196,6 +196,7 @@ export const themes = [
 // in all five languages.
 export const locales = [
   { value: 'enUS', label: 'English' },
+  { value: 'jaJP', label: '日本語' },
   { value: 'ptBR', label: 'Português' },
   { value: 'zhCN', label: '简体中文' },
   { value: 'zhHK', label: '正體中文' },
@@ -296,10 +297,16 @@ export const mockEncounter = {
 // else is on Global and
 // sees English, French included: there is no French service, so a French player
 // is reading the same English log as everyone else on Global.
+//
+// Japanese is its own client, so its skills come from it. The character names
+// do not: FFXIV character names are Latin on every service except CN, the JP one
+// included, so a Japanese player reads Latin names above Japanese skill names --
+// which is why the ja set repeats the English names rather than transliterating.
 const labelSet = {
   enUS: 'en',
   ptBR: 'en',
   frFR: 'en',
+  jaJP: 'jaJP',
   zhCN: 'zhCN',
   zhHK: 'zhHK'
 }
@@ -385,6 +392,39 @@ const mockLabels = {
     ['Urianger Augurelt', 'Macrocosmos'],
     ['Minfilia Warde', 'Glare'],
     ['Limit Break', 'Limit Break']
+  ],
+  // Latin names on purpose -- see labelSet. Skills are the JP client's own
+  // wording, not a translation of the English: 乱れ雪月花 and 氷遁の術 are what
+  // the Japanese game prints, and taking them back through English would have
+  // produced something no JP player has ever seen. The few that come from FFIX
+  // rather than FFXIV (Meteor, Alexander, Power Break, Frog Drop) use that
+  // game's Japanese wording for the same reason.
+  jaJP: [
+    ['Vivi Ornitier', 'メテオ'],
+    ['Freya Crescent', 'レイウィンド'],
+    ['Cid Fabool', 'チェーンソー'],
+    ['Garnet Alexandros', 'アレキサンダー'],
+    ['Adelbert Steiner', 'パワーブレイク'],
+    ['Amarant Coral', 'ビーストロア'],
+    ['Eiko Carol', 'ホーリー'],
+    ['Quina Quen', 'カエルおとし'],
+    ['Hien Rijin', '乱れ雪月花'],
+    ['Yugiri Mistwalker', '氷遁の術'],
+    ['Lyse Hext', '紅蓮の極意'],
+    ['Arenvald Lentinus', 'ヴァルホーリー'],
+    ['Ryne Waters', 'デスフレア'],
+    ['Sadu Heltoha', 'ティリャーナ'],
+    ['Curious Gorge', '原初の解放'],
+    ['Sidurgu Orl', 'ブラッドスピラー'],
+    ['Thancred Waters', 'ガナッシュファング'],
+    ['Haurchefant Greystone', 'ホーリーシェルトロン'],
+    ['Bremondt', 'プライマルレンド'],
+    ['Yshtola Rhul', 'ミゼリ'],
+    ['Alisaie Leveilleur', 'ブロイル'],
+    ['Krile Baldesion', 'プネウマ'],
+    ['Urianger Augurelt', 'マクロコスモス'],
+    ['Minfilia Warde', 'グレア'],
+    ['Limit Break', 'Limit Break']
   ]
 }
 
@@ -442,6 +482,7 @@ export function mockRoster(locale) {
 // name reads more like the thing being previewed.
 export const mockZone = {
   en: 'The Omega Protocol',
+  jaJP: '絶オメガ検証戦',
   zhCN: '绝欧米茄验证战',
   zhHK: '絕歐米茄驗證戰'
 }

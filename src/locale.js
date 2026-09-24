@@ -67,6 +67,63 @@ const locale = {
         'This is NOT real data, this is just a mock so you can place and setup this overlay the way you want. Go hit a dummy or engage in real combat to get real data here. <br />Also, please resize this window to something like the width of the settings window.',
     },
   },
+  jaJP: {
+    initial: {
+      help:
+        'ここを右クリックすると設定が開きます。ACTの "Enable clickthru" がオフになっていることを確認してください。',
+    },
+    config: {
+      setupTitle: '設定モード',
+      backTitle: 'オーバーレイに戻る',
+      nameHelp: '自分のキャラクター名：',
+      themeTitle: 'カラーテーマ',
+      themeOption1: 'ロール別',
+      themeOption2: 'モノクロ',
+      themeOption3: 'ロール別（詳細）',
+      sectionCard: 'メンバーカード',
+      sectionBanner: '戦闘情報バー',
+      sectionRoster: '表示するメンバー',
+      sectionSelf: '自分と配信',
+      toggleOption1: '順位',
+      toggleOption2: 'ジョブアイコン',
+      toggleOption3: 'HPS',
+      leftStatTitle: '左側の表示',
+      leftStatCrit: 'クリティカル率',
+      leftStatDhit: 'ダイレクトヒット率',
+      leftStatCdh: 'クリダイ率',
+      leftStatJob: 'ジョブ',
+      toggleOption4: 'ハイライト',
+      toggleOption5: '自分をハイライト',
+      toggleOption6: '戦闘時間',
+      toggleOption7: '合計DPS',
+      toggleOption8: 'HPSバー',
+      toggleOption15: 'DPSバー',
+      toggleOption16: 'クリティカル / DH / クリダイ',
+      toggleOption17: '戦闘不能マーク',
+      toggleOption18: 'リミットブレイクのダメージ',
+      toggleOption11: '最大ダメージ',
+      toggleOption12: 'ジョブなしのメンバーを表示',
+      toggleOption13: '配信者モード（他人の名前をぼかす）',
+      toggleOption14: '自分のDPSのみ表示',
+      maxCombatantsTitle: '最大表示人数',
+      zoomTitle: '表示倍率',
+      resetTitle: 'リセット',
+      discordTitle: 'Discord Webhook URL',
+      discordToggle: '送信ボタンを表示',
+      discordAnonymous: '名前を Player 1, 2, 3 に置き換えて送信',
+      discordHelp: 'Discordのチャンネル設定から取得できます',
+      localeTitle: '言語',
+      help:
+        '変更は自動的に保存されます。<br /><strong>右クリック</strong>でこのウィンドウが開きます',
+    },
+    setupMode: {
+      sampleZone: '木人',
+      instructionsTitle:
+        '<strong>このウィンドウ内を右クリックすると設定が開きます！</strong>',
+      instructions:
+        'これは実際の計測結果ではなく、オーバーレイの位置や表示内容を調整するためのサンプルです。実際のデータを表示するには、木人を殴るか戦闘に参加してください。<br />また、このウィンドウの幅は設定ウィンドウと同じくらいに調整することをおすすめします。',
+    },
+  },
   ptBR: {
     initial: {
       help:

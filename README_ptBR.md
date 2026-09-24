@@ -30,7 +30,7 @@ Clique com o botão direito para abrir as configurações. Tudo vale na hora e s
 
 <img src="screenshots/ptBR/config.png" width="420">
 
-* Cinco idiomas de interface: inglês, português, chinês simplificado, chinês tradicional e francês
+* Seis idiomas de interface: inglês, japonês, português, chinês simplificado, chinês tradicional e francês
 * Três temas de cor: por função, preto & branco, e por função detalhada
 * A metade direita do cartão é DPS; a esquerda alterna entre HPS, taxa de crítico, taxa de acerto direto, taxa de crítico direto e o código do job
 * Duas barras de participação, uma de DPS e outra de HPS

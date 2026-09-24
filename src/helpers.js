@@ -145,16 +145,11 @@ export function withHelper({ WrappedComponent, isConfig = false }) {
   }
 }
 
-// One combatant's cut of an encounter total, as a percentage string. Shared
-// because the share bar on a card and the share column in the Discord report
-// are the same number: when each worked it out its own way they disagreed.
-// ACT can report a total as 0 or absent before anything has landed, so the
-// divide is guarded.
-export function share(part, total) {
-  const whole = parseFloat(total)
-  if (!whole) return '0%'
-  return `${parseInt(part / whole * 100, 10)}%`
-}
+// A `share(part, total)` used to live here, dividing a combatant's total by the
+// encounter's to get the width of a bar and the percentage in the report. It is
+// gone: ACT sends `damage%` and `healed%` already worked out, and the overlay
+// displays what the parser reports rather than recomputing it. See the note in
+// CombatantHorizontal.
 
 export function getRandom(min, max) {
   const first = Math.ceil(min)
@@ -276,9 +271,14 @@ export const mockEncounter = {
   // number, which setup mode spread straight onto the readout -- truthy, so
   // the banner appeared, with both fields undefined, so it read "LB" and
   // nothing else. The live path was fine; only the preview was wrong.
+  // Setup mode does not go through ACT, so this stands in for the `damage%` the
+  // live path reads off the combatant. Truncated rather than rounded, because
+  // that is what ACT does and the preview should not show a percentage the real
+  // thing would never print. mockTotalDps already counts limit break, so the
+  // denominator matches the encounter total ACT reports.
   limitBreak: {
     damage: String(18200 * 323),
-    share: Math.round(18200 / mockTotalDps() * 100) + '%'
+    share: Math.floor(18200 / mockTotalDps() * 100) + '%'
   }
 }
 

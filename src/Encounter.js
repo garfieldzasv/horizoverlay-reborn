@@ -78,10 +78,10 @@ class Encounter extends Component {
     const cols = [
       { head: 'JOB', left: true, get: c => c.job || 'PET' },
       { head: 'DPS', get: c => c.dps },
-      // Both shares arrive from helpers' share(), already carrying their sign,
-      // and both headers carry it too. Bare DMG and HEAL read as totals beside
-      // DPS and HPS, which are the real thing -- and DMG collided with the
-      // banner's own DMG, where it does mean a total.
+      // Both shares are ACT's own `damage%` and `healed%`, which arrive with
+      // their sign attached, and both headers carry it too. Bare DMG and HEAL
+      // read as totals beside DPS and HPS, which are the real thing -- and DMG
+      // collided with the banner's own DMG, where it does mean a total.
       { head: 'DMG%', get: c => c.damage },
       { head: 'HPS', get: c => c.hps },
       { head: 'HEAL%', get: c => c.healed },

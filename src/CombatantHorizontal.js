@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { bool, string, number, object, oneOfType } from 'prop-types'
-import { jobRoles, otherIcons, share } from './helpers'
+import { jobRoles, otherIcons } from './helpers'
 var images = require.context('./images', false, /\.png$/)
 
 DataWrapper.propTypes = {
@@ -56,10 +56,20 @@ export default class CombatantHorizontal extends Component {
     }
     if (roleName) jobStyleClass = ` job-${roleName}`
 
-    // Share of the encounter's damage and of its healing. ACT can report either
-    // total as 0 or absent before anything has landed, so guard the divide.
-    damageWidth = share(data.damage, this.props.encounterDamage)
-    const healWidth = share(data.healed, this.props.encounterHealed)
+    // Share of the encounter's damage and of its healing, as ACT reports them.
+    // These used to be worked out here, from the combatant's total over the
+    // encounter's -- a habit inherited from upstream. ACT has already done that
+    // division and hands the answer over as a string with its sign attached,
+    // which is exactly what a CSS width wants. Doing it again bought nothing:
+    // checked against a captured encounter, the two agree on every combatant
+    // including limit break. It only added places where this could drift from
+    // the parser -- rounding, which total goes on the bottom, what to do when a
+    // field is missing. The overlay reports what ACT says; it does not audit it.
+    //
+    // The fallback is for the first frames of a pull, before ACT has a total to
+    // divide by. An absent width would make the bar span its whole track.
+    damageWidth = data['damage%'] || '0%'
+    const healWidth = data['healed%'] || '0%'
 
     // Job icon
     if (config.showJobIcon) {

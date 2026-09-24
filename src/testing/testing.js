@@ -80,10 +80,21 @@ function buildData(seconds, size, scale, withPet, locale) {
   // The overlay ranks by insertion order, so sort by the relevant number.
   rows.sort((a, b) => Math.max(b.dps, b.hps) - Math.max(a.dps, a.hps))
 
-  // Not const: limit break is added to it below, the way ACT counts it.
-  let totalDamage = rows.reduce((sum, r) => sum + r.dps * seconds, 0)
+  // Limit break counts towards the encounter's damage, so its share of it has
+  // to be known before any combatant's percentage can be worked out. It used to
+  // be added after the loop below, which left every percentage measured against
+  // a total that was missing it.
+  const limitBreakDamage = 1820 * seconds
+  const totalDamage =
+    rows.reduce((sum, r) => sum + r.dps * seconds, 0) + limitBreakDamage
   const totalHealed = rows.reduce((sum, r) => sum + r.hps * seconds, 0)
   const Combatant = {}
+
+  // The overlay reads `damage%` and `healed%` straight off the combatant rather
+  // than dividing for itself, so the mock has to carry both -- a missing field
+  // shows up as an empty bar, not as an obviously wrong one. Truncated, not
+  // rounded: that is what ACT does, checked against a captured encounter.
+  const pct = (part, total) => (total ? Math.floor(part / total * 100) : 0) + '%'
 
   rows.forEach(r => {
     Combatant[r.name] = {
@@ -93,12 +104,11 @@ function buildData(seconds, size, scale, withPet, locale) {
       ENCHPS: String(r.hps),
       damage: String(r.dps * seconds),
       healed: String(r.hps * seconds),
+      'damage%': pct(r.dps * seconds, totalDamage),
       // ACT sends this, so the mock does too. It used to be a flat '12%' for
       // everyone, which is not a number any encounter could produce -- it had
       // a DPS with no healing at all claiming the same cut as the healer.
-      'healed%': totalHealed
-        ? Math.round(r.hps * seconds / totalHealed * 100) + '%'
-        : '0%',
+      'healed%': pct(r.hps * seconds, totalHealed),
       deaths: String(r.deaths),
       'crithit%': (18 + Math.floor(Math.random() * 12)) + '%',
       DirectHitPct: (22 + Math.floor(Math.random() * 15)) + '%',
@@ -115,7 +125,6 @@ function buildData(seconds, size, scale, withPet, locale) {
   // party used it: the combatant list is an object, so every cast accumulates
   // here. Checked against a captured payload -- the record carries 86 fields
   // and none of them says who cast it.
-  const limitBreakDamage = 1820 * seconds
   Combatant['Limit Break'] = {
     name: 'Limit Break',
     Job: '',
@@ -123,6 +132,9 @@ function buildData(seconds, size, scale, withPet, locale) {
     ENCHPS: '0',
     damage: String(limitBreakDamage),
     healed: '0',
+    // ACT fills the percentage in for limit break like any other combatant,
+    // and the banner's readout reads it from here.
+    'damage%': pct(limitBreakDamage, totalDamage),
     'healed%': '0%',
     deaths: '0',
     'crithit%': '0%',
@@ -132,11 +144,7 @@ function buildData(seconds, size, scale, withPet, locale) {
 
   // The encounter total includes limit break. Verified on a captured payload:
   // the players summed to 14,666,377, limit break to 620,310, and the
-  // encounter reported 15,286,687 -- the two to the unit. The mock used to
-  // total the players alone and add limit break afterwards, which made every
-  // share in the preview slightly larger than the same fight would show.
-  totalDamage += limitBreakDamage
-
+  // encounter reported 15,286,687 -- the two to the unit.
   const totalDps = Math.round(totalDamage / seconds)
   const mm = String(Math.floor(seconds / 60)).padStart(2, '0')
   const ss = String(seconds % 60).padStart(2, '0')

@@ -1,6 +1,6 @@
 # Horizoverlay Reborn
 
-[English](README.md) · [简体中文](README_zhCN.md) · [正體中文](README_zhHK.md) · [Português](README_ptBR.md) · Français
+[English](README.md) · [日本語](README_jaJP.md) · [简体中文](README_zhCN.md) · [正體中文](README_zhHK.md) · [Português](README_ptBR.md) · Français
 
 Un compteur de dégâts horizontal pour Final Fantasy XIV, qui affiche le DPS et le HPS de toute l'équipe sur une rangée de cartes. Une refonte de [Horizoverlay](https://github.com/bsides/horizoverlay).
 

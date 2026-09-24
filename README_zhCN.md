@@ -1,6 +1,6 @@
 # Horizoverlay Reborn
 
-[English](README.md) · 简体中文 · [正體中文](README_zhHK.md) · [Português](README_ptBR.md) · [Français](README_frFR.md)
+[English](README.md) · [日本語](README_jaJP.md) · 简体中文 · [正體中文](README_zhHK.md) · [Português](README_ptBR.md) · [Français](README_frFR.md)
 
 FF14 的 ACT 横向悬浮窗，一排卡片显示全队的 DPS 和 HPS。基于 [Horizoverlay](https://github.com/bsides/horizoverlay) 重做。
 

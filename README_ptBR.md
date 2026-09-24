@@ -1,6 +1,6 @@
 # Horizoverlay Reborn
 
-[English](README.md) · [简体中文](README_zhCN.md) · [正體中文](README_zhHK.md) · Português · [Français](README_frFR.md)
+[English](README.md) · [日本語](README_jaJP.md) · [简体中文](README_zhCN.md) · [正體中文](README_zhHK.md) · Português · [Français](README_frFR.md)
 
 Um medidor de dano horizontal para Final Fantasy XIV, que mostra o DPS e o HPS do grupo inteiro numa fileira de cartões. Uma reconstrução do [Horizoverlay](https://github.com/bsides/horizoverlay).
 

@@ -317,10 +317,11 @@ const labelSet = {
 // -- row 9 is 照破 in Chinese and Midare Setsugekka in English, two different
 // Samurai actions -- and they do not need to be. Each only has to be real.
 //
-// One exception, marked so it is not mistaken for a translation: Beastmaster
-// went live on Global with patch 7.56 (2026-09-08) but has not reached the CN
-// service, so its row has no official Chinese name yet. 静水波 stands in for
-// Quelling Wave until there is one.
+// The CN service runs in step with Global these days, so its rows use the
+// official Chinese names like any other locale -- Beastmaster arrived there
+// with patch 7.56 too. Traditional is the one that lags: it has no client of
+// its own, so that set is the Simplified one converted, and a job's wording
+// there is only as current as the conversion.
 const mockLabels = {
   zhCN: [
     ['黑魔法师阿三', '万象灵炎'],
@@ -328,7 +329,7 @@ const mockLabels = {
     ['机工士小钢', '回转飞锯'],
     ['光之战士', '死亡宣告'],
     ['骑士铁壁', '圣盾阵'],
-    ['驯兽师阿狼', '静水波'],
+    ['驯兽师阿狼', '狂猛怒火'],
     ['星极大魔法使', '天辉'],
     ['青魔法师小蓝', '月之笛'],
     ['武士一刀斋', '照破'],
@@ -355,7 +356,7 @@ const mockLabels = {
     ['機工士小鋼', '迴轉飛鋸'],
     ['光之戰士', '死亡宣告'],
     ['騎士鐵壁', '聖盾陣'],
-    ['馴獸師阿狼', '靜水波'],
+    ['馴獸師阿狼', '狂猛怒火'],
     ['星極大魔法使', '天輝'],
     ['青魔法師小藍', '月之笛'],
     ['武士一刀齋', '照破'],

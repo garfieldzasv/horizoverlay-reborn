@@ -122,7 +122,8 @@ class Browser {
 
   // Opens a page, runs `script` in it, and hands back both its value and
   // anything the console or the network complained about along the way.
-  async visit (url, { script, width = 1560, height = 200, settle = 3000 } = {}) {
+  async visit (url, opts = {}) {
+    const { script, width = 1560, height = 200, settle = 3000 } = opts
     const { targetId } = await this.send('Target.createTarget', { url: 'about:blank' })
     const { sessionId } = await this.send('Target.attachToTarget', { targetId, flatten: true })
     const S = (m, p) => this.send(m, p, sessionId)
@@ -155,6 +156,13 @@ class Browser {
             ((d.exception && d.exception.description) || d.text))
         }
         value = r.result.value
+      }
+      if (opts.screenshot) {
+        const shot = await S('Page.captureScreenshot', {
+          format: 'png', clip: { x: 0, y: 0, width, height, scale: 1 },
+          captureBeyondViewport: false
+        })
+        require('fs').writeFileSync(opts.screenshot, Buffer.from(shot.data, 'base64'))
       }
       return { value, problems: collect(events) }
     } finally {

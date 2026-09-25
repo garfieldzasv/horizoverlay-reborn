@@ -12,3 +12,8 @@ preview/
 
 # Release archives are attached to a GitHub Release, not committed.
 *.zip
+
+# Where those archives are kept between builds. Ignored as a directory rather
+# than relying on the *.zip rule above, so whatever else ends up alongside them
+# -- draft release notes, a checksum file -- stays out of the repo too.
+versions/

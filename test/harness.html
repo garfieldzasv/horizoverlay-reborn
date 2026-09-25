@@ -1,0 +1,56 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>harness</title>
+<script>
+// Turns query parameters into a stored config, then hands over to the real
+// index.html. Same origin, so the config carries; not an iframe, because
+// several of those would share one localStorage and overwrite each other.
+//
+// Served from memory by driver.js rather than written into build/, so a test
+// run never leaves anything behind in the artefact.
+var q = new URLSearchParams(location.search)
+var on = function (name) { return q.get(name) === '1' }
+
+localStorage.setItem('horizoverlay', JSON.stringify({
+  showSetup: on('setup'),
+  color: q.get('color') || 'byRole',
+  characterName: q.get('name') || 'YOU',
+  locale: q.get('locale') || 'enUS',
+  showRank: true,
+  showJobIcon: true,
+  leftStat: q.get('left') || 'hps',
+  showHighlight: false,
+  showSelf: true,
+  showMaxhit: on('maxhit'),
+  showRates: on('rates'),
+  showDeaths: true,
+  showDuration: true,
+  showTotalDps: true,
+  showLimitBreak: on('lb'),
+  showDamageBar: true,
+  showHealBar: true,
+  showDiscord: on('discord'),
+  discordAnonymous: on('anon'),
+  showJobless: false,
+  enableSoloMode: false,
+  enableStreamerMode: false,
+  zoom: q.get('zoom') || '1',
+  discord: q.get('webhook') ? decodeURIComponent(q.get('webhook')) : '',
+  maxCombatants: parseInt(q.get('party'), 10) || 8
+}))
+
+var to
+if (on('config')) {
+  to = './index.html#/config'
+} else if (on('setup')) {
+  to = './index.html?mockBackdrop=1#/'
+} else {
+  // interval=0 sends one frame and stops. Some things only appear on the
+  // second -- the limit break readout among them -- so a check that needs
+  // those asks for a repeating feed.
+  to = './index.html?mock=1&mockInterval=' + (q.get('interval') || '0') +
+    (q.get('party') ? '&mockParty=' + q.get('party') : '') +
+    (on('stress') ? '&mockStress=1' : '') + '#/'
+}
+location.replace(to)
+</script>

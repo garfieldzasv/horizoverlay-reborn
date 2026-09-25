@@ -5,6 +5,34 @@ import locale from './locale'
 
 import './css/config.css'
 
+// A marker after a label that explains what the option does on hover. Only a
+// few options carry one: a page where every row has a question mark is a page
+// that answers nothing, and reading "Highlight: shows a highlight" is worse
+// than reading nothing at all.
+//
+// No JavaScript. The bubble is a sibling shown on :hover, which also means it
+// cannot get stuck open when the pointer leaves the window -- something ACT's
+// CEF does more often than a browser does. It is anchored to the marker and
+// opens rightwards; the settings window is 500px wide and the marker sits just
+// after the label, which leaves well over 300px before the right edge.
+//
+// aria-hidden and tabIndex -1: the text is a convenience for a sighted reader
+// hovering a mouse, and the checkbox beside it already carries its own label,
+// so putting this in the tab order would add a stop that leads nowhere.
+function Hint({ text }) {
+  if (!text) return null
+  return (
+    <span className="cfg-hint" tabIndex={-1}>
+      <span className="cfg-hint-mark" aria-hidden="true">
+        ?
+      </span>
+      <span className="cfg-hint-text" role="tooltip">
+        {text}
+      </span>
+    </span>
+  )
+}
+
 class ConfigRaw extends Component {
   // withHelper hands the merged config down as a prop; the settings page edits
   // it locally and writes through, so it keeps its own copy.
@@ -35,11 +63,14 @@ class ConfigRaw extends Component {
   // state comes from withHelper, which reads it back out of storage and keeps
   // it in step with the overlay window through the 'storage' event.
 
-  field(key, label) {
+  field(key, label, hint) {
     const { config } = this.state
     return (
       <label className="cfg-field" key={key} htmlFor={key}>
-        <span className="cfg-label">{label}</span>
+        <span className="cfg-label">
+          {label}
+          <Hint text={hint} />
+        </span>
         <input
           type="checkbox"
           id={key}
@@ -160,7 +191,7 @@ class ConfigRaw extends Component {
               {this.field('showRates', loc.toggleOption16)}
               {this.field('showMaxhit', loc.toggleOption11)}
               {this.field('showDeaths', loc.toggleOption17)}
-              {this.field('showHighlight', loc.toggleOption4)}
+              {this.field('showHighlight', loc.toggleOption4, loc.hintHighlight)}
             </section>
 
             <section className="cfg-section">
@@ -184,13 +215,16 @@ class ConfigRaw extends Component {
                   onChange={this.handleConfig}
                 />
               </label>
-              {this.field('showJobless', loc.toggleOption12)}
+              {this.field('showJobless', loc.toggleOption12, loc.hintJobless)}
             </section>
 
             <section className="cfg-section">
               <h2>{loc.sectionSelf}</h2>
               <label className="cfg-field cfg-field--stack" htmlFor="characterName">
-                <span className="cfg-label">{loc.nameHelp}</span>
+                <span className="cfg-label">
+                  {loc.nameHelp}
+                  <Hint text={loc.hintCharacterName} />
+                </span>
                 <input
                   type="text"
                   id="characterName"
@@ -200,8 +234,8 @@ class ConfigRaw extends Component {
                 />
               </label>
               {this.field('showSelf', loc.toggleOption5)}
-              {this.field('enableSoloMode', loc.toggleOption14)}
-              {this.field('enableStreamerMode', loc.toggleOption13)}
+              {this.field('enableSoloMode', loc.toggleOption14, loc.hintSolo)}
+              {this.field('enableStreamerMode', loc.toggleOption13, loc.hintStreamer)}
             </section>
 
             <section className="cfg-section">
@@ -224,7 +258,7 @@ class ConfigRaw extends Component {
             <section className="cfg-section">
               <h2>{loc.discordTitle}</h2>
               {this.field('showDiscord', loc.discordToggle)}
-              {this.field('discordAnonymous', loc.discordAnonymous)}
+              {this.field('discordAnonymous', loc.discordAnonymous, loc.hintAnonymous)}
               <label className="cfg-field cfg-field--solo" htmlFor="discord">
                 <input
                   type="text"

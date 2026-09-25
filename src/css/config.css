@@ -99,6 +99,77 @@
   min-width: 0;
   color: rgba(255, 255, 255, 0.85);
 }
+
+/* The "?" after a label, and the bubble it opens. Only a few options have one
+   -- see the note in Config.js. */
+/* The bubble is positioned against the row, not against the marker. Against the
+   marker looks more natural and does not survive a long label: "Enable streamer
+   mode (blur all names)" pushes the marker to x=322, and 260px of bubble from
+   there ends at 578 in a 500px window. Chinese labels are short enough to have
+   got away with it, which is exactly how this kind of thing ships.
+
+   From the row's left edge the arithmetic is fixed -- the row starts at 28px
+   and the bubble is capped at 260 -- so it cannot reach the right edge whatever
+   a translator writes. */
+.cfg-field {
+  position: relative;
+}
+.cfg-hint {
+  display: inline-block;
+  margin-left: 5px;
+  /* The row is a <label>, so a click anywhere in it toggles the checkbox. The
+     marker is there to be pointed at, not pressed; letting it toggle the option
+     would be a trap. */
+  pointer-events: auto;
+  vertical-align: baseline;
+}
+.cfg-hint-mark {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  line-height: 13px;
+  text-align: center;
+  font-size: 10px;
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.12);
+  cursor: help;
+}
+.cfg-hint:hover .cfg-hint-mark {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.3);
+}
+.cfg-hint-text {
+  /* Hidden by visibility rather than display so it keeps its box and can be
+     measured; opacity gives it a fade that display cannot. */
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.12s ease-out;
+  position: absolute;
+  z-index: 10;
+  /* Anchored to the row (see above), just under it and flush with its left
+     edge, so where the marker happens to sit makes no difference. */
+  top: calc(100% - 4px);
+  left: 0;
+  width: max-content;
+  max-width: 260px;
+  padding: 7px 9px;
+  font-size: var(--text-small);
+  line-height: 1.5;
+  /* Normal, not nowrap: these are sentences and are meant to wrap. */
+  white-space: normal;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.9);
+  background: #22262e;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 3px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+  cursor: default;
+}
+.cfg-hint:hover .cfg-hint-text {
+  visibility: visible;
+  opacity: 1;
+}
 .cfg-value {
   color: rgba(255, 255, 255, 0.55);
 }

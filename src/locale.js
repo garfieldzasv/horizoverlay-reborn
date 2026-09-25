@@ -18,7 +18,8 @@ const locale = {
     config: {
       setupTitle: 'Setup Mode',
       backTitle: 'Back to overlay',
-      nameHelp: "Your character's name:",
+      nameHelp:
+        'Your name in the combatant list:',
       themeTitle: 'Color Theme',
       themeOption1: 'Color By Role',
       themeOption2: 'Black & White',
@@ -55,6 +56,23 @@ const locale = {
       discordToggle: 'Show send button',
       discordAnonymous: 'Send names as Player 1, 2, 3',
       discordHelp: 'Get this from your Discord channel',
+      // Hover text for the handful of options whose name does not say enough on
+      // its own. Each describes what the switch actually does; a line that only
+      // restates the label is worse than none, because it costs a hover to find
+      // that out. hintAnonymous also names what has to be set first, which is
+      // the other thing this page keeps out of sight.
+      hintHighlight:
+        'Shades the two number cells, one side darker than the other, so the eye lands on the one that matters for that job. Healers get it the other way round.',
+      hintJobless:
+        'Lists chocobos, egis, turrets and anything else ACT reports without a job. Off by default because they take up card slots.',
+      hintSolo:
+        'Hides everyone else and leaves only your own card. Needs the character name above to be right, or it cannot tell which card is yours.',
+      hintStreamer:
+        'Blurs everyone else\'s name into a shadow; yours stays readable. For streaming, where party names would otherwise be on screen.',
+      hintAnonymous:
+        'Replaces every name in the report with Player 1, 2, 3 -- numbered by finishing position, not by who they are. Needs a webhook address above.',
+      hintCharacterName:
+        'How the overlay picks your card out of the list. ACT usually reports you as YOU, and then whatever you put here is what your card shows. If ACT reports your real character name instead, this has to match it exactly, or the overlay cannot tell which card is yours.',
       localeTitle: 'Language',
       help:
         'Everything saves automatically.<br /><strong>Right click</strong> to open this window',
@@ -75,7 +93,8 @@ const locale = {
     config: {
       setupTitle: '設定モード',
       backTitle: 'オーバーレイに戻る',
-      nameHelp: '自分のキャラクター名：',
+      nameHelp:
+        'メンバー一覧での自分の名前：',
       themeTitle: 'カラーテーマ',
       themeOption1: 'ロール別',
       themeOption2: 'モノクロ',
@@ -112,6 +131,23 @@ const locale = {
       discordToggle: '送信ボタンを表示',
       discordAnonymous: '名前を Player 1, 2, 3 に置き換えて送信',
       discordHelp: 'Discordのチャンネル設定から取得できます',
+      // Hover text for the handful of options whose name does not say enough on
+      // its own. Each describes what the switch actually does; a line that only
+      // restates the label is worse than none, because it costs a hover to find
+      // that out. hintAnonymous also names what has to be set first, which is
+      // the other thing this page keeps out of sight.
+      hintHighlight:
+        'DPS と HPS の 2 マスに濃淡をつけ、そのジョブで見るべき方へ視線が向くようにします。ヒーラーは左右が逆になります。',
+      hintJobless:
+        'チョコボ、エギ、タレットなど、ACT がジョブなしで報告するメンバーも表示します。カードの枠を使うため既定ではオフです。',
+      hintSolo:
+        '自分のカードだけを残し、他のメンバーを隠します。上のキャラクター名が正しくないと、どれが自分のカードか判別できません。',
+      hintStreamer:
+        '他人の名前を影のようにぼかします。自分の名前はそのままです。配信でパーティメンバーの名前を映したくないとき用。',
+      hintAnonymous:
+        'レポート内の名前をすべて Player 1, 2, 3 に置き換えます。順位による番号で、個人とは結び付きません。上の Webhook URL が必要です。',
+      hintCharacterName:
+        'オーバーレイが一覧の中から自分のカードを見分けるために使います。ACT は通常こちらを YOU として報告するので、その場合はここに入れた名前がそのままカードに表示されます。ACT が本当のキャラクター名を報告する設定の場合は、完全に一致させないと自分のカードを判別できません。',
       localeTitle: '言語',
       help:
         '変更は自動的に保存されます。<br /><strong>右クリック</strong>でこのウィンドウが開きます',
@@ -132,7 +168,8 @@ const locale = {
     config: {
       setupTitle: 'Modo Config',
       backTitle: 'Voltar ao overlay',
-      nameHelp: 'Nome do seu personagem:',
+      nameHelp:
+        'Seu nome na lista de combatentes:',
       themeTitle: 'Cor do Tema',
       themeOption1: 'Cor por função',
       themeOption2: 'Preto & Branco',
@@ -169,6 +206,23 @@ const locale = {
       discordToggle: 'Mostrar botão de envio',
       discordAnonymous: 'Enviar nomes como Player 1, 2, 3',
       discordHelp: 'Pegue no seu canal do Discord',
+      // Hover text for the handful of options whose name does not say enough on
+      // its own. Each describes what the switch actually does; a line that only
+      // restates the label is worse than none, because it costs a hover to find
+      // that out. hintAnonymous also names what has to be set first, which is
+      // the other thing this page keeps out of sight.
+      hintHighlight:
+        'Sombreia as duas células de número, um lado mais escuro que o outro, para o olho cair na que importa para aquele job. Para healers é ao contrário.',
+      hintJobless:
+        'Lista chocobos, egis, torretas e qualquer outro que o ACT reporte sem job. Desligado por padrão porque ocupam espaço de card.',
+      hintSolo:
+        'Esconde todos os outros e deixa só o seu card. Precisa que o nome do personagem acima esteja certo, senão não dá para saber qual card é o seu.',
+      hintStreamer:
+        'Borra o nome dos outros até virar sombra; o seu continua legível. Para live, onde os nomes do grupo apareceriam na tela.',
+      hintAnonymous:
+        'Troca todo nome no relatório por Player 1, 2, 3 -- numerados pela posição final, não por quem são. Precisa de um endereço de webhook acima.',
+      hintCharacterName:
+        'Como a overlay acha o seu card na lista. O ACT normalmente reporta você como YOU, e aí o que estiver aqui é o que aparece no seu card. Se o ACT reportar seu nome real de personagem, isto precisa bater exatamente, senão a overlay não sabe qual card é o seu.',
       localeTitle: 'Língua',
       help:
         'Tudo salva automaticamente.<br /><strong>Botão direito</strong> abre essa janela.',
@@ -189,7 +243,8 @@ const locale = {
     config: {
       setupTitle: '配置模式',
       backTitle: '返回悬浮窗',
-      nameHelp: '你的角色名字',
+      nameHelp:
+        '你在名单里的名字：',
       themeTitle: '颜色主题',
       themeOption1: '职业特有',
       themeOption2: '黑白色调',
@@ -226,6 +281,23 @@ const locale = {
       discordToggle: '显示发送按钮',
       discordAnonymous: '角色名发送为 Player 1、2、3',
       discordHelp: '从你的Discord频道中获取',
+      // Hover text for the handful of options whose name does not say enough on
+      // its own. Each describes what the switch actually does; a line that only
+      // restates the label is worse than none, because it costs a hover to find
+      // that out. hintAnonymous also names what has to be set first, which is
+      // the other thing this page keeps out of sight.
+      hintHighlight:
+        '给 DPS 和 HPS 两格加一层深浅分段的底色，把视线引向该职业更该看的那一格。治疗职业会反过来强调左半格。',
+      hintJobless:
+        '把陆行鸟、召唤兽、炮塔这类 ACT 报上来但没有职业的单位也列出来。默认关闭，因为它们会占掉卡片位置。',
+      hintSolo:
+        '只留下你自己的卡片，其他人全部隐藏。需要上面的角色名填对，否则认不出哪张是你。',
+      hintStreamer:
+        '把别人的名字模糊成一团阴影，你自己的照常显示。给直播用，免得队友 ID 出现在画面上。',
+      hintAnonymous:
+        '发送时把报告里的所有名字换成 Player 1、2、3，按名次编号而不是按身份。需要先填上面的 Webhook 地址。',
+      hintCharacterName:
+        '悬浮窗靠它在名单里认出哪张卡是你。ACT 通常把自己报成 YOU，这时你填什么卡上就显示什么；如果 ACT 报的是真实角色名，这里必须填得一模一样，否则认不出来。',
       localeTitle: '模板语言',
       help:
         '所有内容都将自动保存。<br /><strong>右击模板界面</strong>打开本窗口。',
@@ -246,7 +318,8 @@ const locale = {
     config: {
       setupTitle: '配置模式',
       backTitle: '返回懸浮窗',
-      nameHelp: '你的角色名字',
+      nameHelp:
+        '你在名單裡的名字：',
       themeTitle: '顏色主題',
       themeOption1: '職業特有',
       themeOption2: '黑白色調',
@@ -283,6 +356,23 @@ const locale = {
       discordToggle: '顯示發送按鈕',
       discordAnonymous: '角色名發送為 Player 1、2、3',
       discordHelp: '從你的Discord頻道中獲取',
+      // Hover text for the handful of options whose name does not say enough on
+      // its own. Each describes what the switch actually does; a line that only
+      // restates the label is worse than none, because it costs a hover to find
+      // that out. hintAnonymous also names what has to be set first, which is
+      // the other thing this page keeps out of sight.
+      hintHighlight:
+        '給 DPS 和 HPS 兩格加一層深淺分段的底色，把視線引向該職業更該看的那一格。治療職業會反過來強調左半格。',
+      hintJobless:
+        '把陸行鳥、召喚獸、砲塔這類 ACT 報上來但沒有職業的單位也列出來。預設關閉，因為它們會佔掉卡片位置。',
+      hintSolo:
+        '只留下你自己的卡片，其他人全部隱藏。需要上面的角色名填對，否則認不出哪張是你。',
+      hintStreamer:
+        '把別人的名字模糊成一團陰影，你自己的照常顯示。給直播用，免得隊友 ID 出現在畫面上。',
+      hintAnonymous:
+        '傳送時把報告裡的所有名字換成 Player 1、2、3，按名次編號而不是按身分。需要先填上面的 Webhook 位址。',
+      hintCharacterName:
+        '懸浮視窗靠它在名單裡認出哪張卡是你。ACT 通常把自己報成 YOU，這時你填什麼卡上就顯示什麼；如果 ACT 報的是真實角色名，這裡必須填得一模一樣，否則認不出來。',
       localeTitle: '模板語言',
       help:
         '所有內容都將自動儲存。<br /><strong>右擊模板介面</strong>打開本視窗。',
@@ -303,7 +393,8 @@ const locale = {
     config: {
       setupTitle: 'Mode Config',
       backTitle: "Retour à l'overlay",
-      nameHelp: 'Nom de votre personnage :',
+      nameHelp:
+        'Votre nom dans la liste des combattants :',
       themeTitle: 'Thème des couleurs',
       themeOption1: 'Couleur par rôle',
       themeOption2: 'Noir & blanc',
@@ -340,6 +431,22 @@ const locale = {
       discordToggle: "Afficher le bouton d'envoi",
       discordAnonymous: 'Envoyer les noms en Player 1, 2, 3',
       discordHelp: "Obtenez l'adresse depuis votre canal Discord",
+      // Hover text for the handful of options whose name does not say enough on
+      // its own. Each describes what the switch actually does; a line that only
+      // restates the label is worse than none, because it costs a hover to find
+      // that out. hintAnonymous also names what has to be set first, which is
+      // the other thing this page keeps out of sight.
+      hintHighlight:
+        'Ombre les deux cases de chiffres, un côté plus sombre que l\'autre, pour que l\'œil tombe sur celle qui compte pour ce job. L\'inverse pour les soigneurs.',
+      hintJobless:
+        'Affiche chocobos, égis, tourelles et tout ce qu\'ACT signale sans job. Désactivé par défaut car ils prennent des places de carte.',
+      hintSolo:
+        'Masque tous les autres et ne laisse que votre carte. Le nom de personnage ci-dessus doit être correct, sinon impossible de savoir laquelle est la vôtre.',
+      hintStreamer:
+        'Brouille le nom des autres en une ombre ; le vôtre reste lisible. Pour le streaming, où les noms du groupe seraient sinon à l\'écran.',
+      hintAnonymous:
+        'Remplace chaque nom du rapport par Player 1, 2, 3 -- numérotés par position finale, pas par identité. Nécessite une adresse de webhook ci-dessus.',
+      hintCharacterName: "Comment l'overlay repère votre carte dans la liste. ACT vous signale généralement comme YOU, et alors ce que vous mettez ici est ce qu'affiche votre carte. Si ACT signale votre vrai nom de personnage, ceci doit y correspondre exactement, sinon l'overlay ne peut pas savoir quelle carte est la vôtre.",
       localeTitle: 'Langue',
       help:
         'Tout est sauvegardé automatiquement.<br /><strong>Clic droit</strong> pour ouvrir cette fenêtre',

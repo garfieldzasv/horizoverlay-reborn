@@ -85,6 +85,7 @@ export function withHelper({ WrappedComponent, isConfig = false }) {
     }
     componentWillUnmount() {
       window.removeEventListener('storage', this.updateState)
+      window.clearInterval(this.configPoll)
     }
     updateState = () => {
       const stored = readConfig()
@@ -108,6 +109,14 @@ export function withHelper({ WrappedComponent, isConfig = false }) {
       // right-click is how the settings open, so the browser's own menu would
       // only ever be in the way here
       if (e) e.preventDefault()
+
+      // Already open: bring it forward and stop. Calling window.open again with
+      // the same name hands back this very window rather than a fresh one, and
+      // everything written to it below would then be a cross-origin write.
+      if (this.configWindow && !this.configWindow.closed) {
+        this.focusConfig()
+        return
+      }
 
       // './#/config' only landed on the page because a server was mapping './'
       // to index.html. From a file:// path it resolves to the directory, which
@@ -135,11 +144,30 @@ export function withHelper({ WrappedComponent, isConfig = false }) {
 
       this.setState({ isConfigOpen: true })
       this.configWindow = win
-      win.focus()
-      win.onbeforeunload = () => {
-        this.setState({ isConfigOpen: false })
+      this.focusConfig()
+      this.watchConfig()
+    }
+    // focus() is one of the few things a document may call on a window it does
+    // not share an origin with, but CEF has been known to throw here anyway.
+    focusConfig = () => {
+      try {
+        this.configWindow.focus()
+      } catch (err) {}
+    }
+    // `closed` is readable across origins; onbeforeunload is not, and hanging a
+    // handler on it is what used to throw on the second right-click. The window
+    // is open by then, so it carries its own file:// document -- and two file://
+    // documents each have an opaque origin, which never matches anything, not
+    // even another opaque origin. So poll instead.
+    watchConfig = () => {
+      window.clearInterval(this.configPoll)
+      this.configPoll = window.setInterval(() => {
+        if (this.configWindow && !this.configWindow.closed) return
+        window.clearInterval(this.configPoll)
+        this.configPoll = null
         this.configWindow = null
-      }
+        this.setState({ isConfigOpen: false })
+      }, 500)
     }
     render = () => {
       const { Combatant, Encounter, isActive } = this.props

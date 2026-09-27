@@ -31,9 +31,21 @@ export const defaultConfig = {
   locale: 'zhCN'
 }
 
-// Narrow enough that the settings page lays out in a single column, and as tall
-// as fits on a 1080p screen -- the whole form is about 1300px tall at this width.
-const CONFIG_WINDOW = { width: 500, height: 900 }
+// Wide enough for two columns of settings, which is what decides whether this
+// window opens with a scrollbar.
+//
+// Measured across all six locales. At 500 the form is one column and about
+// 1600px tall, so it always scrolled. Two columns bring it to 869px, the same
+// in every language -- the sections are what set the height, not the wording.
+// 780 is the widest that still gives two: at 820 a third column appears and the
+// window is mostly empty. Japanese and French need more than 560 to reach two
+// columns at all, their labels being the longest.
+//
+// The height carries about 70px more than the content, because it is not worth
+// depending on whether a browser reads this as the viewport or as the whole
+// window -- the difference is a title bar and an address bar, and getting it
+// wrong the other way brings back the scrollbar this is meant to remove.
+const CONFIG_WINDOW = { width: 780, height: 940 }
 
 // Declaring as a function makes it hoisted and don't mess with constructor from React.Component
 export function withHelper({ WrappedComponent, isConfig = false }) {

@@ -181,6 +181,7 @@ export const jobRoles = {
   caster: ['blm', 'smn', 'rdm', 'pct', 'blu', 'thm', 'acn', 'carbuncle', 'garuda', 'ifrit', 'titan']
 }
 
+
 // Colour themes. Adding one: append an entry here, add a matching class block
 // at the bottom of src/css/overlay.css, and a label under `config` in every
 // locale. Nothing else has to change.
@@ -249,17 +250,17 @@ const mockRows = [
   { rank: 6, job: 'bst', jobClass: 'Bst', jobFull: 'Beastmaster', jobRole: 'job-melee', isSelf: false, dps: 69538, hps: 0, hit: 91270 },
   { rank: 7, job: 'ast', jobClass: 'Ast', jobFull: 'Astrologian', jobRole: 'job-healer', isSelf: false, dps: 41258, hps: 102843, hit: 58210 },
   { rank: 8, job: 'blu', jobClass: 'Blu', jobFull: 'Blue Mage', jobRole: 'job-caster', isSelf: false, dps: 39760, hps: 4380, hit: 64380 },
-  { rank: 9, job: 'sam', jobClass: 'Sam', jobFull: 'Samurai', jobRole: 'job-melee', isSelf: false, dps: 38940, hps: 0, hit: 248760 },
+  { rank: 9, job: 'vpr', jobClass: 'Vpr', jobFull: 'Viper', jobRole: 'job-melee', isSelf: false, dps: 38940, hps: 0, hit: 248760 },
   { rank: 10, job: 'nin', jobClass: 'Nin', jobFull: 'Ninja', jobRole: 'job-melee', isSelf: false, dps: 37820, hps: 0, hit: 231450 },
   { rank: 11, job: 'mnk', jobClass: 'Mnk', jobFull: 'Monk', jobRole: 'job-melee', isSelf: false, dps: 36710, hps: 0, hit: 204180 },
-  { rank: 12, job: 'rdm', jobClass: 'Rdm', jobFull: 'Red Mage', jobRole: 'job-caster', isSelf: false, dps: 35490, hps: 2180, hit: 176030 },
+  { rank: 12, job: 'pct', jobClass: 'Pct', jobFull: 'Pictomancer', jobRole: 'job-caster', isSelf: false, dps: 35490, hps: 0, hit: 176030 },
   { rank: 13, job: 'smn', jobClass: 'Smn', jobFull: 'Summoner', jobRole: 'job-caster', isSelf: false, dps: 34260, hps: 0, hit: 269340 },
   { rank: 14, job: 'dnc', jobClass: 'Dnc', jobFull: 'Dancer', jobRole: 'job-ranged', isSelf: false, dps: 33100, hps: 3260, hit: 141870 },
   { rank: 15, job: 'war', jobClass: 'War', jobFull: 'Warrior', jobRole: 'job-tank', isSelf: false, dps: 32040, hps: 4210, hit: 96180 },
   { rank: 16, job: 'drk', jobClass: 'Drk', jobFull: 'Dark Knight', jobRole: 'job-tank', isSelf: false, dps: 30980, hps: 3915, hit: 91270 },
   { rank: 17, job: 'gnb', jobClass: 'Gnb', jobFull: 'Gunbreaker', jobRole: 'job-tank', isSelf: false, dps: 29870, hps: 3680, hit: 88940 },
-  { rank: 18, job: 'pld', jobClass: 'Pld', jobFull: 'Paladin', jobRole: 'job-tank', isSelf: false, dps: 28750, hps: 4400, hit: 85210 },
-  { rank: 19, job: 'war', jobClass: 'War', jobFull: 'Warrior', jobRole: 'job-tank', isSelf: false, dps: 27640, hps: 3990, hit: 83670 },
+  { rank: 18, job: 'sam', jobClass: 'Sam', jobFull: 'Samurai', jobRole: 'job-melee', isSelf: false, dps: 28750, hps: 0, hit: 85210 },
+  { rank: 19, job: 'rdm', jobClass: 'Rdm', jobFull: 'Red Mage', jobRole: 'job-caster', isSelf: false, dps: 27640, hps: 2180, hit: 83670 },
   { rank: 20, job: 'whm', jobClass: 'Whm', jobFull: 'White Mage', jobRole: 'job-healer', isSelf: false, dps: 26530, hps: 98165, hit: 64380 },
   { rank: 21, job: 'sch', jobClass: 'Sch', jobFull: 'Scholar', jobRole: 'job-healer', isSelf: false, dps: 25420, hps: 95320, hit: 51290 },
   { rank: 22, job: 'sge', jobClass: 'Sge', jobFull: 'Sage', jobRole: 'job-healer', isSelf: false, dps: 24310, hps: 93110, hit: 49870 },
@@ -334,6 +335,14 @@ const labelSet = {
 // with patch 7.56 too. Traditional is the one that lags: it has no client of
 // its own, so that set is the Simplified one converted, and a job's wording
 // there is only as current as the conversion.
+//
+// Viper and Pictomancer sit at ranks 9 and 12, in the middle of the damage
+// pack. They took the two rows that used to be a second Paladin and a second
+// Warrior, and the Samurai and Red Mage they displaced moved down into those
+// rows -- so no job left the roster and none of the numbers changed hands.
+// Putting the two of them at the tail instead would have ranked a Viper below
+// every tank in the raid, which no one who plays the game would read as a
+// preview of anything.
 const mockLabels = {
   zhCN: [
     ['黑魔法师阿三', '万象灵炎'],
@@ -344,17 +353,17 @@ const mockLabels = {
     ['驯兽师阿狼', '狂猛怒火'],
     ['星极大魔法使', '天辉'],
     ['青魔法师小蓝', '月之笛'],
-    ['武士一刀斋', '照破'],
+    ['蝰蛇剑士双牙', '祖灵大蛇牙'],
     ['忍者影', '水遁之术'],
     ['武僧铁拳', '争雷'],
-    ['赤魔法师小红', '赤复活'],
+    ['绘灵法师丹青', '星光棱镜'],
     ['召唤师小绿', '死星核爆'],
     ['舞者踏歌', '强音之剑'],
     ['战士怒涛', '原初解放'],
     ['暗黑骑士小黑', '血溅五步'],
     ['绝枪战士铁', '血壤'],
-    ['骑士坚盾', '神圣阵'],
-    ['战士裂空', '原初之魂'],
+    ['武士一刀斋', '照破'],
+    ['赤魔法师小红', '赤复活'],
     ['白魔导师小花', '炽天迴向'],
     ['学者书虫', '秽浊之灾'],
     ['贤者小贤', '智识之灵'],
@@ -371,17 +380,17 @@ const mockLabels = {
     ['馴獸師阿狼', '狂猛怒火'],
     ['星極大魔法使', '天輝'],
     ['青魔法師小藍', '月之笛'],
-    ['武士一刀齋', '照破'],
+    ['蝰蛇劍士雙牙', '祖靈大蛇牙'],
     ['忍者影', '水遁之術'],
     ['武僧鐵拳', '爭雷'],
-    ['赤魔法師小紅', '赤復活'],
+    ['繪靈法師丹青', '星光稜鏡'],
     ['召喚師小綠', '死星核爆'],
     ['舞者踏歌', '強音之劍'],
     ['戰士怒濤', '原初解放'],
     ['暗黑騎士小黑', '血濺五步'],
     ['絕槍戰士鐵', '血壤'],
-    ['騎士堅盾', '神聖陣'],
-    ['戰士裂空', '原初之魂'],
+    ['武士一刀齋', '照破'],
+    ['赤魔法師小紅', '赤復活'],
     ['白魔導師小花', '熾天迴向'],
     ['學者書蟲', '穢濁之災'],
     ['賢者小賢', '智識之靈'],
@@ -398,17 +407,17 @@ const mockLabels = {
     ['Amarant Coral', 'Quelling Wave'],
     ['Eiko Carol', 'Earthly Star'],
     ['Quina Quen', 'White Wind'],
-    ['Hien Rijin', 'Midare Setsugekka'],
+    ['Erenville', 'Ouroboros'],
     ['Yugiri Mistwalker', 'Hyoton'],
     ['Lyse Hext', 'Riddle of Fire'],
-    ['Arenvald Lentinus', 'Verholy'],
+    ['Wuk Lamat', 'Star Prism'],
     ['Ryne Waters', 'Deathflare'],
     ['Sadu Heltoha', 'Tillana'],
     ['Curious Gorge', 'Inner Release'],
     ['Sidurgu Orl', 'Bloodspiller'],
     ['Thancred Waters', 'Gnashing Fang'],
-    ['Haurchefant Greystone', 'Holy Sheltron'],
-    ['Bremondt', 'Primal Rend'],
+    ['Hien Rijin', 'Midare Setsugekka'],
+    ['Arenvald Lentinus', 'Verholy'],
     ['Yshtola Rhul', 'Afflatus Misery'],
     ['Alisaie Leveilleur', 'Broil'],
     ['Krile Baldesion', 'Pneuma'],
@@ -423,9 +432,7 @@ const mockLabels = {
   //
   // Every one of these is a real FFXIV action for the job on that row, which
   // matters more than it sounds: this list is what the card's width is measured
-  // against, so a made-up name would give a made-up limit. The English set still
-  // carries FFIX skills on its first rows (Meteor, Rei's Wind, Alexander) and
-  // wants the same treatment -- see the DEVLOG.
+  // against, so a made-up name would give a made-up limit.
   jaJP: [
     ['Vivi Ornitier', 'フレアスター'],
     ['Freya Crescent', 'スターダイバー'],
@@ -435,17 +442,17 @@ const mockLabels = {
     ['Amarant Coral', 'クェリングウェーブ'],
     ['Eiko Carol', 'アーサリースター'],
     ['Quina Quen', 'ホワイトウィンド'],
-    ['Hien Rijin', '乱れ雪月花'],
+    ['Erenville', '祖霊の大蛇牙'],
     ['Yugiri Mistwalker', '氷遁の術'],
     ['Lyse Hext', '紅蓮の極意'],
-    ['Arenvald Lentinus', 'ヴァルホーリー'],
+    ['Wuk Lamat', 'スタープリズム'],
     ['Ryne Waters', 'デスフレア'],
     ['Sadu Heltoha', 'ティリャーナ'],
     ['Curious Gorge', '原初の解放'],
     ['Sidurgu Orl', 'ブラッドスピラー'],
     ['Thancred Waters', 'ガナッシュファング'],
-    ['Haurchefant Greystone', 'ホーリーシェルトロン'],
-    ['Bremondt', 'プライマルレンド'],
+    ['Hien Rijin', '乱れ雪月花'],
+    ['Arenvald Lentinus', 'ヴァルホーリー'],
     ['Yshtola Rhul', 'ミゼリ'],
     ['Alisaie Leveilleur', 'ブロイル'],
     ['Krile Baldesion', 'プネウマ'],

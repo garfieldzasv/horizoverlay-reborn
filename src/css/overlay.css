@@ -187,12 +187,6 @@
 .job.cool {
   --icon-glow: var(--icon-glow-cool);
 }
-/* Pet icons still carry their glow inside the bitmap, so they must not get a
-   second one on top. They are due to be replaced with plain artwork like the
-   job icons, and this rule goes when they are. */
-.job.pet {
-  filter: none;
-}
 /* .row .name, not .name: `.row > div` above sets the padding for every direct
    child and would otherwise win on specificity. */
 .row .name {

@@ -193,9 +193,11 @@ export const handLandJobs = [
 // rather than something baked into the PNG: a filter is computed at the size
 // the icon is actually drawn, while a baked one is a bitmap blurred at some
 // other size and then resampled, which is why the old icons went soft in the
-// card while looking sharp in the file.
+// card while looking sharp in the file. Pets go through the same path -- their
+// bitmaps used to carry a glow of their own and had to be excluded, but it has
+// since been unmixed back out of them.
 export function iconGlowClass(job) {
-  if (!job) return 'job pet'        // pets still carry their glow in the bitmap
+  if (!job) return 'job'
   return handLandJobs.indexOf(job.toLowerCase()) >= 0 ? 'job cool' : 'job'
 }
 

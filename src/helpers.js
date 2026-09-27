@@ -181,6 +181,23 @@ export const jobRoles = {
   caster: ['blm', 'smn', 'rdm', 'pct', 'blu', 'thm', 'acn', 'carbuncle', 'garuda', 'ifrit', 'titan']
 }
 
+// The crafting and gathering classes. They have no combat role, so they get no
+// `job-*` class -- this list exists only so their icon can keep the cool glow
+// it has always had, against the warm one every battle job gets. Matched on the
+// lowercased job code, because ACT's casing is not something to rely on.
+export const handLandJobs = [
+  'crp', 'bsm', 'arm', 'gsm', 'ltw', 'wvr', 'alc', 'cul', 'min', 'btn', 'fsh'
+]
+
+// Which glow an icon gets, as a class on the <img>. The glow is a CSS filter
+// rather than something baked into the PNG: a filter is computed at the size
+// the icon is actually drawn, while a baked one is a bitmap blurred at some
+// other size and then resampled, which is why the old icons went soft in the
+// card while looking sharp in the file.
+export function iconGlowClass(job) {
+  if (!job) return 'job pet'        // pets still carry their glow in the bitmap
+  return handLandJobs.indexOf(job.toLowerCase()) >= 0 ? 'job cool' : 'job'
+}
 
 // Colour themes. Adding one: append an entry here, add a matching class block
 // at the bottom of src/css/overlay.css, and a label under `config` in every

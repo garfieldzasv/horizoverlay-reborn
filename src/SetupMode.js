@@ -1,6 +1,6 @@
 import React from 'react'
 import Encounter from './Encounter'
-import { mockEncounter, getMockData, getMockPet } from './helpers'
+import { mockEncounter, getMockData, getMockPet, iconGlowClass } from './helpers'
 import { RateLine, DeathMark, MaxHit } from './CombatantHorizontal'
 import locale from './locale'
 
@@ -92,7 +92,7 @@ function SetupMode(props) {
                     {props.config.showJobIcon ? (
                       <img
                         src={images(`./${mock.job}.png`)}
-                        className="job"
+                        className={iconGlowClass(mock.job)}
                         alt={mock.jobFull}
                       />
                     ) : null}

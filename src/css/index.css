@@ -43,6 +43,13 @@
      tracks font-size on its own: change the type scale and the cards follow. */
   --stat-digits: 6;
   --job-icon: 20px;
+  /* The job icon's glow. It is a CSS filter rather than part of the PNG, so it
+     is drawn at the size the icon actually occupies -- a glow baked into the
+     bitmap is blurred at one size and then resampled to another, which is what
+     made the icons look soft in the card while looking sharp in the file.
+     Crafters and gatherers keep the cool cast they have always had. */
+  --icon-glow: 204, 141, 39;
+  --icon-glow-cool: 116, 151, 195;
   /* The job icon floats over the centre of the band. Without a reserved slot it
      lands on top of the leading digit once a number reaches 6 figures. */
   --icon-slot: calc(var(--job-icon) / 2 + 3px);

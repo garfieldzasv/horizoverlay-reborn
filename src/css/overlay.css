@@ -170,11 +170,28 @@
 
 .job {
   width: var(--job-icon);
+  /* Two shadows, not one: a single gaussian cannot hold both the bright rim
+     right against the stroke and the long tail further out, and the original
+     art has both. Radii are in the icon's drawn size, so they hold whatever
+     --job-icon is set to. */
+  filter: drop-shadow(0 0 1.3px rgba(var(--icon-glow), 1))
+    drop-shadow(0 0 2.2px rgba(var(--icon-glow), 0.45));
   position: absolute;
   top: -5px;
   /* was a hard-coded 59px, i.e. the centre of the old fixed 140px card */
   left: calc(50% - var(--job-icon) / 2);
   z-index: 1;
+}
+/* Crafters and gatherers only swap the colour; the shape of the glow is the
+   same everywhere. */
+.job.cool {
+  --icon-glow: var(--icon-glow-cool);
+}
+/* Pet icons still carry their glow inside the bitmap, so they must not get a
+   second one on top. They are due to be replaced with plain artwork like the
+   job icons, and this rule goes when they are. */
+.job.pet {
+  filter: none;
 }
 /* .row .name, not .name: `.row > div` above sets the padding for every direct
    child and would otherwise win on specificity. */

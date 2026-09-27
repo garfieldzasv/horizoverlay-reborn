@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { bool, string, number, object, oneOfType } from 'prop-types'
-import { jobRoles, otherIcons } from './helpers'
+import { jobRoles, otherIcons, iconGlowClass } from './helpers'
 var images = require.context('./images', false, /\.png$/)
 
 DataWrapper.propTypes = {
@@ -131,7 +131,13 @@ export default class CombatantHorizontal extends Component {
             isHealing ? ' inverse' : ''
           }`}
         >
-          {jobIcon && <img src={jobIcon} className="job" alt={jobName} />}
+          {jobIcon && (
+            <img
+              src={jobIcon}
+              className={iconGlowClass(data.Job)}
+              alt={jobName}
+            />
+          )}
           <DataText type={config.leftStat} isHealing={isHealing} {...data} />
           <DataText type="dps" isHealing={isHealing} {...data} />
         </div>

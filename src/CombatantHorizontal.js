@@ -107,8 +107,6 @@ export default class CombatantHorizontal extends Component {
     // healer's important number sits on the left and the emphasis should flip.
     const isHealing = config.leftStat === 'hps' && roleName === 'healer'
 
-    let maxhit
-    if (data.maxhit) maxhit = data.maxhit.replace(/-([^-]*)$/, ": $1")
     return (
       <div
         className={`row ${data.Job}${jobStyleClass}${
@@ -150,7 +148,7 @@ export default class CombatantHorizontal extends Component {
             cdh={data.CritDirectHitPct || data.DirectCritHitPct}
           />
         )}
-        <div className="maxhit">{config.showMaxhit && maxhit}</div>
+        <MaxHit raw={data.maxhit} show={config.showMaxhit} />
       </div>
     )
   }
@@ -183,6 +181,30 @@ function pct(value) {
   if (value === undefined || value === null || value === '') return '0%'
   const s = String(value)
   return s.endsWith('%') ? s : s + '%'
+}
+
+// The biggest single hit of the fight, under everything else. ACT sends it as
+// "Skill-12345", and the two halves are rendered separately because they have
+// to behave differently once the row runs short: the number is the point of
+// the line and stays whole, the name gives way with an ellipsis. As one string
+// the clip came off the right-hand end, which is where the number is -- "The
+// Rose of Destruction: 28…" keeps the half nobody needs.
+//
+// Shared with setup mode, which draws its own cards and would otherwise have
+// its own copy of the splitting to keep in step.
+export function MaxHit({ raw, show }) {
+  if (!show || !raw) return <div className="maxhit" />
+  const cut = raw.lastIndexOf('-')
+  // No dash, or nothing after it: show what came through rather than a blank.
+  const hasValue = cut > 0 && cut < raw.length - 1
+  const skill = hasValue ? raw.slice(0, cut) : raw
+  const value = hasValue ? raw.slice(cut + 1) : null
+  return (
+    <div className="maxhit">
+      <span className="maxhit-skill">{skill}</span>
+      {value && <span className="maxhit-value">{`: ${value}`}</span>}
+    </div>
+  )
 }
 
 // Crit, direct hit and crit direct hit, on one line under the bars. Same

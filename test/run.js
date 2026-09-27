@@ -146,8 +146,8 @@ async function main () {
       check('伤害为 ACT 的原值', value.damage === '50000', `实得 ${value.damage}`)
     }
 
-    // ---- 6e28c1c: 长技能名不撑高卡片 ----
-    console.log('\n长技能名不撑高卡片（6e28c1c）')
+    // ---- 6e28c1c: 长技能名不撑高卡片，且截断要落在名字上 ----
+    console.log('\n最强一击这一行（6e28c1c）')
     {
       const { value } = await browser.visit(`${base}?locale=enUS&maxhit=1&interval=1000`, {
         script: `(async () => {
@@ -155,21 +155,30 @@ async function main () {
           const rows = [...document.querySelectorAll('.combatants .row')]
           const before = rows.map(r => Math.round(r.getBoundingClientRect().height))
           // 青魔真实技能，比卡片宽
-          rows[0].querySelector('.maxhit').textContent = 'The Rose of Destruction: 284910'
+          rows[0].querySelector('.maxhit-skill').textContent = 'The Rose of Destruction'
           await new Promise(r => setTimeout(r, 300))
-          const after = rows.map(r => Math.round(r.getBoundingClientRect().height))
-          const m = rows[0].querySelector('.maxhit')
-          const st = getComputedStyle(m)
-          return { before, after, white: st.whiteSpace, over: st.overflow, ell: st.textOverflow }
+          const skill = rows[0].querySelector('.maxhit-skill')
+          const value_ = rows[0].querySelector('.maxhit-value')
+          const clipped = el => el.scrollWidth > el.clientWidth + 0.5
+          return {
+            before,
+            after: rows.map(r => Math.round(r.getBoundingClientRect().height)),
+            skillClipped: clipped(skill),
+            valueClipped: clipped(value_),
+            valueText: value_.textContent
+          }
         })()`
       })
       const same = value.after.every(h => h === value.after[0]) &&
         value.after[0] === value.before[0]
       check('塞入超长技能名后所有卡片等高', same,
         `改前 ${value.before.join('/')} → 改后 ${value.after.join('/')}`)
-      check('样式为单行 + 省略号',
-        value.white === 'nowrap' && value.over === 'hidden' && value.ell === 'ellipsis',
-        `${value.white} / ${value.over} / ${value.ell}`)
+      // 检查行为而不是 CSS 属性：这一行的意义在于那个数字，名字可以让路。
+      // 之前整行一起裁，裁掉的正是数字。
+      check('放不下时截断名字，伤害数字保持完整',
+        value.skillClipped && !value.valueClipped,
+        `名字被截 ${value.skillClipped}，数字被截 ${value.valueClipped}，` +
+        `数字仍是 "${value.valueText}"`)
     }
 
     // ---- 折行是这个 fork 的立身之本 ----

@@ -236,16 +236,32 @@
      the negative margin left this touching the bars. */
   margin-top: 0.3em;
   margin-left: -0.8em;
-  text-align: center;
   /* A skill name long enough to wrap used to make the card taller -- 73px
      became 89px -- and a row then held cards of two different heights, which
      the skewed edges are aligned against. Real skill names get there: "The
      Rose of Destruction" is a Blue Mage action, and Japanese katakana runs
-     longer still. One line, clipped with an ellipsis, keeps every card the
-     same height whatever the game reports. */
+     longer still.
+
+     Flex rather than one centred string, so the two halves can be told apart
+     when there is not enough room. Clipping the line as a whole took it off
+     the right-hand end, which is where the number is: "The Rose of
+     Destruction: 28…" keeps the part nobody needs and loses the part the line
+     exists for. */
+  display: flex;
+  justify-content: center;
   white-space: nowrap;
   overflow: hidden;
+}
+/* Gives way first, and shows an ellipsis when it does. */
+.row .maxhit-skill {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
   text-overflow: ellipsis;
+}
+/* Never shrinks: the number is the reason this line is here. */
+.row .maxhit-value {
+  flex: 0 0 auto;
 }
 /* Crit / direct hit / crit direct hit, under the bars. Sits on the same
    baseline grid as .maxhit and borrows the band's grammar: the number in

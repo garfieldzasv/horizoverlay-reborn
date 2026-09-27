@@ -1,7 +1,7 @@
 import React from 'react'
 import Encounter from './Encounter'
 import { mockEncounter, getMockData, getMockPet } from './helpers'
-import { RateLine, DeathMark } from './CombatantHorizontal'
+import { RateLine, DeathMark, MaxHit } from './CombatantHorizontal'
 import locale from './locale'
 
 import './css/reboot.css'
@@ -59,8 +59,6 @@ function SetupMode(props) {
           {mockData.map((mock, index) => {
             if (index >= maxCombatants) return false
             if (!mock.isSelf && props.config.enableSoloMode) return false
-            let maxhit
-            if (mock.maxhit) maxhit = mock.maxhit.replace(/-([^-]*)$/, ': $1')
             return (
               mock.name.toLowerCase() !== 'limit break' && (
                 <div
@@ -147,9 +145,7 @@ function SetupMode(props) {
                   {props.config.showRates && (
                     <RateLine crit={mock.crit} dhit={mock.dhit} cdh={mock.cdh} />
                   )}
-                  <div className="maxhit">
-                    {props.config.showMaxhit && maxhit}
-                  </div>
+                  <MaxHit raw={mock.maxhit} show={props.config.showMaxhit} />
                 </div>
               )
             )

@@ -488,11 +488,27 @@ const mockLabels = {
 // path's name matching.
 export function getMockPet(locale, rank) {
   const set = labelSet[locale] || 'en'
-  const chocobo = { zhCN: '陆行鸟', zhHK: '陸行鳥', en: 'Chocobo' }
-  const beak = { zhCN: '喙突', zhHK: '喙突', en: 'Choco Beak' }
+  // Keyed by label set, not by locale -- and every entry has to be here. A
+  // missing one used to leave `name` undefined, which CombatantHorizontal
+  // lowercases on its first line, and the throw took the whole overlay down
+  // until it was reloaded. Japanese was the only locale with a set of its own
+  // that was not listed, so it was the only one that went blank. The fallback
+  // is there so the next locale added cannot do it again.
+  const chocobo = {
+    zhCN: '陆行鸟',
+    zhHK: '陸行鳥',
+    jaJP: 'チョコボ',
+    en: 'Chocobo'
+  }
+  const beak = {
+    zhCN: '喙突',
+    zhHK: '喙突',
+    jaJP: 'チョコビーク',
+    en: 'Choco Beak'
+  }
   return {
     isSelf: false,
-    name: chocobo[set],
+    name: chocobo[set] || chocobo.en,
     jobClass: '',
     jobFull: 'Chocobo',
     // `job` only picks the icon here; the text is its own field, because a pet
@@ -512,7 +528,7 @@ export function getMockPet(locale, rank) {
     deaths: '0',
     damagePct: '1',
     healPct: '0',
-    maxhit: beak[set] + '-14820'
+    maxhit: (beak[set] || beak.en) + '-14820'
   }
 }
 

@@ -223,6 +223,35 @@ async function main () {
         `未翻译 ${value.leaked}` + (problems.length ? '，' + problems[0] : ''))
     }
 
+    // ---- 配置预览的六语种：宠物那张卡 ----
+    // 上面那组只走配置页，所以漏掉了这条路。getMockPet 按「标签集」取名字，
+    // 日语是唯一自成一套又没被列进去的，取出来是 undefined，而卡片第一行就
+    // 把它 toLowerCase，抛错卸载整棵树 —— 悬浮窗整个空白，只能重载。
+    // 宠物只在开了「显示无职业单位」时才进名单，所以这里必须带上 jobless=1。
+    console.log('\n配置预览的六语种（宠物那张卡）')
+    for (const locale of ['enUS', 'jaJP', 'ptBR', 'frFR', 'zhCN', 'zhHK']) {
+      const { value, problems } = await browser.visit(
+        `${base}?locale=${locale}&setup=1&jobless=1`, {
+          width: 1200, height: 400,
+          script: `(() => {
+            const names = [...document.querySelectorAll('.row .name')]
+              .map(e => e.textContent.trim())
+            return {
+              mounted: !!document.querySelector('.setupMode'),
+              rows: names.length,
+              last: names.length ? names[names.length - 1] : ''
+            }
+          })()`
+        })
+      check(locale,
+        value.mounted && value.rows > 0 && /\S/.test(value.last) &&
+          problems.length === 0,
+        value.mounted
+          ? `${value.rows} 张卡，末位 “${value.last}”` +
+            (problems.length ? '，' + problems[0] : '')
+          : '树已卸载' + (problems.length ? '：' + problems[0] : ''))
+    }
+
     // ---- cadb133: 配置页的行与分隔线 ----
     console.log('\n配置页行距（cadb133）')
     {

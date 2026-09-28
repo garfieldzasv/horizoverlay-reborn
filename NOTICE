@@ -16,16 +16,18 @@ Substantially rewritten
   src/css/config.css         new stylesheet for the above
   src/css/index.css          design tokens; type scale rebuilt on one root size
   src/css/overlay.css        colour rules rewritten against CSS custom properties
-  src/locale.js              translations corrected across all five languages
+  src/locale.js              translations corrected, and a sixth language added
   src/CombatantHorizontal.js card geometry, roles, selectable left-hand stat
   src/helpers.js             config defaults and migration, mock data, registries
   src/index.js               single render tree replacing the two-tree structure
+  src/images/                job and class icons redrawn from vector sources, five
+                             of them absent from the original; their glow now comes
+                             from CSS rather than being baked into the bitmaps
 
 Added
   src/skewAlign.js           runtime measurement that keeps the skewed edges collinear
   src/configStore.js         localStorage wrapper with an in-memory fallback
   src/fonts/                 bundled webfont, see src/fonts/OFL.txt
-  src/images/bst.png         Beastmaster job icon, drawn to match the existing set
   src/testing/               mock data harness for offline preview
 
 Removed
@@ -40,6 +42,18 @@ Third-party components
     Taken from the upstream v7.9 MapleMono-CN release, which ships TTF only,
     and repacked as woff2 with fonttools. The font itself is unmodified.
 
-  Job icons are derived from FINAL FANTASY XIV artwork. FINAL FANTASY is a
-  registered trademark of Square Enix Holdings Co., Ltd. This project is
-  unaffiliated with and unendorsed by Square Enix.
+  Job and class icon shapes -- src/images/
+    https://github.com/xivapi/classjob-icons
+    Copyright (c) 2018 XIVAPI
+    MIT License -- full text in src/images/LICENSE-classjob-icons.txt
+
+    The silhouettes were drawn from those SVGs, reached by way of
+    https://github.com/Ennea/ffxiv-job-icons, which states them as its own
+    source. Colour and glow are this project's own and live in CSS.
+
+    Pet icons are not from that set; they were recovered from the original
+    overlay's own bitmaps.
+
+  The icons depict FINAL FANTASY XIV artwork. FINAL FANTASY is a registered
+  trademark of Square Enix Holdings Co., Ltd. This project is unaffiliated
+  with and unendorsed by Square Enix.

@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "./static/css/main.609ceeaa.css",
-    "main.js": "./static/js/main.9beb6190.js",
+    "main.js": "./static/js/main.fd3d0a9b.js",
     "static/media/MapleMono-CN-Regular.woff2": "./static/media/MapleMono-CN-Regular.75bdd62fcaa3b520af36.woff2",
     "index.html": "./index.html",
     "main.609ceeaa.css.map": "./static/css/main.609ceeaa.css.map",
-    "main.9beb6190.js.map": "./static/js/main.9beb6190.js.map"
+    "main.fd3d0a9b.js.map": "./static/js/main.fd3d0a9b.js.map"
   },
   "entrypoints": [
     "static/css/main.609ceeaa.css",
-    "static/js/main.9beb6190.js"
+    "static/js/main.fd3d0a9b.js"
   ]
 }

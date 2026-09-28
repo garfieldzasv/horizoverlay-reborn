@@ -170,11 +170,19 @@
 
 .job {
   width: var(--job-icon);
-  /* Two shadows, not one: a single gaussian cannot hold both the bright rim
-     right against the stroke and the long tail further out, and the original
-     art has both. Radii are in the icon's drawn size, so they hold whatever
-     --job-icon is set to. */
-  filter: drop-shadow(0 0 1.3px rgba(var(--icon-glow), 1))
+  /* Three shadows. The outer two are the glow: one gaussian cannot hold both
+     the bright rim against the stroke and the long tail further out, and the
+     original art has both. Radii are in the icon's drawn size, so they hold
+     whatever --job-icon is set to.
+
+     The innermost is a contact edge. The glyphs are white, and a band can be
+     light enough that they dissolve into it -- the self row's is white
+     outright, which is where this came from, but the healer green and the
+     neutral grey a pet gets are light too, and all of them read better with
+     it. Dark rather than a darker gold so it reads as an edge and not as more
+     glow; small enough that it does not on the darker bands. */
+  filter: drop-shadow(0 0 1px rgba(48, 34, 10, 1))
+    drop-shadow(0 0 1.3px rgba(var(--icon-glow), 1))
     drop-shadow(0 0 2.2px rgba(var(--icon-glow), 0.45));
   position: absolute;
   top: -5px;
@@ -187,6 +195,14 @@
 .job.cool {
   --icon-glow: var(--icon-glow-cool);
 }
+/* The contact edge above started as a self-row-only rule, because that band is
+   white and the icons vanished into it. Two things it deliberately is not.
+   Swapping the whole glow to dark reads fine on its own but would put one
+   row's icons in a different key from every other card. Darkening the glyph
+   reads better still against the band, but the icon overhangs it by a few
+   pixels onto the dark backdrop, and a dark glyph disappears up there -- a
+   white glyph with a dark edge is the only thing that works in both halves.
+   It ended up on every row because the lighter role colours want it too. */
 /* .row .name, not .name: `.row > div` above sets the padding for every direct
    child and would otherwise win on specificity. */
 .row .name {

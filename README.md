@@ -63,7 +63,7 @@ Setup mode:
 * The left half is selectable; the original only offered HPS
 * Cards, banners and share bars line their slanted edges up automatically
 * An extra theme that splits DPS into melee, ranged and caster
-* 59 job icons, including Beastmaster <img src="screenshots/bst-icon.png" width="18"> from patch 7.56
+* Icons for all 43 jobs and classes. Reaper, Sage, Viper, Pictomancer and Beastmaster <img src="screenshots/bst-icon.png" width="18"> were all missing from the original
 * Pets use a summon icon in neutral grey, instead of a disconnected-network icon in black
 * A rebuilt settings page
 * No third-party requests and no analytics; fonts and icons are bundled (the original's hosted page carries Google Analytics)

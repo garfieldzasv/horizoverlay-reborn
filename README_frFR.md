@@ -63,7 +63,7 @@ Mode config :
 * La moitié gauche est au choix ; l'original ne proposait que le HPS
 * Cartes, bannières et barres alignent leurs bords obliques toutes seules
 * Un thème de plus, qui sépare le DPS en corps à corps, distance et caster
-* 59 icônes de job, dont le Beastmaster <img src="screenshots/bst-icon.png" width="18"> du patch 7.56
+* Des icônes pour les 43 jobs et classes. Faucheur, Sage, Rôdeur vipère, Pictomancien et Dresseur <img src="screenshots/bst-icon.png" width="18"> manquaient tous à l’original
 * Les familiers utilisent une icône d'invocation en gris neutre, au lieu d'une icône de réseau déconnecté en noir
 * Une page de paramètres refaite
 * Aucune requête vers un tiers et pas d'analytics ; polices et icônes sont embarquées (la page hébergée de l'original embarque Google Analytics)

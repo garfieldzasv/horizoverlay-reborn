@@ -63,7 +63,7 @@ Modo config:
 * A metade esquerda é selecionável; o original só oferecia HPS
 * Cartões, barras e banners alinham as bordas inclinadas sozinhos
 * Um tema a mais, que separa o DPS em corpo a corpo, ranged e caster
-* 59 ícones de job, incluindo o Beastmaster <img src="screenshots/bst-icon.png" width="18"> do patch 7.56
+* Ícones para todos os 43 jobs e classes. Reaper, Sage, Viper, Pictomancer e Beastmaster <img src="screenshots/bst-icon.png" width="18"> faltavam no original
 * Pets usam um ícone de invocação em cinza neutro, no lugar do ícone de rede desconectada em preto
 * Página de configurações refeita
 * Nenhuma requisição a terceiros e nenhum analytics; fontes e ícones vêm embutidos (a página hospedada do original carrega Google Analytics)

@@ -20,9 +20,9 @@ Substantially rewritten
   src/CombatantHorizontal.js card geometry, roles, selectable left-hand stat
   src/helpers.js             config defaults and migration, mock data, registries
   src/index.js               single render tree replacing the two-tree structure
-  src/images/                job and class icons redrawn from vector sources, five
-                             of them absent from the original; their glow now comes
-                             from CSS rather than being baked into the bitmaps
+  src/images/                job and class icons redrawn, five of them absent from
+                             the original; their glow now comes from CSS rather
+                             than being baked into the bitmaps
 
 Added
   src/skewAlign.js           runtime measurement that keeps the skewed edges collinear
@@ -51,8 +51,10 @@ Third-party components
     https://github.com/Ennea/ffxiv-job-icons, which states them as its own
     source. Colour and glow are this project's own and live in CSS.
 
-    Pet icons are not from that set; they were recovered from the original
-    overlay's own bitmaps.
+    The twenty base-class, crafter and gatherer icons are not from that set;
+    they were traced from the game's own icons (ui/icon/062000, 062301-062320),
+    because the SVGs had dropped their inner detail. Pet icons are not from it
+    either; they were recovered from the original overlay's own bitmaps.
 
   The icons depict FINAL FANTASY XIV artwork. FINAL FANTASY is a registered
   trademark of Square Enix Holdings Co., Ltd. This project is unaffiliated

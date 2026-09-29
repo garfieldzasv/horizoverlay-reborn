@@ -58,8 +58,8 @@ function check (name, ok, detail) {
 // Pushes the fixture a few times over, because a first frame is not enough for
 // everything -- the limit break readout is set from componentWillReceiveProps
 // and so cannot appear until a second one arrives.
-const feed = (n = 3) => `
-  const fixture = ${JSON.stringify(FIXTURE)}
+const feed = (n = 3, data = FIXTURE) => `
+  const fixture = ${JSON.stringify(data)}
   for (let i = 0; i < ${n}; i++) {
     document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: fixture }))
     await new Promise(r => setTimeout(r, 250))
@@ -99,6 +99,49 @@ async function main () {
       check('极限技不占用卡片位', !value.names.includes('Limit Break'),
         value.names.join(', '))
       check('控制台无错误', problems.length === 0, problems.join('\n      '))
+    }
+
+    // ---- 无职业单位只留队伍里的人带着的 ----
+    // 开场动作少时 ACT 偶尔把你和敌人划到同一边，名单变成「你 + 敌人」。敌人
+    // 也没有职业，一开「显示无职业单位」就全列了出来。解析插件给有主人的单位
+    // 起名「名字 (主人)」，主人部分和主人那一行的键是同一个函数生成的，所以只
+    // 留主人在名单里且带职业的。第二组给了角色名，YOU 那一行的 name 会被
+    // Overlay.js 改写 —— 比对必须用键，不能用 name。
+    console.log('\n无职业单位只留有主人的')
+    {
+      const extra = (name, dps) => combatant(name, '', '40000', '4%', '0', '0%', dps, '0')
+      const party = {
+        ...FIXTURE,
+        Combatant: {
+          ...FIXTURE.Combatant,
+          'Chocobo (Bravo)': extra('Chocobo (Bravo)', '700'),
+          'Striker': extra('Striker', '900'),
+          'Add (Striker)': extra('Add (Striker)', '800'),
+          'Ghost (Nobody)': extra('Ghost (Nobody)', '600')
+        }
+      }
+      const flipped = {
+        ...FIXTURE,
+        Combatant: {
+          YOU: combatant('YOU', 'BLM', '300000', '50%', '0', '0%', '5000', '0'),
+          'Chocobo (YOU)': extra('Chocobo (YOU)', '700'),
+          'Striker': extra('Striker', '900'),
+          'Add (Striker)': extra('Add (Striker)', '800')
+        }
+      }
+      const names = data => `(async () => {
+        ${feed(2, data)}
+        return [...document.querySelectorAll('.combatants .character-name')]
+          .map(e => e.textContent.trim())
+      })()`
+      const a = (await browser.visit(`${base}?locale=enUS&jobless=1`, { script: names(party) })).value
+      check('队友的宠物照常显示', a.includes('Chocobo (Bravo)'), a.join(', '))
+      check('敌人、Boss 的小怪、主人不在名单里的都不显示',
+        !a.includes('Striker') && !a.includes('Add (Striker)') && !a.includes('Ghost (Nobody)'),
+        a.join(', '))
+      const b = (await browser.visit(`${base}?locale=enUS&jobless=1&name=Vivi`, { script: names(flipped) })).value
+      check('认反时只剩你和你的宠物', b.length === 2 && b.includes('Vivi') && b.includes('Chocobo (YOU)'),
+        b.join(', '))
     }
 
     // ---- 627ae4f: 占比取自 ACT 字段，不再自己算 ----

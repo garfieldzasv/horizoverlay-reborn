@@ -59,13 +59,16 @@ function jitter(base, pct) {
 // `mockPet=1` puts one in, named the way a Chinese client reports it even in
 // the English preview: the point of this row is that the English name matching
 // misses and the icon has to fall back, which a Latin name would not exercise.
+// It belongs to the first row, and says so the way the parsing plugin does --
+// a jobless combatant with no owner in the list is taken for an enemy.
 const PET = ['陆行鸟', '', '喙突', 9200, 0, 0]
 
 function buildData(seconds, size, scale, withPet, locale) {
   const cast = mockRoster(locale)
+  const pet = [`${PET[0]} (${cast[0].name})`].concat(PET.slice(1))
   const members = NUMBERS.slice(0, size)
     .map((n, i) => [cast[i].name, cast[i].job, cast[i].skill].concat(n))
-    .concat(withPet ? [PET] : [])
+    .concat(withPet ? [pet] : [])
   const rows = members.map(([name, job, skill, dps, hps, deaths], i) => ({
     name,
     job,

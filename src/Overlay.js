@@ -1,6 +1,7 @@
 import React from 'react'
 import Encounter from './Encounter'
 import Combatants from './Combatants'
+import { partyJobless } from './helpers'
 import './css/reboot.css'
 import './css/index.css'
 import './css/overlay.css'
@@ -50,7 +51,14 @@ class Overlay extends React.Component {
         ? { damage: lb.damage, share: lb['damage%'] || '0%' }
         : null
     )
-    let battler = dataArray.filter(key => !isLimitBreak(key)).slice(0, maxRows)
+    // Jobless combatants go in only when someone in the party owns them; the
+    // rest are enemies (see partyJobless). Pets have always been in the report
+    // whatever Show "jobless" Combatants says, and still are.
+    const isPartyJobless = partyJobless(this.props.Combatant)
+    let battler = dataArray
+      .filter(key => !isLimitBreak(key))
+      .filter(key => this.props.Combatant[key].Job || isPartyJobless(key))
+      .slice(0, maxRows)
     let combatant
     let discordData = []
     for (const ref in battler) {

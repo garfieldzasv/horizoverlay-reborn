@@ -64,7 +64,7 @@ const locale = {
       hintHighlight:
         'Shades the two number cells, one side darker than the other, so the eye lands on the one that matters for that job. Healers get it the other way round.',
       hintJobless:
-        'Lists chocobos, egis, turrets and anything else ACT reports without a job. Off by default because they take up card slots.',
+        'Lists chocobos, egis, turrets and anything else ACT reports without a job, as long as someone in the party owns it -- enemies have no job either, and stay out. Off by default because they take up card slots.',
       hintSolo:
         'Hides everyone else and leaves only your own card. Needs the character name above to be right, or it cannot tell which card is yours.',
       hintStreamer:
@@ -139,7 +139,7 @@ const locale = {
       hintHighlight:
         'DPS と HPS の 2 マスに濃淡をつけ、そのジョブで見るべき方へ視線が向くようにします。ヒーラーは左右が逆になります。',
       hintJobless:
-        'チョコボ、エギ、タレットなど、ACT がジョブなしで報告するメンバーも表示します。カードの枠を使うため既定ではオフです。',
+        'チョコボ、エギ、タレットなど、ACT がジョブなしで報告するメンバーも表示します。パーティの誰かが連れているものに限ります（敵もジョブなしなので、敵は表示しません）。カードの枠を使うため既定ではオフです。',
       hintSolo:
         '自分のカードだけを残し、他のメンバーを隠します。上のキャラクター名が正しくないと、どれが自分のカードか判別できません。',
       hintStreamer:
@@ -214,7 +214,7 @@ const locale = {
       hintHighlight:
         'Sombreia as duas células de número, um lado mais escuro que o outro, para o olho cair na que importa para aquele job. Para healers é ao contrário.',
       hintJobless:
-        'Lista chocobos, egis, torretas e qualquer outro que o ACT reporte sem job. Desligado por padrão porque ocupam espaço de card.',
+        'Lista chocobos, egis, torretas e qualquer outro que o ACT reporte sem job, desde que pertença a alguém do grupo -- inimigos também não têm job e ficam de fora. Desligado por padrão porque ocupam espaço de card.',
       hintSolo:
         'Esconde todos os outros e deixa só o seu card. Precisa que o nome do personagem acima esteja certo, senão não dá para saber qual card é o seu.',
       hintStreamer:
@@ -289,7 +289,7 @@ const locale = {
       hintHighlight:
         '给 DPS 和 HPS 两格加一层深浅分段的底色，把视线引向该职业更该看的那一格。治疗职业会反过来强调左半格。',
       hintJobless:
-        '把陆行鸟、召唤兽、炮塔这类 ACT 报上来但没有职业的单位也列出来。默认关闭，因为它们会占掉卡片位置。',
+        '把陆行鸟、召唤兽、炮塔这类 ACT 报上来但没有职业的单位也列出来，只限队伍里有人带着的 —— 敌人同样没有职业，不会列出。默认关闭，因为它们会占掉卡片位置。',
       hintSolo:
         '只留下你自己的卡片，其他人全部隐藏。需要上面的角色名填对，否则认不出哪张是你。',
       hintStreamer:
@@ -364,7 +364,7 @@ const locale = {
       hintHighlight:
         '給 DPS 和 HPS 兩格加一層深淺分段的底色，把視線引向該職業更該看的那一格。治療職業會反過來強調左半格。',
       hintJobless:
-        '把陸行鳥、召喚獸、砲塔這類 ACT 報上來但沒有職業的單位也列出來。預設關閉，因為它們會佔掉卡片位置。',
+        '把陸行鳥、召喚獸、砲塔這類 ACT 報上來但沒有職業的單位也列出來，只限隊伍裡有人帶著的 —— 敵人同樣沒有職業，不會列出。預設關閉，因為它們會佔掉卡片位置。',
       hintSolo:
         '只留下你自己的卡片，其他人全部隱藏。需要上面的角色名填對，否則認不出哪張是你。',
       hintStreamer:
@@ -439,7 +439,7 @@ const locale = {
       hintHighlight:
         'Ombre les deux cases de chiffres, un côté plus sombre que l\'autre, pour que l\'œil tombe sur celle qui compte pour ce job. L\'inverse pour les soigneurs.',
       hintJobless:
-        'Affiche chocobos, égis, tourelles et tout ce qu\'ACT signale sans job. Désactivé par défaut car ils prennent des places de carte.',
+        'Affiche chocobos, égis, tourelles et tout ce qu\'ACT signale sans job, à condition qu\'un membre du groupe en soit le propriétaire -- les ennemis n\'ont pas de job non plus et restent exclus. Désactivé par défaut car ils prennent des places de carte.',
       hintSolo:
         'Masque tous les autres et ne laisse que votre carte. Le nom de personnage ci-dessus doit être correct, sinon impossible de savoir laquelle est la vôtre.',
       hintStreamer:

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import CombatantHorizontal from './CombatantHorizontal'
+import { partyJobless } from './helpers'
 
 class Combatants extends Component {
   shouldComponentUpdate() {
@@ -12,9 +13,10 @@ class Combatants extends Component {
   render() {
     const maxRows = this.props.config.maxCombatants
     const dataArray = Object.keys(this.props.data)
+    const isPartyJobless = partyJobless(this.props.data)
     const battler = dataArray.filter(player => (
         this.props.data[player].name.toLowerCase() !== 'limit break'
-		&& (this.props.config.showJobless || (this.props.data[player].Job && this.props.data[player].Job !== '')) //doesn't have a job, filter it out.
+		&& ((this.props.config.showJobless && isPartyJobless(player)) || (this.props.data[player].Job && this.props.data[player].Job !== '')) //doesn't have a job, filter it out. Jobless ones only if someone in the party owns them.
 		&& (this.props.data[player].ENCDPS > 0 || this.props.data[player].ENCHPS > 0) //irrelevant npcs (i.e. estinien) like to show up for whatever reason
 	)).slice(0, maxRows)
     let rows = []

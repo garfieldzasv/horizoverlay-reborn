@@ -217,6 +217,34 @@ export const handLandJobs = [
   'crp', 'bsm', 'arm', 'gsm', 'ltw', 'wvr', 'alc', 'cul', 'min', 'btn', 'fsh'
 ]
 
+// Which of the jobless combatants in a CombatData list belong to the party, as
+// a predicate over the list's keys.
+//
+// Jobless is not the same as friendly. OverlayPlugin sends whatever ACT counts
+// as the allies, and ACT works that out from who acted on whom, starting from
+// you. Early in a pull, with few actions to go on, it now and then puts you on
+// the enemies' side for a few seconds -- the list is you plus the enemies, the
+// party is gone -- and the enemies carry no job either.
+//
+// What does tell them apart is the name. The FFXIV parsing plugin names
+// anything with an owner "<name> (<owner>)": chocobos, turrets, pets when pet
+// merging is off, trust NPCs. The separator is a literal in the plugin, not
+// game text, so it reads the same on every client. The owner's part comes from
+// the same function that names the owner's own row, so it matches that row's
+// key exactly -- "YOU" or a real name, whatever ACT is set to, with the plugin's
+// -World suffix where it adds one. A jobless combatant counts as ours when its
+// owner is someone in this list who has a job. Enemies have no owner; a boss's
+// adds have the boss, who has no job.
+//
+// Keys, not `.name`: Overlay.js rewrites the name on the "YOU" row.
+export function partyJobless(combatants) {
+  const owners = Object.keys(combatants).filter(key => combatants[key].Job)
+  return key => {
+    const match = / \(([^()]+)\)$/.exec(key)
+    return match !== null && owners.indexOf(match[1]) >= 0
+  }
+}
+
 // Which glow an icon gets, as a class on the <img>. The glow is a CSS filter
 // rather than something baked into the PNG: a filter is computed at the size
 // the icon is actually drawn, while a baked one is a bitmap blurred at some
